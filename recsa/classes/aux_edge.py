@@ -11,7 +11,7 @@ __all__ = ['AuxEdge']
 class AuxEdge:
     """An auxiliary edge between two binding sites."""
     def __init__(
-            self, bindsite1: str, bindsite2: str, aux_type: str):
+            self, bindsite1: str, bindsite2: str, aux_kind: str):
         """Initialize an auxiliary edge.
 
         Note that the order of the binding sites does not matter,
@@ -38,8 +38,8 @@ class AuxEdge:
                 'The two binding sites should be different.')
         self.bindsites = {bindsite1, bindsite2}
 
-        validate_name_of_aux_type(aux_type)
-        self.aux_type = aux_type
+        validate_name_of_aux_type(aux_kind)
+        self.aux_type = aux_kind
     
     @property
     def bindsite1(self) -> str:
