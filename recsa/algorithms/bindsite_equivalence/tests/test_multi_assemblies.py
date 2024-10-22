@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import (Assembly, AuxEdge, ComponentStructure,
+from recsa import (Assembly, ComponentStructure, LocalAuxEdge,
                    compute_bindsite_to_root_maps_for_multi_assemblies)
 
 
@@ -22,8 +22,8 @@ def test_maps():
         'M_TRI': ComponentStructure('M', {'a', 'b', 'c'}),
         'M_TETRA': ComponentStructure(
             'M', {'a', 'b', 'c', 'd'},
-            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
-             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
+            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
+             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
         'L': ComponentStructure('L', {'a', 'b'}), 
         'X': ComponentStructure('X', {'a'})
         }

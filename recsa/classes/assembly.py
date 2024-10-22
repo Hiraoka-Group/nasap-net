@@ -12,7 +12,7 @@ import networkx as nx
 
 from recsa import RecsaValueError
 
-from .aux_edge import AuxEdge
+from .aux_edge import LocalAuxEdge
 from .component_structure import ComponentStructure
 
 __all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']

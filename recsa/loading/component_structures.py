@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 from pydantic.dataclasses import dataclass
 
-from recsa import AuxEdge, ComponentStructure
+from recsa import ComponentStructure, LocalAuxEdge
 
 __all__ = ['load_component_structures']
 
@@ -60,7 +60,7 @@ def create_component_structures_from_data(
                 for aux_edge in component_structure.aux_edges:
                     bindsite1, bindsite2 = aux_edge.bindsites
                     kind = aux_edge.kind
-                    aux_edges.add(AuxEdge(bindsite1, bindsite2, kind))
+                    aux_edges.add(LocalAuxEdge(bindsite1, bindsite2, kind))
         component_structures[component_structure.id] = ComponentStructure(
             component_structure.id, bindsites, aux_edges)
     return component_structures

@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import AuxEdge
+from recsa import LocalAuxEdge
 
 
 def test_AuxEdge():

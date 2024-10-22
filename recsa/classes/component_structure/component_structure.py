@@ -6,7 +6,7 @@ import networkx as nx
 
 from recsa import RecsaValueError
 
-from ..aux_edge import AuxEdge
+from ..aux_edge import LocalAuxEdge
 from ..validations import (validate_name_of_binding_site,
                            validate_name_of_component_kind)
 from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
@@ -20,7 +20,7 @@ class ComponentStructure:
     def __init__(
             self, component_kind: str, 
             binding_sites: set[str],
-            aux_edges: set[AuxEdge] | None = None):
+            aux_edges: set[LocalAuxEdge] | None = None):
         """
         Parameters
         ----------
@@ -87,7 +87,7 @@ class ComponentStructure:
         return self.__binding_sites.copy()
 
     @property
-    def aux_edges(self) -> set[AuxEdge]:
+    def aux_edges(self) -> set[LocalAuxEdge]:
         # TODO: Consider not to make a deep copy. It's costly.
         return deepcopy(self.__aux_edges)
     
@@ -138,7 +138,7 @@ class ComponentStructure:
             self.__remove_binding_site(bindsite)
 
     @clear_g_cache
-    def __add_aux_edge(self, aux_edge: AuxEdge) -> None:
+    def __add_aux_edge(self, aux_edge: LocalAuxEdge) -> None:
         """Add an auxiliary edge."""
         if aux_edge in self.__aux_edges:
             raise RecsaValueError(
@@ -150,13 +150,13 @@ class ComponentStructure:
         self.__aux_edges.add(aux_edge)
     
     @clear_g_cache
-    def __add_aux_edges(self, aux_edges: set[AuxEdge]) -> None:
+    def __add_aux_edges(self, aux_edges: set[LocalAuxEdge]) -> None:
         """Add auxiliary edges."""
         for aux_edge in aux_edges:
             self.__add_aux_edge(aux_edge)
     
     @clear_g_cache
-    def __remove_aux_edge(self, aux_edge: AuxEdge) -> None:
+    def __remove_aux_edge(self, aux_edge: LocalAuxEdge) -> None:
         """Remove an auxiliary edge."""
         if aux_edge not in self.__aux_edges:
             raise RecsaValueError(
@@ -164,7 +164,7 @@ class ComponentStructure:
         self.__aux_edges.remove(aux_edge)
 
     @clear_g_cache
-    def __remove_aux_edges(self, aux_edges: set[AuxEdge]) -> None:
+    def __remove_aux_edges(self, aux_edges: set[LocalAuxEdge]) -> None:
         """Remove auxiliary edges."""
         for aux_edge in aux_edges:
             self.__remove_aux_edge(aux_edge)

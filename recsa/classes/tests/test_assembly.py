@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, AuxEdge, ComponentStructure
+from recsa import Assembly, ComponentStructure, LocalAuxEdge
 
 
 @pytest.fixture
@@ -13,8 +13,8 @@ def M_WITH_AUX_EDGES() -> ComponentStructure:
     return ComponentStructure(
         'M', {'a', 'b', 'c', 'd'}, 
         {
-            AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
-            AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')
+            LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
+            LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')
         })
 
 

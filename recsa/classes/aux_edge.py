@@ -5,10 +5,10 @@ from recsa import RecsaValueError
 from .validations import (validate_name_of_aux_type,
                           validate_name_of_binding_site)
 
-__all__ = ['AuxEdge']
+__all__ = ['LocalAuxEdge']
 
 
-class AuxEdge:
+class LocalAuxEdge:
     """An auxiliary edge between two binding sites."""
     def __init__(
             self, bindsite1: str, bindsite2: str, aux_kind: str):
@@ -53,7 +53,7 @@ class AuxEdge:
         return hash((tuple(sorted(self.bindsites)), self.aux_type))
 
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, AuxEdge):
+        if not isinstance(other, LocalAuxEdge):
             return False
         return (
             self.bindsites == other.bindsites and
