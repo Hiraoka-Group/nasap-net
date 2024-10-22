@@ -27,7 +27,7 @@ def perform_inter_exchange(
     init_assem.add_bond(entering_bs, metal_bs)
 
     # Separate the leaving assembly if possible
-    metal_comp, rel_bindsite = Assembly.abs_to_rel(metal_bs)
+    metal_comp, rel_bindsite = init_assem.global_to_local(metal_bs)
     main_assem, leaving_assem = separate_product_if_possible(
         init_assem, metal_comp)
     return main_assem, leaving_assem
