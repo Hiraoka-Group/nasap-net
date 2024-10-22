@@ -84,9 +84,5 @@ def convert_data_to_args(data: StructureData) -> Args:
     }
     components = {comp.id: comp.kind for comp in data.components}
     bonds = {bond.id: frozenset(bond.bindsites) for bond in data.bonds or []}
-
-    print(component_structures)
-    print(components)
-    print(bonds)
     
     return Args(component_structures, components, bonds)
