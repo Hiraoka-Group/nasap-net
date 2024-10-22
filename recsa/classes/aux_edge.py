@@ -42,12 +42,11 @@ class LocalAuxEdge:
         self._aux_kind = aux_kind
     
     @property
-    def bindsite1(self) -> str:
-        return sorted(self.bindsites)[0]
+    def local_bindsite1(self) -> str:
+        return sorted(self._bindsites)[0]
     
     @property
-    def bindsite2(self) -> str:
-        return sorted(self.bindsites)[1]
+    def local_bindsite2(self) -> str:
 
     def __hash__(self) -> int:
         return hash((tuple(sorted(self._bindsites)), self._aux_kind))
