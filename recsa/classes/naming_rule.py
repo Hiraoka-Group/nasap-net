@@ -1,3 +1,6 @@
+__all__ = ['NamingRule']
+
+
 class NamingRule:
     DELIMITER = '.'
 
