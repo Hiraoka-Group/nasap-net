@@ -14,6 +14,7 @@ from recsa import RecsaValueError
 
 from .aux_edge import LocalAuxEdge
 from .component_structure import ComponentStructure
+from .naming_rule import NamingRule
 
 __all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']
 
@@ -36,6 +37,8 @@ class Assembly:
     
     An assembly is a group of components connected by bonds.
     """
+    naming_rule = NamingRule()
+    
     def __init__(
             self, 
             component_id_to_kind: Mapping[str, str] | None = None,
@@ -385,21 +388,22 @@ class Assembly:
             G.add_edge(comp1, comp2, bindsites={comp1: rel1, comp2: rel2})
         return G
 
-    @staticmethod
+    @classmethod
     def local_to_global(
-            component_id: str, relative_node_name: str) -> str:
-        return f'{component_id}.{relative_node_name}'
+            cls, component_id: str, relative_node_name: str) -> str:
+        return cls.naming_rule.local_to_global(
+            component_id, relative_node_name)
 
-    @staticmethod
+    @classmethod
     def global_to_local(
-                abs_node_name: str) -> tuple[str, str]:
-            comp_id, local_id = abs_node_name.split('.')
-            return comp_id, local_id
+            cls, abs_node_name: str) -> tuple[str, str]:
+        return cls.naming_rule.global_to_local(abs_node_name)
 
-    @staticmethod
-    def bond_to_rough_bond(bond: frozenset[str]) -> frozenset[str]:
-        comp1, rel1 = Assembly.global_to_local(next(iter(bond)))
-        comp2, rel2 = Assembly.global_to_local(next(iter(bond - {next(iter(bond))})))
+    @classmethod
+    def bond_to_rough_bond(
+            cls, bond: frozenset[str]) -> frozenset[str]:
+        comp1, rel1 = cls.global_to_local(next(iter(bond)))
+        comp2, rel2 = cls.global_to_local(next(iter(bond - {next(iter(bond))})))
         return frozenset([comp1, comp2])
 
 
