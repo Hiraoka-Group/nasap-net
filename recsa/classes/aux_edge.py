@@ -1,6 +1,7 @@
 from typing import Any
 
-from recsa import RecsaValueError
+import recsa as rx
+from recsa.utils import FrozenUnorderedPair
 
 from .validations import (validate_name_of_aux_type,
                           validate_name_of_binding_site)
@@ -9,9 +10,9 @@ __all__ = ['LocalAuxEdge']
 
 
 class LocalAuxEdge:
-    """An auxiliary edge between two binding sites."""
+    """An auxiliary edge between two binding sites. (Immutable)"""
     def __init__(
-            self, bindsite1: str, bindsite2: str, aux_kind: str):
+            self, local_bindsite1: str, local_bindsite2: str, aux_kind: str):
         """Initialize an auxiliary edge.
 
         Note that the order of the binding sites does not matter,
@@ -20,44 +21,59 @@ class LocalAuxEdge:
         Parameters
         ----------
         bindsite1 : str
-            The first binding site. 
+            The local id of the first binding site.
         bindsite2 : str
-            The second binding site. 
+            The local id of the second binding site.
         aux_type : str
             The auxiliary type.
 
+        Note
+        ----
+        The order of the binding sites does not matter.
+
         Raises
         ------
-        RecsaValueError
+        rx.RecsaValueError
             If the two binding sites are the same.
         """
-        validate_name_of_binding_site(bindsite1)
-        validate_name_of_binding_site(bindsite2)
-        if bindsite1 == bindsite2:
-            raise RecsaValueError(
+        validate_name_of_binding_site(local_bindsite1)
+        validate_name_of_binding_site(local_bindsite2)
+        if local_bindsite1 == local_bindsite2:
+            raise rx.RecsaValueError(
                 'The two binding sites should be different.')
-        self.bindsites = {bindsite1, bindsite2}
+        self._bindsites = FrozenUnorderedPair[str](
+            local_bindsite1, local_bindsite2)
 
         validate_name_of_aux_type(aux_kind)
         self._aux_kind = aux_kind
     
     @property
     def local_bindsite1(self) -> str:
-        return sorted(self._bindsites)[0]
+        return self._bindsites.first
     
     @property
     def local_bindsite2(self) -> str:
+        return self._bindsites.second
+    
+    @property
+    def bindsites(self) -> FrozenUnorderedPair[str]:
+        return self._bindsites
+
+    @property
+    def aux_kind(self) -> str:
+        return self._aux_kind
 
     def __hash__(self) -> int:
-        return hash((tuple(sorted(self._bindsites)), self._aux_kind))
+        return hash((self.bindsites, self.aux_kind))
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, LocalAuxEdge):
             return False
         return (
             self.bindsites == other.bindsites and
-            self._aux_kind == other._aux_kind)
+            self.aux_kind == other.aux_kind)
 
     def __repr__(self) -> str:
-        [first, second] = sorted(self.bindsites)
-        return f'AuxEdge({first!r}, {second!r}, {self._aux_kind!r})'
+        return (
+            f'LocalAuxEdge({self.local_bindsite1!r}, '
+            f'{self.local_bindsite2!r}, {self.aux_kind!r})')
