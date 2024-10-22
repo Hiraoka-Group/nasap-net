@@ -1,6 +1,7 @@
 import pytest
 
-from recsa import Assembly, AuxEdge, ComponentStructure, MleBindsite, MleKind
+from recsa import (Assembly, ComponentStructure, LocalAuxEdge, MleBindsite,
+                   MleKind)
 from recsa.algorithms.mle_equivalence import compute_mle_equivalence_as_uf
 from recsa.algorithms.mle_equivalence.as_uf import _update_mle_equivalence
 
@@ -44,8 +45,8 @@ def test_for_specific_assembly_with_aux_edges() -> None:
     COMPONENT_STRUCTURES = {
         'M': ComponentStructure(
             'M', {'a', 'b', 'c', 'd'},
-            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
-             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
+            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
+             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
         'L': ComponentStructure('L', {'a', 'b'}),
         'X': ComponentStructure('X', {'a'})
     }
