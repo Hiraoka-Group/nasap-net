@@ -331,7 +331,7 @@ class Assembly:
                 yield AbsAuxEdge(
                     Assembly.rel_to_abs(comp_id, rel_aux_edge.bindsite1),
                     Assembly.rel_to_abs(comp_id, rel_aux_edge.bindsite2),
-                    rel_aux_edge.aux_type)
+                    rel_aux_edge.aux_kind)
 
     def get_bindsites_of_component(
             self, component_id: str, 
@@ -436,4 +436,4 @@ def add_component_to_graph(
     for aux_edge in component_structure.aux_edges:
         bs1_abs = Assembly.rel_to_abs(component_id, aux_edge.bindsite1)
         bs2_abs = Assembly.rel_to_abs(component_id, aux_edge.bindsite2)
-        g.add_edge(bs1_abs, bs2_abs, aux_type=aux_edge.aux_type)
+        g.add_edge(bs1_abs, bs2_abs, aux_type=aux_edge.aux_kind)
