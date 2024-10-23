@@ -1,4 +1,4 @@
-from recsa import Assembly
+from recsa import Assembly, BindsiteIdConverter
 from recsa.algorithms.assembly_separation import separate_product_if_possible
 from recsa.algorithms.union import union_assemblies
 
@@ -27,7 +27,8 @@ def perform_inter_exchange(
     init_assem.add_bond(entering_bs, metal_bs)
 
     # Separate the leaving assembly if possible
-    metal_comp, rel_bindsite = init_assem.global_to_local(metal_bs)
+    id_converter = BindsiteIdConverter()
+    metal_comp, rel_bindsite = id_converter.global_to_local(metal_bs)
     main_assem, leaving_assem = separate_product_if_possible(
         init_assem, metal_comp)
     return main_assem, leaving_assem
