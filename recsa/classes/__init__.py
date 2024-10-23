@@ -7,4 +7,4 @@ from .mle import MleBindsite
 from .mle import MleKind
 from .reaction import InterReaction
 from .reaction import IntraReaction
-from .naming_rule import NamingRule
+from .bindsite_id_converter import BindsiteIdConverter
