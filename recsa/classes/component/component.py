@@ -12,7 +12,7 @@ __all__ = ['Component']
 
 
 class Component:
-    """A component of an assembly."""
+    """A component of an assembly. (Immutable)"""
 
     def __init__(
             self, kind: str, 
