@@ -55,7 +55,7 @@ class ComponentStructure:
             self._aux_edges == value._aux_edges)
 
     @property
-    def component_kind(self) -> str:
+    def kind(self) -> str:
         return self._kind
     
     @property
@@ -74,7 +74,7 @@ class ComponentStructure:
         G = nx.Graph()
         G.add_node(
             'core', core_or_bindsite='core',
-            component_kind=self.component_kind)
+            component_kind=self.kind)
         for bindsite in self.binding_sites:
             G.add_node(bindsite, core_or_bindsite='bindsite')
             G.add_edge('core', bindsite)

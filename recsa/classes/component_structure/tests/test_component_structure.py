@@ -28,7 +28,7 @@ def test_init_with_valid_args_with_multiple_aux_edges() -> None:
         LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('a', 'c', 'cis'), 
         LocalAuxEdge('b', 'c', 'trans')})
     
-    assert component.component_kind == 'M'
+    assert component.kind == 'M'
     assert set(component.binding_sites) == {'a', 'b', 'c'}
     assert component.aux_edges == {
         LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('a', 'c', 'cis'), 
