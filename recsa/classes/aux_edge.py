@@ -52,5 +52,5 @@ class AuxEdge:
 
     def __repr__(self) -> str:
         return (
-            f'LocalAuxEdge({self.local_bindsite1!r}, '
+            f'AuxEdge({self.local_bindsite1!r}, '
             f'{self.local_bindsite2!r}, {self.aux_kind!r})')

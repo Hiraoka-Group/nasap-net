@@ -3,7 +3,7 @@ from functools import cached_property
 
 import networkx as nx
 
-from ..aux_edge import LocalAuxEdge
+from ..aux_edge import AuxEdge
 from ..validations import (validate_name_of_binding_site,
                            validate_name_of_component_kind)
 from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
@@ -17,7 +17,7 @@ class Component:
     def __init__(
             self, kind: str, 
             bindsites: Iterable[str],
-            aux_edges: Iterable[LocalAuxEdge] | None = None):
+            aux_edges: Iterable[AuxEdge] | None = None):
         """
         Parameters
         ----------
@@ -63,7 +63,7 @@ class Component:
         return self._bindsites
 
     @property
-    def aux_edges(self) -> frozenset[LocalAuxEdge]:
+    def aux_edges(self) -> frozenset[AuxEdge]:
         return self._aux_edges
     
     @cached_property

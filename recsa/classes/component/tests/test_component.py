@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Component, LocalAuxEdge, RecsaValueError
+from recsa import AuxEdge, Component, RecsaValueError
 
 
 @pytest.fixture
@@ -9,7 +9,7 @@ def comp() -> Component:
 
 @pytest.fixture
 def comp_with_aux_edges() -> Component:
-    return Component('M', {'a', 'b'}, {LocalAuxEdge('a', 'b', 'cis')})
+    return Component('M', {'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
 
 
 def test_init_with_valid_args(comp) -> None:
@@ -20,24 +20,24 @@ def test_init_with_valid_args(comp) -> None:
 def test_init_with_valid_args_with_single_aux_edge(comp_with_aux_edges) -> None:
     assert comp_with_aux_edges.kind == 'M'
     assert set(comp_with_aux_edges.bindsites) == {'a', 'b'}
-    assert comp_with_aux_edges.aux_edges == {LocalAuxEdge('a', 'b', 'cis')}
+    assert comp_with_aux_edges.aux_edges == {AuxEdge('a', 'b', 'cis')}
 
 
 def test_init_with_valid_args_with_multiple_aux_edges() -> None:
     component = Component('M', {'a', 'b', 'c'}, {
-        LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('a', 'c', 'cis'), 
-        LocalAuxEdge('b', 'c', 'trans')})
+        AuxEdge('a', 'b', 'cis'), AuxEdge('a', 'c', 'cis'), 
+        AuxEdge('b', 'c', 'trans')})
     
     assert component.kind == 'M'
     assert set(component.bindsites) == {'a', 'b', 'c'}
     assert component.aux_edges == {
-        LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('a', 'c', 'cis'), 
-        LocalAuxEdge('b', 'c', 'trans')}
+        AuxEdge('a', 'b', 'cis'), AuxEdge('a', 'c', 'cis'), 
+        AuxEdge('b', 'c', 'trans')}
 
 
 def test_init_with_invalid_aux_edge_whose_binding_sites_not_in_binding_sites() -> None:
     with pytest.raises(RecsaValueError):
-        Component('M', {'a', 'b'}, {LocalAuxEdge('a', 'c', 'cis')})
+        Component('M', {'a', 'b'}, {AuxEdge('a', 'c', 'cis')})
 
 
 def test_init_with_empty_binding_sites() -> None:
@@ -55,8 +55,8 @@ def test_init_with_empty_aux_edges() -> None:
 def test_eq() -> None:
     component1 = Component('M', {'a', 'b'})
     component2 = Component('M', {'a', 'b'})
-    component3 = Component('M', {'a', 'b'}, {LocalAuxEdge('a', 'b', 'cis')})
-    component4 = Component('M', {'a', 'b'}, {LocalAuxEdge('a', 'b', 'trans')})
+    component3 = Component('M', {'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
+    component4 = Component('M', {'a', 'b'}, {AuxEdge('a', 'b', 'trans')})
 
     assert component1 == component2
     assert component1 != component3
