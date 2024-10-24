@@ -67,7 +67,7 @@ class Component:
         return self._aux_edges
     
     @cached_property
-    def g_snapshot(self) -> nx.Graph:
+    def graph(self) -> nx.Graph:
         return component_to_graph(self)
 
 
