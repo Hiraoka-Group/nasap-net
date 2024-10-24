@@ -8,7 +8,7 @@ from ..validations import (validate_name_of_binding_site,
                            validate_name_of_component_kind)
 from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 
-__all__ = ['Component']
+__all__ = ['Component', 'component_to_graph']
 
 
 class Component:
@@ -68,16 +68,17 @@ class Component:
     
     @cached_property
     def g_snapshot(self) -> nx.Graph:
-        return self._to_graph()
+        return component_to_graph(self)
 
-    def _to_graph(self) -> nx.Graph:
-        G = nx.Graph()
-        G.add_node(
-            'core', core_or_bindsite='core',
-            component_kind=self.kind)
-        for bindsite in self.bindsites:
-            G.add_node(bindsite, core_or_bindsite='bindsite')
-            G.add_edge('core', bindsite)
-        for aux_edge in self.aux_edges:
-            G.add_edge(*aux_edge.bindsites, aux_type=aux_edge.aux_kind)
-        return G
+
+def component_to_graph(comp: Component) -> nx.Graph:
+    G = nx.Graph()
+    G.add_node(
+        'core', core_or_bindsite='core',
+        component_kind=comp.kind)
+    for bindsite in comp.bindsites:
+        G.add_node(bindsite, core_or_bindsite='bindsite')
+        G.add_edge('core', bindsite)
+    for aux_edge in comp.aux_edges:
+        G.add_edge(*aux_edge.bindsites, aux_type=aux_edge.aux_kind)
+    return G
