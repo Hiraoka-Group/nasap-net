@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, Component, LocalAuxEdge
+from recsa import Assembly, AuxEdge, Component
 from recsa.algorithms.bindsite_equivalence import compute_bindsite_to_root_maps
 
 
@@ -31,8 +31,8 @@ def test_bindsite_to_root_for_MX4_with_aux_edges():
     component_structures = {
         'M': Component(
             'M', {'a', 'b', 'c', 'd'},
-            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
+            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
         'X': Component('X', {'a'})
     }
     comp_kind_to_map = compute_bindsite_to_root_maps(

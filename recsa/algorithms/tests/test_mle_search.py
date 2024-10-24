@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import (Assembly, Component, LocalAuxEdge, MleBindsite, MleKind,
+from recsa import (Assembly, AuxEdge, Component, MleBindsite, MleKind,
                    find_mles_by_kind)
 
 
@@ -37,8 +37,8 @@ def test_find_mles_by_kind_with_aux_edges() -> None:
     COMPONENT_STRUCTURES = {
         'M': Component(
             'M', {'a', 'b', 'c', 'd'},
-            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
+            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
         'L': Component('L', {'a', 'b'}),
         'X': Component('X', {'a'})
     }

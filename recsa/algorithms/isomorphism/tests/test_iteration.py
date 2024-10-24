@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, Component, LocalAuxEdge, isomorphisms_iter
+from recsa import Assembly, AuxEdge, Component, isomorphisms_iter
 
 
 def test_isomorphisms_iter():
@@ -10,8 +10,8 @@ def test_isomorphisms_iter():
     COMPONENT_STRUCTURES = {
         'M': Component(
             'M', {'a', 'b', 'c', 'd'},
-            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
+            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
         'L': Component('L', {'a'}),
         'X': Component('X', {'a'})}
     

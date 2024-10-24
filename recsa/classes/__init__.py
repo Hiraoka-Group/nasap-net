@@ -1,7 +1,7 @@
 # isort: skip_file
 
 from .assembly import Assembly
-from .aux_edge import LocalAuxEdge
+from .aux_edge import AuxEdge
 from .component import Component
 from .mle import MleBindsite
 from .mle import MleKind

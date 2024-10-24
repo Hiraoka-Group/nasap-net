@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, Component, LocalAuxEdge, has_aux_edges
+from recsa import Assembly, AuxEdge, Component, has_aux_edges
 
 
 def test_has_aux_edges_true():
@@ -10,8 +10,8 @@ def test_has_aux_edges_true():
     COMPONENT_STRUCTURES = {
         'M': Component(
             'M', {'a', 'b', 'c', 'd'}, 
-            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
+            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
         'X': Component('X', {'a'})}
     assert has_aux_edges(MX4, COMPONENT_STRUCTURES)
 
@@ -34,8 +34,8 @@ def test_has_aux_edges_false2():
         'M': Component('M', {'a', 'b', 'c', 'd'}),  # No aux edges
         'L': Component(
             'L', {'a', 'b', 'c', 'd'},
-            {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-             LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),  # Aux edges but not in assembly
+            {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),  # Aux edges but not in assembly
         'X': Component('X', {'a'})}
     assert not has_aux_edges(MX4, COMPONENT_STRUCTURES)
 
