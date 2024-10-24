@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, ComponentStructure, LocalAuxEdge
+from recsa import Assembly, Component, LocalAuxEdge
 from recsa.algorithms.bindsite_equivalence import \
     compute_bindsite_equivalence_as_uf
 from recsa.algorithms.bindsite_equivalence.as_uf import \
@@ -18,8 +18,8 @@ def test_uf_for_MX4():
         {('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')}
     )
     component_structures = {
-        'M': ComponentStructure('M', {'a', 'b', 'c', 'd'}),
-        'X': ComponentStructure('X', {'a'})
+        'M': Component('M', {'a', 'b', 'c', 'd'}),
+        'X': Component('X', {'a'})
     }
     comp_kind_to_uf = compute_bindsite_equivalence_as_uf(MX4, component_structures)
     assert comp_kind_to_uf.keys() == {'M', 'X'}
@@ -37,11 +37,11 @@ def test_uf_for_MX4_with_aux_edges():
         {('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')}
     )
     component_structures = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'},
             {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
              LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'X': ComponentStructure('X', {'a'})
+        'X': Component('X', {'a'})
     }
     comp_kind_to_uf = compute_bindsite_equivalence_as_uf(MX4, component_structures)
 
@@ -67,9 +67,9 @@ def test_uf_for_M2LX2():
         {
             ('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'L1.a'),
             ('M2.a', 'L1.b'), ('M2.b', 'X3.a'), ('M2.c', 'X4.a')})
-    M_COMP = ComponentStructure('M', {'a', 'b', 'c'})
-    L_COMP = ComponentStructure('L', {'a', 'b'})
-    X_COMP = ComponentStructure('X', {'a'})
+    M_COMP = Component('M', {'a', 'b', 'c'})
+    L_COMP = Component('L', {'a', 'b'})
+    X_COMP = Component('X', {'a'})
     component_structures = {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}
     comp_kind_to_uf = compute_bindsite_equivalence_as_uf(M2LX4, component_structures)
 
@@ -92,12 +92,12 @@ def test_ML3X():
         {('M1.a', 'L1.a'), ('M1.b', 'L2.a'), ('M1.c', 'L3.a'), ('M1.d', 'X1.a')}
     )
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'},
             {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
              LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})}
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'})}
     
     comp_kind_to_uf = compute_bindsite_equivalence_as_uf(ML3X, COMPONENT_STRUCTURES)
 

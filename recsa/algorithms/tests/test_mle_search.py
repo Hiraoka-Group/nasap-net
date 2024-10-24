@@ -1,7 +1,7 @@
 import pytest
 
-from recsa import (Assembly, ComponentStructure, LocalAuxEdge, MleBindsite,
-                   MleKind, find_mles_by_kind)
+from recsa import (Assembly, Component, LocalAuxEdge, MleBindsite, MleKind,
+                   find_mles_by_kind)
 
 
 def test_find_mles_by_kind() -> None:
@@ -13,9 +13,9 @@ def test_find_mles_by_kind() -> None:
         MleKind(metal='M', entering='L', leaving='X'),
     ]
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure('M', {'a', 'b'}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})
+        'M': Component('M', {'a', 'b'}),
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'})
     }
     mles = find_mles_by_kind(
         MLX, MleKind(metal='M', entering='L', leaving='X'), 
@@ -35,12 +35,12 @@ def test_find_mles_by_kind_with_aux_edges() -> None:
         MleKind(metal='M', entering='L', leaving='X'),
     ]
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'},
             {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
              LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'})
     }
     mles = find_mles_by_kind(
         MLX3, MleKind(metal='M', entering='L', leaving='X'), 

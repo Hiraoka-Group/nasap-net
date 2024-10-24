@@ -6,14 +6,14 @@ from typing import Any
 import yaml
 from pydantic import BaseModel, ConfigDict, field_validator
 
-from recsa import ComponentStructure, LocalAuxEdge
+from recsa import Component, LocalAuxEdge
 
 __all__ = ['load_structure_data']
 
 
 @dataclass
 class Args:
-    component_structures: dict[str, ComponentStructure]
+    component_structures: dict[str, Component]
     components: dict[str, str]
     bond_id_to_bindsites: dict[str, frozenset[str]]
 
@@ -76,7 +76,7 @@ def load_yaml(file_path: str | Path) -> StructureData:
 
 def convert_data_to_args(data: StructureData) -> Args:
     component_structures = {
-        comp_kind.id: ComponentStructure(
+        comp_kind.id: Component(
             comp_kind.id, set(comp_kind.bindsites),
             {LocalAuxEdge(edge.bindsites[0], edge.bindsites[1], edge.kind)
              for edge in comp_kind.aux_edges or []})

@@ -3,7 +3,7 @@ from itertools import combinations
 
 from networkx.utils import UnionFind, groups
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 from recsa.algorithms.isomorphism import isomorphisms_iter
 
 __all__ = ['compute_bindsite_equivalence_as_uf']
@@ -11,7 +11,7 @@ __all__ = ['compute_bindsite_equivalence_as_uf']
 
 def compute_bindsite_equivalence_as_uf(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> dict[str, UnionFind]:
     """Compute node equivalences of an assembly.
 

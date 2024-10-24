@@ -1,7 +1,7 @@
 from collections.abc import Iterator, Mapping
 from itertools import product
 
-from recsa import Assembly, ComponentStructure, MleBindsite, MleKind
+from recsa import Assembly, Component, MleBindsite, MleKind
 
 __all__ = ['find_mles_by_kind']
 
@@ -9,7 +9,7 @@ __all__ = ['find_mles_by_kind']
 def find_mles_by_kind(
         assembly: Assembly,
         mle_kind: MleKind,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> Iterator[MleBindsite]:
     """Get all MLE bindsites of a specific kind.
 

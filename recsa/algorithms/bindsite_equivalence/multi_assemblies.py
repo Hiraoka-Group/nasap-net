@@ -1,6 +1,6 @@
 from collections.abc import Mapping
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 from recsa.algorithms.bindsite_equivalence.as_dict import \
     compute_bindsite_to_root_maps
 from recsa.algorithms.bindsite_equivalence.typing import (AssemblyId,
@@ -14,7 +14,7 @@ __all__ = [
 
 def compute_bindsite_to_root_maps_for_multi_assemblies(
         id_to_assembly: Mapping[str, Assembly],
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> dict[tuple[AssemblyId, ComponentKind], BindsiteToRoot]:
     """Compute a mapping from bindsite to its root node.
 

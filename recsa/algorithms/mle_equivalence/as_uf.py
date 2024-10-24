@@ -3,7 +3,7 @@ from itertools import combinations
 
 from networkx.utils import UnionFind, groups
 
-from recsa import Assembly, ComponentStructure, MleKind
+from recsa import Assembly, Component, MleKind
 from recsa.algorithms.isomorphism import isomorphisms_iter
 from recsa.algorithms.isomorphism_application_to_mle import \
     apply_isomorphism_to_mle
@@ -14,7 +14,7 @@ __all__ = ['compute_mle_equivalence_as_uf']
 
 def compute_mle_equivalence_as_uf(
         assembly: Assembly, mle_kinds: Iterable[MleKind],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> dict[MleKind, UnionFind]:
     """Compute MLE bindsite equivalences and return them as UnionFind objects.
 

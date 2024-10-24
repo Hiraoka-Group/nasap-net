@@ -1,16 +1,16 @@
 import pytest
 
-from recsa import Assembly, ComponentStructure, LocalAuxEdge
+from recsa import Assembly, Component, LocalAuxEdge
 
 
 @pytest.fixture
-def M_COMP() -> ComponentStructure:
-    return ComponentStructure('M', {'a', 'b', 'c', 'd'})
+def M_COMP() -> Component:
+    return Component('M', {'a', 'b', 'c', 'd'})
 
 
 @pytest.fixture
-def M_WITH_AUX_EDGES() -> ComponentStructure:
-    return ComponentStructure(
+def M_WITH_AUX_EDGES() -> Component:
+    return Component(
         'M', {'a', 'b', 'c', 'd'}, 
         {
             LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
@@ -19,13 +19,13 @@ def M_WITH_AUX_EDGES() -> ComponentStructure:
 
 
 @pytest.fixture
-def L_COMP() -> ComponentStructure:
-    return ComponentStructure('L', {'a', 'b'})
+def L_COMP() -> Component:
+    return Component('L', {'a', 'b'})
 
 
 @pytest.fixture
-def X_COMP() -> ComponentStructure:
-    return ComponentStructure('X', {'a'})
+def X_COMP() -> Component:
+    return Component('X', {'a'})
 
 
 def test_init_with_no_args() -> None:

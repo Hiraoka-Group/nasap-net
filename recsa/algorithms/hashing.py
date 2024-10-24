@@ -2,7 +2,7 @@ from collections.abc import Mapping
 
 import networkx as nx
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 from recsa.algorithms.aux_edge_existence import has_aux_edges
 
 __all__ = [
@@ -15,7 +15,7 @@ __all__ = [
 
 def calc_wl_hash_of_assembly(
         assembly: Assembly, 
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> str:
     if has_aux_edges(assembly, component_structures):
         return calc_pure_wl_hash(assembly, component_structures)
@@ -30,7 +30,7 @@ def calc_rough_wl_hash(assembly: Assembly) -> str:
 
 def calc_pure_wl_hash(
         assembly: Assembly, 
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> str:
     g = assembly.g_snapshot(component_structures)
     _add_attr_for_hash(g)

@@ -1,7 +1,7 @@
 import networkx as nx
 import pytest
 
-from recsa import Assembly, ComponentStructure, LocalAuxEdge, draw_2d
+from recsa import Assembly, Component, LocalAuxEdge, draw_2d
 
 
 @pytest.mark.skip(reason='This is a visual test.')
@@ -11,12 +11,12 @@ def test_draw_2d():
         [('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'L1.a')],
     )
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'}, {
                 LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
                 LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'}),
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'}),
     }
 
     positions = nx.spring_layout(MLX3.g_snapshot(COMPONENT_STRUCTURES))

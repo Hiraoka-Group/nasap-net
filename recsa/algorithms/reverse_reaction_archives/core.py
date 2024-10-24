@@ -1,7 +1,7 @@
 from collections.abc import Mapping
 
-from recsa import (Assembly, ComponentStructure, InterReactionInit,
-                   IntraReactionInit, MleKind, ReactionInit)
+from recsa import (Assembly, Component, InterReactionInit, IntraReactionInit,
+                   MleKind, ReactionInit)
 from recsa.algorithms.bindsite_equivalence import (AssemblyId, BindsiteToRoot,
                                                    ComponentKind,
                                                    RootToBindsites)
@@ -23,7 +23,7 @@ def get_reverse_reaction(
         product: Assembly, leaving: Assembly | None,
         id_to_assembly: Mapping[str, Assembly],
         hash_to_ids: Mapping[str, set[AssemblyId]],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         bindsite_to_root_maps: Mapping[
             tuple[AssemblyId, ComponentKind], BindsiteToRoot],
         root_to_bindsites_maps: Mapping[

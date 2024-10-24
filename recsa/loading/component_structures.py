@@ -3,14 +3,14 @@ from pathlib import Path
 import yaml
 from pydantic.dataclasses import dataclass
 
-from recsa import ComponentStructure, LocalAuxEdge
+from recsa import Component, LocalAuxEdge
 
 __all__ = ['load_component_structures']
 
 
 def load_component_structures(
         file_path: str | Path
-        ) -> dict[str, ComponentStructure]:
+        ) -> dict[str, Component]:
     """Load ComponentStructure objects from a YAML file."""
     file_path = Path(file_path)
     data = load_yaml(file_path)
@@ -49,7 +49,7 @@ def load_yaml(file_path: str | Path) -> list[ComponentStructureData]:
 
 def create_component_structures_from_data(
         data: list[ComponentStructureData]
-        ) -> dict[str, ComponentStructure]:
+        ) -> dict[str, Component]:
     """Create ComponentStructure objects from a dictionary."""
     component_structures = {}
     for component_structure in data:
@@ -61,6 +61,6 @@ def create_component_structures_from_data(
                     bindsite1, bindsite2 = aux_edge.bindsites
                     kind = aux_edge.kind
                     aux_edges.add(LocalAuxEdge(bindsite1, bindsite2, kind))
-        component_structures[component_structure.id] = ComponentStructure(
+        component_structures[component_structure.id] = Component(
             component_structure.id, bindsites, aux_edges)
     return component_structures

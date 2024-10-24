@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, ComponentStructure, LocalAuxEdge
+from recsa import Assembly, Component, LocalAuxEdge
 from recsa.algorithms.bindsite_equivalence import compute_bindsite_to_root_maps
 
 
@@ -10,8 +10,8 @@ def test_bindsite_to_root_for_MX4():
         {('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')}
     )
     component_structures = {
-        'M': ComponentStructure('M', {'a', 'b', 'c', 'd'}),
-        'X': ComponentStructure('X', {'a'})
+        'M': Component('M', {'a', 'b', 'c', 'd'}),
+        'X': Component('X', {'a'})
     }
     comp_kind_to_map = compute_bindsite_to_root_maps(
         MX4, component_structures)
@@ -29,11 +29,11 @@ def test_bindsite_to_root_for_MX4_with_aux_edges():
         {('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')}
     )
     component_structures = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'},
             {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
              LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'X': ComponentStructure('X', {'a'})
+        'X': Component('X', {'a'})
     }
     comp_kind_to_map = compute_bindsite_to_root_maps(
         MX4, component_structures)
@@ -54,9 +54,9 @@ def test_bindsite_to_root_for_M2LX4():
             ('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'L1.a'),
             ('M2.a', 'L1.b'), ('M2.b', 'X3.a'), ('M2.c', 'X4.a')})
     component_structures = {
-        'M': ComponentStructure('M', {'a', 'b', 'c'}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})
+        'M': Component('M', {'a', 'b', 'c'}),
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'})
     }
     comp_kind_to_map = compute_bindsite_to_root_maps(
         M2LX4, component_structures)

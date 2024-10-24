@@ -1,7 +1,6 @@
 import pytest
 
-from recsa import (Assembly, ComponentStructure, LocalAuxEdge, MleBindsite,
-                   MleKind)
+from recsa import Assembly, Component, LocalAuxEdge, MleBindsite, MleKind
 from recsa.algorithms.mle_equivalence import compute_mle_equivalence_as_uf
 from recsa.algorithms.mle_equivalence.as_uf import _update_mle_equivalence
 
@@ -19,9 +18,9 @@ def test_for_specific_assembly() -> None:
         MleKind(metal='M', entering='L', leaving='X'),
     ]
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure('M', {'a', 'b'}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})
+        'M': Component('M', {'a', 'b'}),
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'})
     }
     mle_kind_to_uf = compute_mle_equivalence_as_uf(
         MLX, MLE_KINDS, COMPONENT_STRUCTURES)
@@ -43,12 +42,12 @@ def test_for_specific_assembly_with_aux_edges() -> None:
         MleKind(metal='M', entering='L', leaving='X'),
     ]
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'},
             {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
              LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})
+        'L': Component('L', {'a', 'b'}),
+        'X': Component('X', {'a'})
     }
     mle_kind_to_uf = compute_mle_equivalence_as_uf(
         MLX3, MLE_KINDS, COMPONENT_STRUCTURES)

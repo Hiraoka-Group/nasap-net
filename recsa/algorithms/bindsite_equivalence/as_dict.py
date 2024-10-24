@@ -2,7 +2,7 @@ from collections.abc import Mapping
 
 from networkx.utils import UnionFind
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 from .as_uf import compute_bindsite_equivalence_as_uf
 from .typing import BindsiteToRoot, ComponentKind
@@ -12,7 +12,7 @@ __all__ = ['compute_bindsite_to_root_maps']
 
 def compute_bindsite_to_root_maps(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> dict[ComponentKind, BindsiteToRoot]:
     """Compute node equivalences of an assembly.
     

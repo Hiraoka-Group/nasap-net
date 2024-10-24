@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import (Assembly, ComponentStructure, LocalAuxEdge,
+from recsa import (Assembly, Component, LocalAuxEdge,
                    compute_bindsite_to_root_maps_for_multi_assemblies)
 
 
@@ -19,13 +19,13 @@ def test_maps():
     ID_TO_ASSEMBLY = {'MX4': MX4, 'M2LX4': M2LX4}
 
     COMPONENT_STRUCTURES = {
-        'M_TRI': ComponentStructure('M', {'a', 'b', 'c'}),
-        'M_TETRA': ComponentStructure(
+        'M_TRI': Component('M', {'a', 'b', 'c'}),
+        'M_TETRA': Component(
             'M', {'a', 'b', 'c', 'd'},
             {LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
              LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
-        'L': ComponentStructure('L', {'a', 'b'}), 
-        'X': ComponentStructure('X', {'a'})
+        'L': Component('L', {'a', 'b'}), 
+        'X': Component('X', {'a'})
         }
     
     bindsite_to_root_maps = compute_bindsite_to_root_maps_for_multi_assemblies(

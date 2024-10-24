@@ -1,7 +1,7 @@
 from collections.abc import Iterable, Mapping
 from typing import TypeAlias
 
-from recsa import Assembly, ComponentStructure, MleBindsite, MleKind
+from recsa import Assembly, Component, MleBindsite, MleKind
 from recsa.algorithms.mle_equivalence.as_uf import \
     compute_mle_equivalence_as_uf
 from recsa.algorithms.mle_equivalence.typing import (AssemblyId, MleToRoot,
@@ -13,7 +13,7 @@ __all__ = ['compute_mle_to_root_maps']
 def compute_mle_to_root_maps(
         id_to_assembly: Mapping[str, Assembly],
         mle_kinds: Iterable[MleKind],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> dict[tuple[AssemblyId, MleKind], MleToRoot]:
     """Compute a mapping from "triple bindsites" to its root "triple bindsites".
 
