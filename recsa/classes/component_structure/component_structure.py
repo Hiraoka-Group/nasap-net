@@ -59,7 +59,7 @@ class ComponentStructure:
         return self._kind
     
     @property
-    def binding_sites(self) -> frozenset[str]:
+    def bindsites(self) -> frozenset[str]:
         return self._bindsites
 
     @property
@@ -75,7 +75,7 @@ class ComponentStructure:
         G.add_node(
             'core', core_or_bindsite='core',
             component_kind=self.kind)
-        for bindsite in self.binding_sites:
+        for bindsite in self.bindsites:
             G.add_node(bindsite, core_or_bindsite='bindsite')
             G.add_edge('core', bindsite)
         for aux_edge in self.aux_edges:

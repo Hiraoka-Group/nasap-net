@@ -29,7 +29,7 @@ def test_init_with_valid_args_with_multiple_aux_edges() -> None:
         LocalAuxEdge('b', 'c', 'trans')})
     
     assert component.kind == 'M'
-    assert set(component.binding_sites) == {'a', 'b', 'c'}
+    assert set(component.bindsites) == {'a', 'b', 'c'}
     assert component.aux_edges == {
         LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('a', 'c', 'cis'), 
         LocalAuxEdge('b', 'c', 'trans')}
@@ -43,7 +43,7 @@ def test_init_with_invalid_aux_edge_whose_binding_sites_not_in_binding_sites() -
 def test_init_with_empty_binding_sites() -> None:
     # Empty binding sites is allowed.
     component = ComponentStructure('M', set())
-    assert component.binding_sites == set()
+    assert component.bindsites == set()
 
 
 def test_init_with_empty_aux_edges() -> None:
