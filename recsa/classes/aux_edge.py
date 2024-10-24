@@ -13,29 +13,6 @@ class LocalAuxEdge:
     """An auxiliary edge between two binding sites. (Immutable)"""
     def __init__(
             self, local_bindsite1: str, local_bindsite2: str, aux_kind: str):
-        """Initialize an auxiliary edge.
-
-        Note that the order of the binding sites does not matter,
-        i.e., AuxEdge('a', 'b', 'cis') is the same as AuxEdge('b', 'a', 'cis').
-
-        Parameters
-        ----------
-        bindsite1 : str
-            The local id of the first binding site.
-        bindsite2 : str
-            The local id of the second binding site.
-        aux_type : str
-            The auxiliary type.
-
-        Note
-        ----
-        The order of the binding sites does not matter.
-
-        Raises
-        ------
-        rx.RecsaValueError
-            If the two binding sites are the same.
-        """
         validate_name_of_binding_site(local_bindsite1)
         validate_name_of_binding_site(local_bindsite2)
         if local_bindsite1 == local_bindsite2:
