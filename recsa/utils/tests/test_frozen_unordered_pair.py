@@ -1,6 +1,6 @@
 import pytest
 
-import recsa as rx
+from recsa import RecsaValueError
 from recsa.utils.frozen_unordered_pair import FrozenUnorderedPair
 
 
@@ -17,12 +17,12 @@ def test_init_with_iterable():
 
 
 def test_init_with_invalid_iterable_length():
-    with pytest.raises(rx.RecsaValueError):
+    with pytest.raises(RecsaValueError):
         FrozenUnorderedPair([1])
 
 
 def test_init_with_invalid_number_of_arguments():
-    with pytest.raises(rx.RecsaValueError):
+    with pytest.raises(RecsaValueError):
         FrozenUnorderedPair(1, 2, 3)  # type: ignore
 
 
