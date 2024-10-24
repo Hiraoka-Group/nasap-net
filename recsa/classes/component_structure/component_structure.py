@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from copy import deepcopy
 from functools import wraps
 
@@ -19,8 +19,8 @@ class ComponentStructure:
 
     def __init__(
             self, component_kind: str, 
-            binding_sites: set[str],
-            aux_edges: set[LocalAuxEdge] | None = None):
+            binding_sites: Iterable[str],
+            aux_edges: Iterable[LocalAuxEdge] | None = None):
         """
         Parameters
         ----------
@@ -40,9 +40,12 @@ class ComponentStructure:
 
         for bindsite in binding_sites:
             validate_name_of_binding_site(bindsite)
-        self.__binding_sites = binding_sites.copy()
+        self.__binding_sites = set(binding_sites)
 
-        self.__aux_edges = aux_edges or set()
+        if aux_edges is not None:
+            self.__aux_edges = set(aux_edges)
+        else:
+            self.__aux_edges = set()
         check_bindsites_of_aux_edges_exists(
             self.__aux_edges, self.__binding_sites)
         
@@ -178,5 +181,5 @@ class ComponentStructure:
             G.add_node(bindsite, core_or_bindsite='bindsite')
             G.add_edge('core', bindsite)
         for aux_edge in self.aux_edges:
-            G.add_edge(*aux_edge.bindsites, aux_type=aux_edge.aux_type)
+            G.add_edge(*aux_edge.bindsites, aux_type=aux_edge.aux_kind)
         return G
