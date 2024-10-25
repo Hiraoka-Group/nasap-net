@@ -170,6 +170,20 @@ class Assembly:
         self.__bindsite_to_connected[bindsite1] = bindsite2
         self.__bindsite_to_connected[bindsite2] = bindsite1
 
+    def with_added_bond(
+            self, bindsite1: str, bindsite2: str) -> Assembly:
+        # TODO: Should raise Error if the bond already exists.
+        id_converter = BindsiteIdConverter()
+        comp1, rel1 = id_converter.global_to_local(bindsite1)
+        comp2, rel2 = id_converter.global_to_local(bindsite2)
+        for comp in [comp1, comp2]:
+            if comp not in self.__components:
+                raise RecsaValueError(
+                    f'The component "{comp}" does not exist in the assembly.')
+        return Assembly(
+            self.component_id_to_kind,
+            self.bonds | {frozenset([bindsite1, bindsite2])})
+
     @clear_g_caches
     def remove_bond(
             self, bindsite1: str, bindsite2: str) -> None:
