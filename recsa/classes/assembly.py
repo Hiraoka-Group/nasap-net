@@ -1,27 +1,20 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable, Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from copy import deepcopy
 from dataclasses import dataclass
-from functools import wraps
 from itertools import chain
 from types import MappingProxyType
-from typing import Concatenate, Literal, ParamSpec, TypeVar, overload
+from typing import Literal, overload
 
 import networkx as nx
 
 from recsa import RecsaValueError
 
-from .aux_edge import AuxEdge
 from .bindsite_id_converter import BindsiteIdConverter
 from .component import Component
 
 __all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']
-
-
-# For type hint of the decorator
-P = ParamSpec("P")
-R = TypeVar("R")
 
 
 @dataclass
@@ -63,24 +56,6 @@ class Assembly:
         # NOTE: Make sure that the __rough_g_cache attributes
         # are initialized before calling any method that modifies the assembly.
         self.__rough_g_cache = None
-
-    # Decorator
-    # For type hint of the decorator, see the following link:
-    # https://github.com/microsoft/pyright/issues/6472
-    @staticmethod
-    def clear_g_caches(func: Callable[Concatenate[Assembly, P], R]
-            ) -> Callable[Concatenate[Assembly, P], R]:
-        """Decorator to clear the cache of the graph snapshot before
-        calling the method."""
-        @wraps(func)
-        def wrapper(self: Assembly, *args: P.args, **kwargs: P.kwargs):
-            assert hasattr(self, '_Assembly__rough_g_cache'), (
-                'The "__g_cache" attribute is not found. '
-                'Please make sure that the "__rough_g_cache" attribute is '
-                'initialized in the __init__ method.')
-            self.__rough_g_cache = None
-            return func(self, *args, **kwargs)
-        return wrapper
 
     # ============================================================
     # Properties (read-only)
@@ -199,7 +174,6 @@ class Assembly:
     # Methods to relabel the assembly
     # ============================================================
     
-    @clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str]) -> Assembly:
         assem = deepcopy(self)
