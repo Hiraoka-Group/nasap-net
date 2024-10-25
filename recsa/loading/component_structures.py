@@ -27,7 +27,7 @@ class AuxEdgeData:
 class ComponentStructureData:
     kind: str
     bindsites: list[str]
-    aux_edges: list[AuxEdgeData | None] | None = None
+    aux_edges: list[AuxEdgeData] | None = None
 
 
 @dataclass
