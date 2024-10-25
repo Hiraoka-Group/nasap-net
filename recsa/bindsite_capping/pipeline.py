@@ -36,10 +36,9 @@ def cap_bindsites_pipeline(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for id_, assembly in id_assembly_pairs:
-        cap_bindsites(
+        assembly = cap_bindsites(
             assembly, component_structures, 
             cap_params.component_kind_to_be_capped,
-            cap_params.cap_component_kind, cap_params.cap_bindsite,
-            copy=False)
+            cap_params.cap_component_kind, cap_params.cap_bindsite)
         output_path = output_dir / f'{id_}.yaml'
         save_assembly(assembly, output_path, overwrite=False)

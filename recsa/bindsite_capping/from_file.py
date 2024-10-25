@@ -21,9 +21,8 @@ def cap_bindsites_from_file(
     cap_params = load_cap_args(cap_params_path)
 
     for id_, assembly in id_assembly_pairs:
-        cap_bindsites(
+        assembly = cap_bindsites(
             assembly, component_structures, 
             cap_params.component_kind_to_be_capped,
-            cap_params.cap_component_kind, cap_params.cap_bindsite,
-            copy=False)
+            cap_params.cap_component_kind, cap_params.cap_bindsite)
         yield id_, assembly
