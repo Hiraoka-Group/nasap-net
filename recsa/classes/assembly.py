@@ -37,7 +37,7 @@ class Assembly:
             self, 
             comp_kind_to_structure: Mapping[str, Component],
             component_id_to_kind: Mapping[str, str] | None = None,
-            bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
+            bonds: Iterable[tuple[str, str] | Iterable[str]] | None = None,
             ) -> None:
         """
         Parameters
