@@ -28,26 +28,31 @@ def X_COMP() -> Component:
     return Component('X', {'a'})
 
 
-def test_init_with_no_args() -> None:
-    assembly = Assembly()
+@pytest.fixture
+def component_structures(M_COMP, L_COMP, X_COMP) -> dict[str, Component]:
+    return {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}
+
+
+def test_init_with_no_args(component_structures) -> None:
+    assembly = Assembly(component_structures)
     assert assembly.component_id_to_kind == {}
     assert assembly.bonds == set()
 
 
-def test_init() -> None:
+def test_init(component_structures) -> None:
     components = {
         'M1': 'M', 'L1': 'L', 'X1': 'X', 'X2': 'X', 'X3': 'X'}
     bonds = {
         frozenset(['M1.a', 'X1.a']), frozenset(['M1.b', 'X1.a']),
         frozenset(['M1.c', 'X2.a']), frozenset(['M1.d', 'X3.a']),}
-    assembly = Assembly(components, bonds)
+    assembly = Assembly(component_structures, components, bonds)
 
     assert assembly.component_id_to_kind == components
     assert assembly.bonds == set(bonds)
 
 
-def test_with_added_component() -> None:
-    assembly = Assembly()
+def test_with_added_component(component_structures) -> None:
+    assembly = Assembly(component_structures)
     new_assembly = assembly.with_added_component('M1', 'M')
     
     assert new_assembly.component_id_to_kind == {'M1': 'M'}
@@ -63,8 +68,8 @@ def test_with_added_component() -> None:
     assert assembly.bonds == set()
 
 
-def test_with_added_components() -> None:
-    assembly = Assembly()
+def test_with_added_components(component_structures) -> None:
+    assembly = Assembly(component_structures)
     new_assembly = assembly.with_added_components([('M1', 'M'), ('L1', 'L')])
     
     assert new_assembly.component_id_to_kind == {'M1': 'M', 'L1': 'L'}
@@ -80,7 +85,7 @@ def test_with_added_components() -> None:
     assert assembly.bonds == set()
 
 
-def test_with_added_bond() -> None:
+def test_with_added_bond(component_structures) -> None:
     components = {
         'M1': 'M', 'M2': 'M', 
         'L1': 'L', 'L2': 'L', 'L3': 'L',
@@ -89,7 +94,7 @@ def test_with_added_bond() -> None:
         frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'L2.a']),
         frozenset(['M1.c', 'L3.a']), frozenset(['M1.d', 'X1.a']),
         frozenset(['M2.a', 'L1.b'])}
-    assembly = Assembly(components, bonds)
+    assembly = Assembly(component_structures, components, bonds)
 
     new_assembly = assembly.with_added_bond('M2.b', 'L2.b')
     
@@ -99,7 +104,7 @@ def test_with_added_bond() -> None:
     assert assembly.bonds == bonds
 
 
-def test_with_added_bonds() -> None:
+def test_with_added_bonds(component_structures) -> None:
     components = {
         'M1': 'M', 'M2': 'M', 
         'L1': 'L', 'L2': 'L', 'L3': 'L',
@@ -108,7 +113,7 @@ def test_with_added_bonds() -> None:
         frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'L2.a']),
         frozenset(['M1.c', 'L3.a']), frozenset(['M1.d', 'X1.a']),
         frozenset(['M2.a', 'L1.b'])}
-    assembly = Assembly(components, bonds)
+    assembly = Assembly(component_structures, components, bonds)
 
     new_assembly = assembly.with_added_bonds([
         ('M2.b', 'L2.b'), ('M2.c', 'L3.b')])
@@ -120,10 +125,10 @@ def test_with_added_bonds() -> None:
     assert assembly.bonds == bonds
 
 
-def test_with_removed_bond():
+def test_with_removed_bond(component_structures):
         component_id_to_kind = {'M1': 'M', 'L1': 'L'}
         bonds = [('M1.a', 'L1.b')]
-        assembly = Assembly(component_id_to_kind, bonds)
+        assembly = Assembly(component_structures, component_id_to_kind, bonds)
 
         # Remove an existing bond
         new_assembly = assembly.with_removed_bond('M1.a', 'L1.b')
@@ -135,7 +140,7 @@ def test_with_removed_bond():
             frozenset(['M1.a', 'L1.b'])}
 
 
-def test_with_removed_bonds() -> None:
+def test_with_removed_bonds(component_structures) -> None:
     components = {
         'M1': 'M', 'M2': 'M', 
         'L1': 'L', 'L2': 'L', 'L3': 'L',
@@ -144,7 +149,7 @@ def test_with_removed_bonds() -> None:
         frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'L2.a']),
         frozenset(['M1.c', 'L3.a']), frozenset(['M1.d', 'X1.a']),
         frozenset(['M2.a', 'L1.b']), frozenset(['M2.b', 'L2.b'])}
-    assembly = Assembly(components, bonds)
+    assembly = Assembly(component_structures, components, bonds)
 
     # Remove existing bonds
     new_assembly = assembly.with_removed_bonds([

@@ -4,9 +4,6 @@ from recsa import Assembly, AuxEdge, Component, isomorphisms_iter
 
 
 def test_isomorphisms_iter():
-    ML2X2_CIS = Assembly(
-        {'M1': 'M', 'L1': 'L', 'L2': 'L', 'X1': 'X', 'X2': 'X'},
-        [('M1.a', 'L1.a'), ('M1.b', 'L2.a'), ('M1.c', 'X1.a'), ('M1.d', 'X2.a')])
     COMPONENT_STRUCTURES = {
         'M': Component(
             'M', {'a', 'b', 'c', 'd'},
@@ -14,6 +11,10 @@ def test_isomorphisms_iter():
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
         'L': Component('L', {'a'}),
         'X': Component('X', {'a'})}
+    ML2X2_CIS = Assembly(
+        COMPONENT_STRUCTURES,
+        {'M1': 'M', 'L1': 'L', 'L2': 'L', 'X1': 'X', 'X2': 'X'},
+        [('M1.a', 'L1.a'), ('M1.b', 'L2.a'), ('M1.c', 'X1.a'), ('M1.d', 'X2.a')])
     
     isomorphisms = list(isomorphisms_iter(ML2X2_CIS, ML2X2_CIS, COMPONENT_STRUCTURES))
 

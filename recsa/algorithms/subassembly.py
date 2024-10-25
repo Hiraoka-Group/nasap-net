@@ -18,7 +18,7 @@ def bond_induced_sub_assembly(
         comp_id: assembly.get_component_kind(comp_id)
         for comp_id in component_ids}
 
-    return Assembly(components, bonds)
+    return Assembly(assembly.comp_kind_to_structure, components, bonds)
 
 
 def component_induced_sub_assembly(
@@ -36,4 +36,4 @@ def component_induced_sub_assembly(
         if assembly.bond_to_rough_bond(bond) <= component_ids}
     # i.e., if the both binding sites of a bond are in the component_ids
 
-    return Assembly(components, bonds)
+    return Assembly(assembly.comp_kind_to_structure, components, bonds)

@@ -7,15 +7,6 @@ from recsa.algorithms.isomorphism import pure_is_isomorphic
 
 
 @pytest.fixture
-def assem_without_bonds() -> Assembly:
-    assem = Assembly()
-    assem = assem.with_added_component('M1', 'M')
-    assem = assem.with_added_components([('L1', 'L'), ('L2', 'L')])
-    assem = assem.with_added_components([('X1', 'X'), ('X2', 'X')])
-    return assem
-
-
-@pytest.fixture
 def component_structures() -> dict[str, Component]:
     M_COMP = Component(
         'M', {'a', 'b', 'c', 'd'},
@@ -25,6 +16,15 @@ def component_structures() -> dict[str, Component]:
     L_COMP = Component('L', {'a', 'b'})
     X_COMP = Component('X', {'a'})
     return {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}
+
+
+@pytest.fixture
+def assem_without_bonds(component_structures) -> Assembly:
+    assem = Assembly(component_structures)
+    assem = assem.with_added_component('M1', 'M')
+    assem = assem.with_added_components([('L1', 'L'), ('L2', 'L')])
+    assem = assem.with_added_components([('X1', 'X'), ('X2', 'X')])
+    return assem
 
 
 @pytest.fixture

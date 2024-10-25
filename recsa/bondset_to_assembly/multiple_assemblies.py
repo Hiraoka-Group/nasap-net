@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Iterator, Mapping
 
-from recsa import Assembly
+from recsa import Assembly, Component
 
 from .single_assembly import convert_bondset_to_assembly
 
@@ -10,10 +10,12 @@ __all__ = ['convert_bondsets_to_assemblies']
 def convert_bondsets_to_assemblies(
         bondsets: Iterable[frozenset[str]],
         components: Mapping[str, str],
-        bond_id_to_bindsites: dict[str, frozenset[str]]
+        bond_id_to_bindsites: dict[str, frozenset[str]],
+        comp_kind_to_structure: dict[str, Component]
         ) -> Iterator[Assembly]:
     """Converts the connected bonds to graphs."""
 
     for bondset in bondsets:
         yield convert_bondset_to_assembly(
-            set(bondset), components, bond_id_to_bindsites)
+            set(bondset), components, bond_id_to_bindsites,
+            comp_kind_to_structure)

@@ -2,13 +2,25 @@ from copy import deepcopy
 
 import pytest
 
-from recsa import Assembly
+from recsa import Assembly, AuxEdge, Component
 from recsa.algorithms.isomorphism import is_roughly_isomorphic
 
 
 @pytest.fixture
-def assem_without_bonds() -> Assembly:
-    assem = Assembly()
+def component_structures() -> dict[str, Component]:
+    M_COMP = Component(
+        'M', {'a', 'b', 'c', 'd'},
+        {
+            AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+            AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis'),})
+    L_COMP = Component('L', {'a', 'b'})
+    X_COMP = Component('X', {'a'})
+    return {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}
+
+
+@pytest.fixture
+def assem_without_bonds(component_structures) -> Assembly:
+    assem = Assembly(component_structures)
     assem = assem.with_added_component('M1', 'M')
     assem = assem.with_added_components([('L1', 'L'), ('L2', 'L')])
     assem = assem.with_added_components([('X1', 'X'), ('X2', 'X')])

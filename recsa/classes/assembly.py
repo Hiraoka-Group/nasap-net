@@ -34,9 +34,9 @@ class Assembly:
     """
     def __init__(
             self, 
+            comp_kind_to_structure: Mapping[str, Component],
             component_id_to_kind: Mapping[str, str] | None = None,
             bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
-            comp_kind_to_structure: Mapping[str, Component] | None = None
             ) -> None:
         """
         Parameters
@@ -137,12 +137,14 @@ class Assembly:
     def with_added_component(
             self, component_id: str, component_kind: str) -> Assembly:
         return Assembly(
+            self.comp_kind_to_structure,
             self.component_id_to_kind | {component_id: component_kind},
             self.bonds)
     
     def with_added_components(
             self, components: Iterable[tuple[str, str]]) -> Assembly:
         return Assembly(
+            self.comp_kind_to_structure,
             self.component_id_to_kind | dict(components),
             self.bonds)
     
@@ -157,6 +159,7 @@ class Assembly:
                 raise RecsaValueError(
                     f'The component "{comp}" does not exist in the assembly.')
         return Assembly(
+            self.comp_kind_to_structure,
             self.component_id_to_kind,
             self.bonds | {frozenset([bindsite1, bindsite2])})
     
@@ -171,20 +174,27 @@ class Assembly:
                     raise RecsaValueError(
                         f'The component "{comp}" does not exist in the assembly.')
         return Assembly(
+            self.comp_kind_to_structure,
             self.component_id_to_kind,
-            self.bonds | {frozenset([bindsite1, bindsite2]) for bindsite1, bindsite2 in bonds})
+            self.bonds | {
+                frozenset([bindsite1, bindsite2]) 
+                for bindsite1, bindsite2 in bonds})
 
     def with_removed_bond(
             self, bindsite1: str, bindsite2: str) -> Assembly:
         return Assembly(
+            self.comp_kind_to_structure,
             self.component_id_to_kind,
             self.bonds - {frozenset([bindsite1, bindsite2])})
 
     def with_removed_bonds(
             self, bonds: Iterable[tuple[str, str]]) -> Assembly:
         return Assembly(
+            self.comp_kind_to_structure,
             self.component_id_to_kind,
-            self.bonds - {frozenset([bindsite1, bindsite2]) for bindsite1, bindsite2 in bonds})
+            self.bonds - {
+                frozenset([bindsite1, bindsite2]) 
+                for bindsite1, bindsite2 in bonds})
     
     # ============================================================
     # Methods to relabel the assembly
@@ -351,9 +361,10 @@ class Assembly:
     # ============================================================
 
     def _to_graph(
-            self, component_kinds: Mapping[str, Component]
+            self, 
+            component_kinds: Mapping[str, Component] | None = None
             ) -> nx.Graph:
-        return assembly_to_graph(self, component_kinds)
+        return assembly_to_graph(self, self.comp_kind_to_structure)
 
     def _to_rough_graph(self) -> nx.Graph:
         id_converter = BindsiteIdConverter()

@@ -5,6 +5,9 @@ from pydantic import BaseModel, field_validator
 
 from recsa import Assembly
 
+from .component_structures import (ComponentStructureData,
+                                   create_component_structures_from_data)
+
 __all__ = ['load_assembly']
 
 
@@ -16,6 +19,7 @@ def load_assembly(file_path: str | Path) -> Assembly:
 
 
 class AssemblyData(BaseModel):
+    comp_kind_to_structure: dict[str, ComponentStructureData]
     component_id_to_kind: dict[str, str]
     bonds: set[frozenset[str]] | None
 
@@ -34,4 +38,8 @@ def load_yaml(file_path: str | Path) -> AssemblyData:
 
 def create_assembly_from_data(data: AssemblyData) -> Assembly:
     """Create an Assembly object from a dictionary."""
-    return Assembly(data.component_id_to_kind, data.bonds)
+    comp_kind_to_structure = create_component_structures_from_data(
+        list(data.comp_kind_to_structure.values()))
+    return Assembly(
+        comp_kind_to_structure, data.component_id_to_kind, 
+        data.bonds)
