@@ -34,7 +34,6 @@ class Assembly:
             self, 
             component_id_to_kind: Mapping[str, str] | None = None,
             bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
-            id_: str | None = None,
             ) -> None:
         """
         Parameters
@@ -46,7 +45,6 @@ class Assembly:
             The bonds between the components. Each bond is a tuple of two
             binding sites.
         """
-        self.id = id_
         if component_id_to_kind is None:
             self.__components: dict[str, str] = {}
         else:
