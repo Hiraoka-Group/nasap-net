@@ -199,28 +199,10 @@ class Assembly:
     # Methods to relabel the assembly
     # ============================================================
     
-    # `@overload` decorator is just for type hinting;
-    # it does not affect the behavior of the method.
-    @overload
     @clear_g_caches
     def rename_component_ids(
-            self, mapping: Mapping[str, str],
-            *, copy: Literal[True] = True) -> Assembly:
-        ...
-    @overload
-    @clear_g_caches
-    def rename_component_ids(
-            self, mapping: Mapping[str, str],
-            *, copy: Literal[False]) -> None:
-        ...
-    @clear_g_caches
-    def rename_component_ids(
-            self, mapping: Mapping[str, str],
-            *, copy: bool = True) -> Assembly | None:
-        if copy:
-            assem = deepcopy(self)
-        else:
-            assem = self
+            self, mapping: Mapping[str, str]) -> Assembly:
+        assem = deepcopy(self)
 
         id_converter = BindsiteIdConverter()
 
