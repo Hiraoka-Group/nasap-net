@@ -54,7 +54,10 @@ class Assembly:
             binding sites.
         """
         self.id = id_
-        self.__components: dict[str, str] = {}
+        if component_id_to_kind is None:
+            self.__components: dict[str, str] = {}
+        else:
+            self.__components = dict(component_id_to_kind)
         self.__bonds: set[frozenset[str]] = set()
         self.__bindsite_to_connected: dict[str, str] = {}
 
@@ -62,9 +65,6 @@ class Assembly:
         # are initialized before calling any method that modifies the assembly.
         self.__rough_g_cache = None
 
-        if component_id_to_kind is not None:
-            for component_id, component_kind in component_id_to_kind.items():
-                self.add_component(component_id, component_kind)
         if bonds is not None:
             for bindsite1, bindsite2 in bonds:
                 self.add_bond(bindsite1, bindsite2)

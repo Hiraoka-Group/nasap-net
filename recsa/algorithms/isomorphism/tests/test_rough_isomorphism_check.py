@@ -9,9 +9,9 @@ from recsa.algorithms.isomorphism import is_roughly_isomorphic
 @pytest.fixture
 def assem_without_bonds() -> Assembly:
     assem = Assembly()
-    assem.add_component('M1', 'M')
-    assem.add_components([('L1', 'L'), ('L2', 'L')])
-    assem.add_components([('X1', 'X'), ('X2', 'X')])
+    assem = assem.with_added_component('M1', 'M')
+    assem = assem.with_added_components([('L1', 'L'), ('L2', 'L')])
+    assem = assem.with_added_components([('X1', 'X'), ('X2', 'X')])
     return assem
 
 
