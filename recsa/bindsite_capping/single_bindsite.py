@@ -14,6 +14,7 @@ def cap_single_bindsite(
     assembly = assembly.deepcopy()
 
     assembly = assembly.with_added_component(cap_id, cap_component_kind)
-    assembly.add_bond(id_converter.local_to_global(cap_id, cap_bindsite), target_bindsite)
+    assembly = assembly.with_added_bond(
+        id_converter.local_to_global(cap_id, cap_bindsite), target_bindsite)
 
     return assembly
