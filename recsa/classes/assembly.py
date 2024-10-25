@@ -183,12 +183,6 @@ class Assembly:
             self.component_id_to_kind,
             self.bonds | {frozenset([bindsite1, bindsite2]) for bindsite1, bindsite2 in bonds})
 
-    @clear_g_caches
-    def remove_bond(
-            self, bindsite1: str, bindsite2: str) -> None:
-        """Remove a bond from the assembly."""
-        self.__bonds.remove(frozenset([bindsite1, bindsite2]))
-
     def with_removed_bond(
             self, bindsite1: str, bindsite2: str) -> Assembly:
         return Assembly(
@@ -200,15 +194,6 @@ class Assembly:
         return Assembly(
             self.component_id_to_kind,
             self.bonds - {frozenset([bindsite1, bindsite2]) for bindsite1, bindsite2 in bonds})
-
-    # ============================================================
-    # Methods to make multiple modifications at once
-    # ============================================================
-
-    def remove_bonds(
-            self, bonds: Iterable[tuple[str, str]]) -> None:
-        for bindsite1, bindsite2 in bonds:
-            self.remove_bond(bindsite1, bindsite2)
     
     # ============================================================
     # Methods to relabel the assembly
