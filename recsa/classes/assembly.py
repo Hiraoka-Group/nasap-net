@@ -80,8 +80,8 @@ class Assembly:
         return set(self.__components.values())
     
     @property
-    def bonds(self) -> set[frozenset[str]]:
-        return self.__bonds.copy()
+    def bonds(self) -> frozenset[frozenset[str]]:
+        return self.__bonds
     
     @property
     def bindsite_to_connected(self) -> dict[str, str]:
