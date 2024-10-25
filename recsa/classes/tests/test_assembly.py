@@ -62,5 +62,22 @@ def test_add_component() -> None:
         frozenset(['M1.c', 'X2.a']), frozenset(['M1.d', 'X3.a'])}
 
 
+def test_with_added_component() -> None:
+    assembly = Assembly()
+    new_assembly = assembly.with_added_component('M1', 'M')
+    
+    assert new_assembly.component_id_to_kind == {'M1': 'M'}
+    assert new_assembly.bonds == set()
+    assert assembly.component_id_to_kind == {}
+    assert assembly.bonds == set()
+
+    new_assembly = new_assembly.with_added_component('L1', 'L')
+    
+    assert new_assembly.component_id_to_kind == {'M1': 'M', 'L1': 'L'}
+    assert new_assembly.bonds == set()
+    assert assembly.component_id_to_kind == {}
+    assert assembly.bonds == set()
+
+
 if __name__ == '__main__':
     pytest.main(['-vv', __file__])
