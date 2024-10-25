@@ -155,10 +155,6 @@ class Assembly:
         return Assembly(
             self.component_id_to_kind | dict(components),
             self.bonds)
-
-    @clear_g_caches
-    def remove_component(self, component_id: str) -> None:
-        del self.__components[component_id]
     
     @clear_g_caches
     def add_bond(self, bindsite1: str, bindsite2: str) -> None:
@@ -185,10 +181,6 @@ class Assembly:
     # ============================================================
     # Methods to make multiple modifications at once
     # ============================================================
-
-    def remove_components(self, component_ids: Iterable[str]) -> None:
-        for component_id in component_ids:
-            self.remove_component(component_id)
 
     def add_bonds(
             self, bonds: Iterable[tuple[str, str]]) -> None:
