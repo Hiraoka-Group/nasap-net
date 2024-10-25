@@ -17,6 +17,7 @@ def convert_bondsets_to_assemblies_pipeline(
         bondsets=[frozenset(bondset) for bondset in bondsets],
         components=args.components,
         bond_id_to_bindsites=args.bond_id_to_bindsites,
+        comp_kind_to_structure=args.component_structures
     )
 
     save_assemblies(assemblies, output_dir, overwrite_folder=overwrite)
