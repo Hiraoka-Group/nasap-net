@@ -99,7 +99,7 @@ class Assembly:
                 'The component structures are not set.')
         return dict(self._comp_kind_to_structure)
     
-    @property
+    @cached_property
     def bindsite_to_connected(self) -> dict[str, str]:
         """Return a dictionary of the connected binding sites.
         
