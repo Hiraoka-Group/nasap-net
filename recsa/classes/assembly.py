@@ -59,7 +59,6 @@ class Assembly:
         else:
             self.__components = dict(component_id_to_kind)
         self.__bonds: set[frozenset[str]] = set()
-        self.__bindsite_to_connected: dict[str, str] = {}
 
         # NOTE: Make sure that the __rough_g_cache attributes
         # are initialized before calling any method that modifies the assembly.
@@ -114,13 +113,17 @@ class Assembly:
         return self.__bonds.copy()
     
     @property
-    def bindsite_to_connected(self) -> MappingProxyType[str, str]:
-        """Return a read-only view of the connected binding sites.
+    def bindsite_to_connected(self) -> dict[str, str]:
+        """Return a dictionary of the connected binding sites.
         
         Only the binding sites that are connected to other binding sites
         are included in the returned object.
         """
-        return MappingProxyType(self.__bindsite_to_connected.copy())
+        bindsite_to_connected = {}
+        for bindsite1, bindsite2 in self.__bonds:
+            bindsite_to_connected[bindsite1] = bindsite2
+            bindsite_to_connected[bindsite2] = bindsite1
+        return bindsite_to_connected
     
     def g_snapshot(
             self, component_structures: Mapping[str, Component]
@@ -167,8 +170,6 @@ class Assembly:
                 raise RecsaValueError(
                     f'The component "{comp}" does not exist in the assembly.')
         self.__bonds.add(frozenset([bindsite1, bindsite2]))
-        self.__bindsite_to_connected[bindsite1] = bindsite2
-        self.__bindsite_to_connected[bindsite2] = bindsite1
 
     def with_added_bond(
             self, bindsite1: str, bindsite2: str) -> Assembly:
@@ -203,8 +204,6 @@ class Assembly:
             self, bindsite1: str, bindsite2: str) -> None:
         """Remove a bond from the assembly."""
         self.__bonds.remove(frozenset([bindsite1, bindsite2]))
-        del self.__bindsite_to_connected[bindsite1]
-        del self.__bindsite_to_connected[bindsite2]
 
     # ============================================================
     # Methods to make multiple modifications at once
@@ -303,7 +302,7 @@ class Assembly:
             The connected binding site. If the binding site is free,
             and `error_if_free` is False, return None.
         """
-        connected = self.__bindsite_to_connected.get(bindsite)
+        connected = self.bindsite_to_connected.get(bindsite)
         if connected is None and error_if_free:
             raise RecsaValueError(
                 f'The binding site "{bindsite}" is free.')
