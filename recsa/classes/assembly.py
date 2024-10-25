@@ -121,12 +121,18 @@ class Assembly:
         """
         return assembly_to_graph(self, self.comp_kind_to_structure)
     
-    @property
+    @cached_property
     def rough_g_snapshot(self) -> nx.Graph:
         """Returns a rough graph of the assembly."""
-        if self._rough_graph_cache is None:
-            self._rough_graph_cache = self._to_rough_graph()
-        return deepcopy(self._rough_graph_cache)
+        id_converter = BindsiteIdConverter()
+        G = nx.Graph()
+        for comp_id, comp_kind in self.component_id_to_kind.items():
+            G.add_node(comp_id, component_kind=comp_kind)
+        for bindsite1, bindsite2 in self.bonds:
+            comp1, rel1 = id_converter.global_to_local(bindsite1)
+            comp2, rel2 = id_converter.global_to_local(bindsite2)
+            G.add_edge(comp1, comp2, bindsites={comp1: rel1, comp2: rel2})
+        return G
     
     # ============================================================
     # Methods to modify the assembly (using relative names)
@@ -357,17 +363,6 @@ class Assembly:
     # ============================================================
     # Methods to convert the assembly to graphs
     # ============================================================
-
-    def _to_rough_graph(self) -> nx.Graph:
-        id_converter = BindsiteIdConverter()
-        G = nx.Graph()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
-            G.add_node(comp_id, component_kind=comp_kind)
-        for bindsite1, bindsite2 in self.bonds:
-            comp1, rel1 = id_converter.global_to_local(bindsite1)
-            comp2, rel2 = id_converter.global_to_local(bindsite2)
-            G.add_edge(comp1, comp2, bindsites={comp1: rel1, comp2: rel2})
-        return G
 
     @classmethod
     def bond_to_rough_bond(
