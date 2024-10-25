@@ -143,17 +143,6 @@ class Assembly:
     # ============================================================
     # Methods to modify the assembly (using relative names)
     # ============================================================
-    
-    @clear_g_caches
-    def add_component(
-            self, component_id: str, component_kind: str) -> None:
-        """Add a component to the assembly.
-        
-        Note: No bond is added between the component and the assembly.
-        The user should add bonds between the component and the assembly
-        if necessary.
-        """
-        self.__components[component_id] = component_kind
 
     def with_added_component(
             self, component_id: str, component_kind: str) -> Assembly:
@@ -196,10 +185,6 @@ class Assembly:
     # ============================================================
     # Methods to make multiple modifications at once
     # ============================================================
-
-    def add_components(self, components: Iterable[tuple[str, str]]) -> None:
-        for component_id, component_kind in components:
-            self.add_component(component_id, component_kind)
 
     def remove_components(self, component_ids: Iterable[str]) -> None:
         for component_id in component_ids:
