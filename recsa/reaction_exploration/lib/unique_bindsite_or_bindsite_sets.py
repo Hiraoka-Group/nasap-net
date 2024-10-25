@@ -77,8 +77,7 @@ def compute_unique_bindsites_or_bindsite_sets(
     Make sure to provide the same assembly_id for the same assembly, and not to
     change the component_structures between calls.
     """
-    isomorphisms = iter_self_isomorphisms_with_cache(
-        assembly_id, assembly, component_structures)
+    isomorphisms = iter_self_isomorphisms_with_cache(assembly_id, assembly)
 
     grouped_nodesets = group_equivalent_nodes_or_nodesets(
         bindsites_or_bindsite_sets, isomorphisms)
