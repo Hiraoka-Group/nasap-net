@@ -59,7 +59,8 @@ class Assembly:
         self._rough_graph_cache = None
 
         if comp_kind_to_structure is None:
-            self._comp_kind_to_structure = None
+            self._comp_kind_to_structure: frozendict[
+                str, Component] | None = None
         else:
             self._comp_kind_to_structure = frozendict(
                 comp_kind_to_structure)
