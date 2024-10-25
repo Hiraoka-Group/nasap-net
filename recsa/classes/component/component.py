@@ -1,5 +1,6 @@
 from collections.abc import Iterable
 from functools import cached_property
+from typing import cast
 
 import networkx as nx
 
@@ -17,29 +18,23 @@ class Component:
     def __init__(
             self, 
             bindsites: Iterable[str],
-            aux_edges: Iterable[AuxEdge] | None = None):
-        """
-        Parameters
-        ----------
-        component_kind : str
-            The component type, e.g., 'M', 'L', 'L1', 'X', etc.
-        binding_sites : Iterable[str]
-            The binding sites. Each binding site should be a string.
-        aux_edges : Mapping[tuple[str, str], str], optional
-            Mapping of auxiliary edges. The keys are tuples of two binding
-            sites, and the values are the auxiliary kinds. The binding sites
-            should be in the binding_sites.
-            Duplicate pairs of binding sites raise an error regardless of the
-            order of the binding sites.
-        """
+            aux_edges: (
+                Iterable[AuxEdge] | Iterable[tuple[str, str, str]] | None
+                ) = None):
         for bindsite in bindsites:
             validate_name_of_binding_site(bindsite)
         self._bindsites = frozenset(bindsites)
 
-        if aux_edges is not None:
+        if aux_edges is None or not aux_edges:
+            self._aux_edges = frozenset[AuxEdge]()
+        elif isinstance(next(iter(aux_edges)), AuxEdge):
+            aux_edges = cast(Iterable[AuxEdge], aux_edges)
             self._aux_edges = frozenset(aux_edges)
         else:
-            self._aux_edges = frozenset()
+            aux_edges = cast(Iterable[tuple[str, str, str]], aux_edges)
+            self._aux_edges = frozenset(
+                AuxEdge(*aux_edge) for aux_edge in aux_edges)
+
         check_bindsites_of_aux_edges_exists(
             self._aux_edges, self._bindsites)
     

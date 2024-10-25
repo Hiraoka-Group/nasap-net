@@ -7,6 +7,7 @@ from recsa import AuxEdge, Component, RecsaValueError
 def comp() -> Component:
     return Component({'a', 'b'})
 
+
 @pytest.fixture
 def comp_with_aux_edges() -> Component:
     return Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
@@ -47,6 +48,11 @@ def test_init_with_empty_aux_edges() -> None:
     # Empty aux_edges is allowed.
     component = Component({'a', 'b'}, set())
     assert component.aux_edges == frozenset()
+
+
+def test_init_with_aux_edge_as_tuple() -> None:
+    component = Component({'a', 'b'}, [('a', 'b', 'cis')])
+    assert component.aux_edges == {AuxEdge('a', 'b', 'cis')}
 
 
 def test_eq() -> None:
