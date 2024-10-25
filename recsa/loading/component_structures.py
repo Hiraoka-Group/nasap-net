@@ -19,7 +19,8 @@ def load_component_structures(
 
 @dataclass
 class AuxEdgeData:
-    bindsites: tuple[str, str]
+    bindsite1: str
+    bindsite2: str
     kind: str
 
 
@@ -58,7 +59,8 @@ def create_component_structures_from_data(
         if component_structure.aux_edges:
             if component_structure.aux_edges:
                 for aux_edge in component_structure.aux_edges:
-                    bindsite1, bindsite2 = aux_edge.bindsites
+                    bindsite1 = aux_edge.bindsite1
+                    bindsite2 = aux_edge.bindsite2
                     kind = aux_edge.kind
                     aux_edges.add(AuxEdge(bindsite1, bindsite2, kind))
         component_structures[component_structure.id] = Component(
