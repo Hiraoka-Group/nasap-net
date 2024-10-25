@@ -103,15 +103,16 @@ class Assembly:
         The snapshot is a deep copy of the assembly graph. Therefore,
         any modification to the snapshot will not affect the assembly.
         """
-        # Prevent the user from modifying the assembly.
-        return self._to_graph(component_structures)
+        if self._graph_cache is None:
+            self._graph_cache = self._to_graph(component_structures)
+        return deepcopy(self._graph_cache)
     
     @property
     def rough_g_snapshot(self) -> nx.Graph:
         """Returns a rough graph of the assembly."""
-        if self.__rough_g_cache is None:
-            self.__rough_g_cache = self._to_rough_graph()
-        return deepcopy(self.__rough_g_cache)
+        if self._rough_graph_cache is None:
+            self._rough_graph_cache = self._to_rough_graph()
+        return deepcopy(self._rough_graph_cache)
     
     # ============================================================
     # Methods to modify the assembly (using relative names)
