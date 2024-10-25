@@ -29,5 +29,5 @@ def rough_isomorphisms_iter(
     """
     node_match = categorical_node_match('component_kind', None)
     GM = GraphMatcher(
-        assem1.rough_g_snapshot, assem2.rough_g_snapshot, node_match=node_match)
+        assem1.routh_graph, assem2.routh_graph, node_match=node_match)
     yield from GM.isomorphisms_iter()

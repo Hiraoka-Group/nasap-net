@@ -122,7 +122,7 @@ class Assembly:
         return assembly_to_graph(self, self.comp_kind_to_structure)
     
     @cached_property
-    def rough_g_snapshot(self) -> nx.Graph:
+    def routh_graph(self) -> nx.Graph:
         """Returns a rough graph of the assembly."""
         id_converter = BindsiteIdConverter()
         G = nx.Graph()

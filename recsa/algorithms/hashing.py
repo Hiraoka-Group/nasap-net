@@ -25,7 +25,7 @@ def calc_wl_hash_of_assembly(
 
 def calc_rough_wl_hash(assembly: Assembly) -> str:
     return nx.weisfeiler_lehman_graph_hash(
-        assembly.rough_g_snapshot, node_attr='component_kind')
+        assembly.routh_graph, node_attr='component_kind')
 
 
 def calc_pure_wl_hash(assembly: Assembly) -> str:
