@@ -1,6 +1,5 @@
 from collections.abc import Mapping
 from itertools import count
-from typing import Literal, overload
 
 from recsa import Assembly, Component
 
@@ -9,32 +8,14 @@ from .single_bindsite import cap_single_bindsite
 __all__ = ['cap_bindsites']
 
 
-@overload
 def cap_bindsites(
         assembly: Assembly, 
         component_structures: Mapping[str, Component],
         component_kind_to_be_capped: str,
-        cap_component_kind: str, cap_bindsite: str,
-        copy: Literal[True] = True
-        ) -> Assembly: ...
-@overload
-def cap_bindsites(
-        assembly: Assembly, 
-        component_structures: Mapping[str, Component],
-        component_kind_to_be_capped: str,
-        cap_component_kind: str, cap_bindsite: str,
-        copy: Literal[False]
-        ) -> None: ...
-def cap_bindsites(
-        assembly: Assembly, 
-        component_structures: Mapping[str, Component],
-        component_kind_to_be_capped: str,
-        cap_component_kind: str, cap_bindsite: str,
-        copy: bool = True
+        cap_component_kind: str, cap_bindsite: str
         ) -> Assembly | None:
     """Add leaving ligands to all free bindsites of a specific component kind."""
-    if copy:
-        assembly = assembly.deepcopy()
+    assembly = assembly.deepcopy()
 
     target_bindsites: list[str] = []
     for comp_id, comp_kind in assembly.component_id_to_kind.items():
@@ -51,11 +32,8 @@ def cap_bindsites(
         cap_id = next(cap_ids)
         while cap_id in assembly.component_ids:
             cap_id = next(cap_ids)
-        cap_single_bindsite(
+        assembly = cap_single_bindsite(
             assembly, target_bindsite, cap_id, 
-            cap_component_kind, cap_bindsite, copy=False)
+            cap_component_kind, cap_bindsite)
     
-    if copy:
-        return assembly
-    else:
-        return None
+    return assembly
