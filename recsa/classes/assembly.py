@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator, Mapping
 from copy import deepcopy
 from dataclasses import dataclass
+from functools import cached_property
 from itertools import chain
 from typing import Literal, overload
 
@@ -111,17 +112,14 @@ class Assembly:
             bindsite_to_connected[bindsite2] = bindsite1
         return bindsite_to_connected
     
-    def g_snapshot(
-            self, component_structures: Mapping[str, Component]
-            ) -> nx.Graph:
+    @cached_property
+    def g_snapshot(self) -> nx.Graph:
         """Returns a snapshot of the assembly graph.
         
         The snapshot is a deep copy of the assembly graph. Therefore,
         any modification to the snapshot will not affect the assembly.
         """
-        if self._graph_cache is None:
-            self._graph_cache = self._to_graph(component_structures)
-        return deepcopy(self._graph_cache)
+        return assembly_to_graph(self, self.comp_kind_to_structure)
     
     @property
     def rough_g_snapshot(self) -> nx.Graph:
@@ -359,12 +357,6 @@ class Assembly:
     # ============================================================
     # Methods to convert the assembly to graphs
     # ============================================================
-
-    def _to_graph(
-            self, 
-            component_kinds: Mapping[str, Component] | None = None
-            ) -> nx.Graph:
-        return assembly_to_graph(self, self.comp_kind_to_structure)
 
     def _to_rough_graph(self) -> nx.Graph:
         id_converter = BindsiteIdConverter()

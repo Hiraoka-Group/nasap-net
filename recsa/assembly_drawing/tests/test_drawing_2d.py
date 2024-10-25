@@ -20,7 +20,7 @@ def test_draw_2d():
         [('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'L1.a')],
     )
 
-    positions = nx.spring_layout(MLX3.g_snapshot(COMPONENT_STRUCTURES))
+    positions = nx.spring_layout(MLX3.g_snapshot)
     draw_2d(MLX3, COMPONENT_STRUCTURES, positions, node_labeling_mode='component_kind')
     draw_2d(MLX3, COMPONENT_STRUCTURES, positions, node_labeling_mode='component_id')
     draw_2d(MLX3, COMPONENT_STRUCTURES, positions, node_labeling_mode='core_and_bindsite_ids')

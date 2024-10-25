@@ -9,7 +9,6 @@ __all__ = ['assemblies_equal']
 
 def assemblies_equal(
         assem1: Assembly, assem2: Assembly,
-        component_kinds: Mapping[str, Component]
         ) -> bool:
     """Check if two assemblies are equal.
 
@@ -21,6 +20,4 @@ def assemblies_equal(
     --------
     recsa.is_isomorphic
     """
-    return graphs_equal(
-        assem1.g_snapshot(component_kinds),
-        assem2.g_snapshot(component_kinds))
+    return graphs_equal(assem1.g_snapshot, assem2.g_snapshot)

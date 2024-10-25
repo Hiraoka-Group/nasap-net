@@ -31,9 +31,9 @@ def test_inter_exchange() -> None:
     product, leaving = perform_inter_exchange(
         MX2, L, 'M1.a', 'X1.a', 'L1.a')
 
-    assert assemblies_equal(product, MLX, COMPONENT_KINDS)
+    assert assemblies_equal(product, MLX)
     assert leaving is not None
-    assert assemblies_equal(leaving, X, COMPONENT_KINDS)
+    assert assemblies_equal(leaving, X)
 
 
 if __name__ == '__main__':

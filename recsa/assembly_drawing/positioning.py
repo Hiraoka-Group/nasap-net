@@ -53,7 +53,7 @@ def calc_positions(
     """Calculates the positions of the nodes in the assembly graph."""
     layout_func = LAYOUT_NAME_TO_FUNC[layout_name]
 
-    g = assembly.g_snapshot(component_structures)
+    g = assembly.g_snapshot
 
     init_pos, fixed = format_init_pos_and_fixed(init_pos, fixed)
     if not init_pos:

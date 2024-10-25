@@ -54,7 +54,7 @@ def draw_3d(
     if y_lim is not None:
         ax.set_ylim(y_lim)
     
-    g = assembly.g_snapshot(component_structures)
+    g = assembly.g_snapshot
 
     # ========= Draw the graph =========
 

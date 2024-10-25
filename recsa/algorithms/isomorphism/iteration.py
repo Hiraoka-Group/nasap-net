@@ -10,9 +10,7 @@ __all__ = ['isomorphisms_iter']
 
 
 def isomorphisms_iter(
-        assem1: Assembly, assem2: Assembly,
-        component_structures: Mapping[str, Component]
-        ) -> Iterator[dict[str, str]]:
+        assem1: Assembly, assem2: Assembly) -> Iterator[dict[str, str]]:
     """Find all isomorphisms between two "g_snapshot" graphs of assemblies.
 
     Parameters
@@ -21,8 +19,6 @@ def isomorphisms_iter(
         The first assembly.
     assem2 : Assembly
         The second assembly.
-    component_structures : Mapping[str, ComponentStructure]
-        A mapping from component kind to its structure.
 
     Yields
     ------
@@ -30,8 +26,8 @@ def isomorphisms_iter(
         A mapping from node (core or bindsite, e.g., 'M1.core', 'M1.a')
         in the first assembly to node in the second assembly.
     """
-    g1 = assem1.g_snapshot(component_structures)
-    g2 = assem2.g_snapshot(component_structures)
+    g1 = assem1.g_snapshot
+    g2 = assem2.g_snapshot
 
     node_match = categorical_node_match('component_kind', None)
     edge_match = categorical_edge_match('aux_kind', None)

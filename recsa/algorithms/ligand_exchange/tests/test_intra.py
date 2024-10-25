@@ -25,9 +25,9 @@ def test_intra_exchange() -> None:
     product, leaving = perform_intra_exchange(
         MLX, 'M1.a', 'X1.a', 'L1.b')
 
-    assert assemblies_equal(product, ML_RING, COMPONENT_KINDS)
+    assert assemblies_equal(product, ML_RING)
     assert leaving is not None
-    assert assemblies_equal(leaving, X, COMPONENT_KINDS)
+    assert assemblies_equal(leaving, X)
 
 
 if __name__ == '__main__':

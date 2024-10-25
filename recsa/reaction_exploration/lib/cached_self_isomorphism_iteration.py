@@ -11,7 +11,6 @@ __all__ = ['iter_self_isomorphisms_with_cache']
 def _cache_key(
         assembly_id: str,
         assembly: Assembly,
-        component_structures: Mapping[str, Component],
         ) -> str:
     return assembly_id
 
@@ -19,7 +18,6 @@ def _cache_key(
 @cached(cache={}, key=_cache_key)
 def iter_self_isomorphisms_with_cache(
         assembly_id: str, assembly: Assembly,
-        component_structures: Mapping[str, Component]
         ) -> list[dict[str, str]]:
     """Iterate over self-isomorphisms of an assembly.
 
@@ -47,5 +45,4 @@ def iter_self_isomorphisms_with_cache(
     Make sure to provide the same assembly_id for the same assembly, 
     and not to change the component_structures between calls.
     """
-    return list(isomorphisms_iter(
-        assembly, assembly, component_structures))
+    return list(isomorphisms_iter(assembly, assembly))

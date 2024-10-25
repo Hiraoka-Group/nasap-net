@@ -18,7 +18,7 @@ def calc_wl_hash_of_assembly(
         component_structures: Mapping[str, Component]
         ) -> str:
     if has_aux_edges(assembly, component_structures):
-        return calc_pure_wl_hash(assembly, component_structures)
+        return calc_pure_wl_hash(assembly)
     else:
         return calc_rough_wl_hash(assembly)
 
@@ -28,11 +28,8 @@ def calc_rough_wl_hash(assembly: Assembly) -> str:
         assembly.rough_g_snapshot, node_attr='component_kind')
 
 
-def calc_pure_wl_hash(
-        assembly: Assembly, 
-        component_structures: Mapping[str, Component]
-        ) -> str:
-    g = assembly.g_snapshot(component_structures)
+def calc_pure_wl_hash(assembly: Assembly) -> str:
+    g = assembly.g_snapshot
     _add_attr_for_hash(g)
     
     return nx.weisfeiler_lehman_graph_hash(

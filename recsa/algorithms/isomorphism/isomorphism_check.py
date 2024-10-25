@@ -19,6 +19,6 @@ def is_isomorphic(
         return False
     
     if has_aux_edges(assem1, component_structures):
-        return pure_is_isomorphic(assem1, assem2, component_structures)
+        return pure_is_isomorphic(assem1, assem2)
     else:
         return is_roughly_isomorphic(assem1, assem2)

@@ -42,33 +42,28 @@ def assem2(assem_without_bonds: Assembly) -> Assembly:
 
 
 def test_pure_is_isomorphic_with_isomorphic_assemblies(
-        assem1: Assembly, component_structures: dict[str, Component]
-        ) -> None:
+        assem1: Assembly) -> None:
     assem3 = deepcopy(assem1)
-    assert pure_is_isomorphic(assem1, assem3, component_structures)
+    assert pure_is_isomorphic(assem1, assem3)
 
 
 def test_pure_is_isomorphic_with_clearly_non_isomorphic_assemblies(
-        assem1: Assembly, component_structures: dict[str, Component]):
+        assem1: Assembly) -> None:
     assem2 = assem1.with_removed_bond('M1.a', 'L1.a')
-    assert not pure_is_isomorphic(assem1, assem2, component_structures)
+    assert not pure_is_isomorphic(assem1, assem2)
     
 
 def test_pure_is_isomorphic_with_relabelled_assemblies(
-        assem1: Assembly, component_structures: dict[str, Component]
-        ) -> None:
+        assem1: Assembly) -> None:
     # Should be isomorphic
     assem2 = assem1.rename_component_ids({'M1': 'M1_'})
-    assert pure_is_isomorphic(assem1, assem2, component_structures)
+    assert pure_is_isomorphic(assem1, assem2)
 
 
 def test_pure_is_isomorphic_with_stereo_isomers(
-        assem1: Assembly, assem2: Assembly, 
-        component_structures: dict[str, Component]
-        ) -> None:
+        assem1: Assembly, assem2: Assembly) -> None:
     # Should not be isomorphic, though roughly isomorphic
-    assert not pure_is_isomorphic(assem1, assem2, component_structures)
-
+    assert not pure_is_isomorphic(assem1, assem2)
 
 
 if __name__ == '__main__':
