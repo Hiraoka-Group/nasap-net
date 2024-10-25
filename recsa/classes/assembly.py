@@ -189,6 +189,18 @@ class Assembly:
         """Remove a bond from the assembly."""
         self.__bonds.remove(frozenset([bindsite1, bindsite2]))
 
+    def with_removed_bond(
+            self, bindsite1: str, bindsite2: str) -> Assembly:
+        return Assembly(
+            self.component_id_to_kind,
+            self.bonds - {frozenset([bindsite1, bindsite2])})
+
+    def with_removed_bonds(
+            self, bonds: Iterable[tuple[str, str]]) -> Assembly:
+        return Assembly(
+            self.component_id_to_kind,
+            self.bonds - {frozenset([bindsite1, bindsite2]) for bindsite1, bindsite2 in bonds})
+
     # ============================================================
     # Methods to make multiple modifications at once
     # ============================================================
