@@ -4,7 +4,6 @@ from collections.abc import Iterable, Iterator, Mapping
 from copy import deepcopy
 from dataclasses import dataclass
 from itertools import chain
-from types import MappingProxyType
 from typing import Literal, overload
 
 import networkx as nx
@@ -61,14 +60,14 @@ class Assembly:
     # ============================================================
 
     @property
-    def component_id_to_kind(self) -> MappingProxyType[str, str]:
+    def component_id_to_kind(self) -> dict[str, str]:
         """Return a read-only view of the components.
         
         The returned object can be used like a dictionary, but it is
         read-only. Changes to the original assembly will be reflected
         in the returned object.
         """
-        return MappingProxyType(self.__components.copy())
+        return dict(self.__components.copy())
     
     @property
     def component_ids(self) -> set[str]:
