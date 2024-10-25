@@ -14,7 +14,9 @@ from recsa import RecsaValueError
 from .bindsite_id_converter import BindsiteIdConverter
 from .component import Component
 
-__all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']
+__all__ = [
+    'AbsAuxEdge', 'Assembly', 'assembly_to_graph', 
+    'add_component_to_graph']
 
 
 @dataclass
