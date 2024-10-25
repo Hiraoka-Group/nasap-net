@@ -6,11 +6,11 @@ from recsa import Assembly, AuxEdge, Component, isomorphisms_iter
 def test_isomorphisms_iter():
     COMPONENT_STRUCTURES = {
         'M': Component(
-            'M', {'a', 'b', 'c', 'd'},
+            {'a', 'b', 'c', 'd'},
             {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
-        'L': Component('L', {'a'}),
-        'X': Component('X', {'a'})}
+        'L': Component({'a'}),
+        'X': Component({'a'})}
     ML2X2_CIS = Assembly(
         COMPONENT_STRUCTURES,
         {'M1': 'M', 'L1': 'L', 'L2': 'L', 'X1': 'X', 'X2': 'X'},

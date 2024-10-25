@@ -6,10 +6,10 @@ from recsa import Assembly, AuxEdge, Component, has_aux_edges
 def test_has_aux_edges_true():
     COMPONENT_STRUCTURES = {
         'M': Component(
-            'M', {'a', 'b', 'c', 'd'}, 
+            {'a', 'b', 'c', 'd'}, 
             {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
-        'X': Component('X', {'a'})}
+        'X': Component({'a'})}
     MX4 = Assembly(
         COMPONENT_STRUCTURES,
         {'M1': 'M', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
@@ -19,8 +19,8 @@ def test_has_aux_edges_true():
 
 def test_has_aux_edges_false():
     COMPONENT_STRUCTURES = {
-        'M': Component('M', {'a', 'b', 'c', 'd'}),  # No aux edges
-        'X': Component('X', {'a'})}
+        'M': Component({'a', 'b', 'c', 'd'}),  # No aux edges
+        'X': Component({'a'})}
     MX4 = Assembly(
         COMPONENT_STRUCTURES,
         {'M1': 'M', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
@@ -30,12 +30,12 @@ def test_has_aux_edges_false():
 
 def test_has_aux_edges_false2():
     COMPONENT_STRUCTURES = {
-        'M': Component('M', {'a', 'b', 'c', 'd'}),  # No aux edges
+        'M': Component({'a', 'b', 'c', 'd'}),  # No aux edges
         'L': Component(
-            'L', {'a', 'b', 'c', 'd'},
+            {'a', 'b', 'c', 'd'},
             {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),  # Aux edges but not in assembly
-        'X': Component('X', {'a'})}
+        'X': Component({'a'})}
     MX4 = Assembly(
         COMPONENT_STRUCTURES,
         {'M1': 'M', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},

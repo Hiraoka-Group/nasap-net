@@ -8,14 +8,14 @@ from ..validations import (validate_name_of_binding_site,
                            validate_name_of_component_kind)
 from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 
-__all__ = ['Component', 'component_to_graph']
+__all__ = ['Component']
 
 
 class Component:
     """A component of an assembly. (Immutable)"""
 
     def __init__(
-            self, kind: str, 
+            self, 
             bindsites: Iterable[str],
             aux_edges: Iterable[AuxEdge] | None = None):
         """
@@ -32,9 +32,6 @@ class Component:
             Duplicate pairs of binding sites raise an error regardless of the
             order of the binding sites.
         """
-        validate_name_of_component_kind(kind)
-        self._kind = kind
-
         for bindsite in bindsites:
             validate_name_of_binding_site(bindsite)
         self._bindsites = frozenset(bindsites)
@@ -50,14 +47,9 @@ class Component:
         if not isinstance(value, Component):
             return False
         return (
-            self._kind == value._kind and
-            self._bindsites == value._bindsites and
-            self._aux_edges == value._aux_edges)
+            self.bindsites == value.bindsites and
+            self.aux_edges == value.aux_edges)
 
-    @property
-    def kind(self) -> str:
-        return self._kind
-    
     @property
     def bindsites(self) -> frozenset[str]:
         return self._bindsites
@@ -65,20 +57,3 @@ class Component:
     @property
     def aux_edges(self) -> frozenset[AuxEdge]:
         return self._aux_edges
-    
-    @cached_property
-    def graph(self) -> nx.Graph:
-        return component_to_graph(self)
-
-
-def component_to_graph(comp: Component) -> nx.Graph:
-    G = nx.Graph()
-    G.add_node(
-        'core', core_or_bindsite='core',
-        component_kind=comp.kind)
-    for bindsite in comp.bindsites:
-        G.add_node(bindsite, core_or_bindsite='bindsite')
-        G.add_edge('core', bindsite)
-    for aux_edge in comp.aux_edges:
-        G.add_edge(*aux_edge.bindsites, aux_type=aux_edge.aux_kind)
-    return G

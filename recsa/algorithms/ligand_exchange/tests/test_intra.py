@@ -5,9 +5,9 @@ from recsa import Assembly, Component, assemblies_equal, perform_intra_exchange
 
 def test_intra_exchange() -> None:
     COMPONENT_KINDS = {
-        'M': Component('M', {'a', 'b'}),
-        'L': Component('L', {'a', 'b'}),
-        'X': Component('X', {'a'})}
+        'M': Component({'a', 'b'}),
+        'L': Component({'a', 'b'}),
+        'X': Component({'a'})}
     
     # X1(a)--(a)M1(b)--(a)L1(b)
     MLX = Assembly(

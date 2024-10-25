@@ -6,9 +6,9 @@ from recsa.duplicate_exclusion import group_assemblies_by_isomorphism
 
 def test_group_assemblies_by_isomorphism():
     component_structures = {
-        'M': Component('M', {'a', 'b'}),
-        'L': Component('L', {'a', 'b'}),
-        'X': Component('X', {'a'}),
+        'M': Component({'a', 'b'}),
+        'L': Component({'a', 'b'}),
+        'X': Component({'a'}),
     }
 
     id_to_graph = {
