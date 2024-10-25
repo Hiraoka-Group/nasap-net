@@ -120,5 +120,51 @@ def test_with_added_bonds() -> None:
     assert assembly.bonds == bonds
 
 
+def test_with_removed_bond():
+        component_id_to_kind = {'M1': 'M', 'L1': 'L'}
+        bonds = [('M1.a', 'L1.b')]
+        assembly = Assembly(component_id_to_kind, bonds)
+
+        # Remove an existing bond
+        new_assembly = assembly.with_removed_bond('M1.a', 'L1.b')
+        assert new_assembly.bonds == set()
+
+        # Try to remove a non-existing bond
+        new_assembly = assembly.with_removed_bond('M1.a', 'L1.c')
+        assert new_assembly.bonds == {
+            frozenset(['M1.a', 'L1.b'])}
+
+
+def test_with_removed_bonds() -> None:
+    components = {
+        'M1': 'M', 'M2': 'M', 
+        'L1': 'L', 'L2': 'L', 'L3': 'L',
+        'X1': 'X'}
+    bonds = {
+        frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'L2.a']),
+        frozenset(['M1.c', 'L3.a']), frozenset(['M1.d', 'X1.a']),
+        frozenset(['M2.a', 'L1.b']), frozenset(['M2.b', 'L2.b'])}
+    assembly = Assembly(components, bonds)
+
+    # Remove existing bonds
+    new_assembly = assembly.with_removed_bonds([
+        ('M1.a', 'L1.a'), ('M2.b', 'L2.b')])
+    
+    assert new_assembly.component_id_to_kind == components
+    assert new_assembly.bonds == bonds - {
+        frozenset(['M1.a', 'L1.a']), frozenset(['M2.b', 'L2.b'])}
+    assert assembly.component_id_to_kind == components
+    assert assembly.bonds == bonds
+
+    # Remove a non-existing bond
+    new_assembly = assembly.with_removed_bonds([
+        ('M1.a', 'L1.c')])
+    
+    assert new_assembly.component_id_to_kind == components
+    assert new_assembly.bonds == bonds
+    assert assembly.component_id_to_kind == components
+    assert assembly.bonds == bonds
+
+
 if __name__ == '__main__':
     pytest.main(['-vv', __file__])
