@@ -53,9 +53,8 @@ class Assembly:
         self.__bonds = frozenset(
             frozenset(bond) for bond in (bonds or []))
 
-        # NOTE: Make sure that the __rough_g_cache attributes
-        # are initialized before calling any method that modifies the assembly.
-        self.__rough_g_cache = None
+        self._graph_cache = None
+        self._rough_graph_cache = None
 
     # ============================================================
     # Properties (read-only)
@@ -195,9 +194,9 @@ class Assembly:
                 mapping.get(comp2, comp2), rel2)
             new_bonds.add(frozenset([new_bindsite1, new_bindsite2]))
 
-        assem.__components = new_components
-        assem.__bonds = new_bonds
-        assem.__rough_g_cache = None
+        assem.__components = frozendict(new_components)
+        assem.__bonds = frozenset(new_bonds)
+        assem._rough_graph_cache = None
 
         # TODO: Check if the new component IDs are valid.
         
