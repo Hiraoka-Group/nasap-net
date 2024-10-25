@@ -9,7 +9,7 @@ add_aux_edge_representer()
 
 def component_representer(dumper, data: Component):
     component_dict = {
-        'kind': data.kind,
+        'id': data.kind,
         'bindsites': list(data.bindsites),
         'aux_edges': list(data.aux_edges),
     }

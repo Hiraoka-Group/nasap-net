@@ -25,7 +25,7 @@ class AuxEdgeData:
 
 @dataclass
 class ComponentStructureData:
-    kind: str
+    id: str
     bindsites: list[str]
     aux_edges: list[AuxEdgeData] | None = None
 
@@ -61,6 +61,6 @@ def create_component_structures_from_data(
                     bindsite1, bindsite2 = aux_edge.bindsites
                     kind = aux_edge.kind
                     aux_edges.add(AuxEdge(bindsite1, bindsite2, kind))
-        component_structures[component_structure.kind] = Component(
-            component_structure.kind, bindsites, aux_edges)
+        component_structures[component_structure.id] = Component(
+            component_structure.id, bindsites, aux_edges)
     return component_structures
