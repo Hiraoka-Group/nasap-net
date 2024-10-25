@@ -10,12 +10,12 @@ def perform_inter_exchange(
     init_relabel = {
         comp_id: f'init_{comp_id}'
         for comp_id in init_assem.component_ids}
-    init_assem = init_assem.rename_component_ids(init_relabel)
+    init_assem = init_assem.with_renamed_comp_ids(init_relabel)
 
     entering_relabel = {
         comp_id: f'entering_{comp_id}'
         for comp_id in entering_assem.component_ids}
-    entering_assem = entering_assem.rename_component_ids(entering_relabel)
+    entering_assem = entering_assem.with_renamed_comp_ids(entering_relabel)
 
     metal_bs = f'init_{metal_bs}'
     leaving_bs = f'init_{leaving_bs}'

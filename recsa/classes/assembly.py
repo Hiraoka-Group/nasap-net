@@ -204,7 +204,7 @@ class Assembly:
     # Methods to relabel the assembly
     # ============================================================
     
-    def rename_component_ids(
+    def with_renamed_comp_ids(
             self, mapping: Mapping[str, str]) -> Assembly:
         assem = deepcopy(self)
 

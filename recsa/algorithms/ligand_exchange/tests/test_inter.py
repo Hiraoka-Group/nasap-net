@@ -23,10 +23,10 @@ def test_inter_exchange() -> None:
         COMPONENT_KINDS,
         {'M1': 'M', 'L1': 'L', 'X2': 'X'},
         [('L1.a', 'M1.a'), ('M1.b', 'X2.a')])
-    MLX = MLX.rename_component_ids(
+    MLX = MLX.with_renamed_comp_ids(
         {'M1': 'init_M1', 'L1': 'entering_L1', 'X2': 'init_X2'})
     X = Assembly(COMPONENT_KINDS, {'X1': 'X'}, [])
-    X = X.rename_component_ids({'X1': 'init_X1'})
+    X = X.with_renamed_comp_ids({'X1': 'init_X1'})
     
     product, leaving = perform_inter_exchange(
         MX2, L, 'M1.a', 'X1.a', 'L1.a')

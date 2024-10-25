@@ -56,7 +56,7 @@ def test_pure_is_isomorphic_with_clearly_non_isomorphic_assemblies(
 def test_pure_is_isomorphic_with_relabelled_assemblies(
         assem1: Assembly) -> None:
     # Should be isomorphic
-    assem2 = assem1.rename_component_ids({'M1': 'M1_'})
+    assem2 = assem1.with_renamed_comp_ids({'M1': 'M1_'})
     assert pure_is_isomorphic(assem1, assem2)
 
 

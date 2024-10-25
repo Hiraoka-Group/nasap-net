@@ -57,7 +57,7 @@ def test_is_isomorphic_with_relabelled_assemblies(
         assem1: Assembly, comp_kind_to_structure: dict[str, Component]
         ) -> None:
     # Should be isomorphic
-    assem2 = assem1.rename_component_ids({'M1': 'M1_'})
+    assem2 = assem1.with_renamed_comp_ids({'M1': 'M1_'})
     assert is_isomorphic(assem1, assem2, comp_kind_to_structure)
 
 
