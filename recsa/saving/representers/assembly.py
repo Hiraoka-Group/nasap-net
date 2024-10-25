@@ -1,14 +1,15 @@
-from types import MappingProxyType
-
 import yaml
 
 from recsa import Assembly
 
-__all__ = ['add_assembly_representer', 'assembly_representer']
+from .component import add_component_representer
+
+add_component_representer()
 
 
 def assembly_representer(dumper, data: Assembly):
     assembly_dict = {
+        'comp_kind_to_structure': dict(data.comp_kind_to_structure),
         'component_id_to_kind': dict(data.component_id_to_kind),
         'bonds': [
             sorted([u, v]) for u, v 
