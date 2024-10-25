@@ -62,8 +62,7 @@ def test_is_isomorphic_with_relabelled_assemblies(
         assem1: Assembly, component_structures: dict[str, Component]
         ) -> None:
     # Should be isomorphic
-    assem2 = deepcopy(assem1)
-    assem2.rename_component_ids({'M1': 'M1_'})
+    assem2 = assem1.rename_component_ids({'M1': 'M1_'})
     assert is_isomorphic(assem1, assem2, component_structures)
 
 

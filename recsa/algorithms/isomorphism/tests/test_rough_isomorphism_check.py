@@ -45,8 +45,7 @@ def test_is_roughly_isomorphic_with_relabelled_assemblies(
         assem1: Assembly
         ) -> None:
     # Should be roughly isomorphic
-    assem2 = deepcopy(assem1)
-    assem2.rename_component_ids({'M1': 'M1_'})
+    assem2 = assem1.rename_component_ids({'M1': 'M1_'})
     assert is_roughly_isomorphic(assem1, assem2)
 
 
