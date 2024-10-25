@@ -8,6 +8,7 @@ from types import MappingProxyType
 from typing import Literal, overload
 
 import networkx as nx
+from frozendict import frozendict
 
 from recsa import RecsaValueError
 
@@ -46,10 +47,11 @@ class Assembly:
             binding sites.
         """
         if component_id_to_kind is None:
-            self.__components: dict[str, str] = {}
+            self.__components = frozendict[str, str]()
         else:
-            self.__components = dict(component_id_to_kind)
-        self.__bonds = set(frozenset(bond) for bond in (bonds or []))
+            self.__components = frozendict(component_id_to_kind)
+        self.__bonds = frozenset(
+            frozenset(bond) for bond in (bonds or []))
 
         # NOTE: Make sure that the __rough_g_cache attributes
         # are initialized before calling any method that modifies the assembly.
