@@ -36,6 +36,7 @@ class Assembly:
             self, 
             component_id_to_kind: Mapping[str, str] | None = None,
             bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
+            component_structures: Mapping[str, Component] | None = None
             ) -> None:
         """
         Parameters
@@ -56,6 +57,11 @@ class Assembly:
 
         self._graph_cache = None
         self._rough_graph_cache = None
+
+        if component_structures is None:
+            self._component_structures = None
+        else:
+            self._component_structures = frozendict(component_structures)
 
     # ============================================================
     # Properties (read-only)
@@ -82,6 +88,13 @@ class Assembly:
     @property
     def bonds(self) -> frozenset[frozenset[str]]:
         return self.__bonds
+    
+    @property
+    def component_structures(self) -> dict[str, Component]:
+        if self._component_structures is None:
+            raise RecsaValueError(
+                'The component structures are not set.')
+        return dict(self._component_structures)
     
     @property
     def bindsite_to_connected(self) -> dict[str, str]:
