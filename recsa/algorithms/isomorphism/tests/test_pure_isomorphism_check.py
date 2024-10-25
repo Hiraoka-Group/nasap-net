@@ -50,8 +50,7 @@ def test_pure_is_isomorphic_with_isomorphic_assemblies(
 
 def test_pure_is_isomorphic_with_clearly_non_isomorphic_assemblies(
         assem1: Assembly, component_structures: dict[str, Component]):
-    assem2 = deepcopy(assem1)
-    assem2.remove_bond('M1.a', 'L1.a')
+    assem2 = assem1.with_removed_bond('M1.a', 'L1.a')
     assert not pure_is_isomorphic(assem1, assem2, component_structures)
     
 

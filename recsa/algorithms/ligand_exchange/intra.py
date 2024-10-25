@@ -7,7 +7,7 @@ def perform_intra_exchange(
         metal_bs: str, leaving_bs: str, entering_bs: str,
         ) -> tuple[Assembly, Assembly | None]:
     assembly = assembly.deepcopy()
-    assembly.remove_bond(metal_bs, leaving_bs)
+    assembly = assembly.with_removed_bond(metal_bs, leaving_bs)
     assembly = assembly.with_added_bond(entering_bs, metal_bs)
 
     id_converter = BindsiteIdConverter()
