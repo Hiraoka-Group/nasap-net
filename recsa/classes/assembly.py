@@ -161,6 +161,12 @@ class Assembly:
             self.component_id_to_kind | {component_id: component_kind},
             self.bonds)
     
+    def with_added_components(
+            self, components: Iterable[tuple[str, str]]) -> Assembly:
+        return Assembly(
+            self.component_id_to_kind | dict(components),
+            self.bonds)
+
     @clear_g_caches
     def remove_component(self, component_id: str) -> None:
         del self.__components[component_id]
