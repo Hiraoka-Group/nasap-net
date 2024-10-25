@@ -24,7 +24,7 @@ def perform_inter_exchange(
     init_assem = union_assemblies(init_assem, entering_assem)
 
     init_assem.remove_bond(metal_bs, leaving_bs)
-    init_assem.add_bond(entering_bs, metal_bs)
+    init_assem = init_assem.with_added_bond(entering_bs, metal_bs)
 
     # Separate the leaving assembly if possible
     id_converter = BindsiteIdConverter()

@@ -58,15 +58,11 @@ class Assembly:
             self.__components: dict[str, str] = {}
         else:
             self.__components = dict(component_id_to_kind)
-        self.__bonds: set[frozenset[str]] = set()
+        self.__bonds = set(frozenset(bond) for bond in (bonds or []))
 
         # NOTE: Make sure that the __rough_g_cache attributes
         # are initialized before calling any method that modifies the assembly.
         self.__rough_g_cache = None
-
-        if bonds is not None:
-            for bindsite1, bindsite2 in bonds:
-                self.add_bond(bindsite1, bindsite2)
 
     # Decorator
     # For type hint of the decorator, see the following link:

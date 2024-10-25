@@ -17,20 +17,16 @@ def assem_without_bonds() -> Assembly:
 
 @pytest.fixture
 def assem1(assem_without_bonds: Assembly) -> Assembly:
-    assem1_ = deepcopy(assem_without_bonds)
-    assem1_.add_bonds([
+    return assem_without_bonds.with_added_bonds([
         ('M1.a', 'L1.a'), ('M1.b', 'L2.a'),  # cis
         ('M1.c', 'X1.a'), ('M1.d', 'X2.a')])
-    return assem1_
 
 
 @pytest.fixture
 def assem2(assem_without_bonds: Assembly) -> Assembly:
-    assem2_ = deepcopy(assem_without_bonds)
-    assem2_.add_bonds([
+    return assem_without_bonds.with_added_bonds([
         ('M1.a', 'L1.a'), ('M1.c', 'L2.a'),  # trans
         ('M1.b', 'X1.a'), ('M1.d', 'X2.a')])
-    return assem2_
 
 
 def test_is_roughly_isomorphic_with_isomorphic_assemblies(
