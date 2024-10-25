@@ -26,8 +26,8 @@ def isomorphisms_iter(
         A mapping from node (core or bindsite, e.g., 'M1.core', 'M1.a')
         in the first assembly to node in the second assembly.
     """
-    g1 = assem1.g_snapshot
-    g2 = assem2.g_snapshot
+    g1 = assem1.graph
+    g2 = assem2.graph
 
     node_match = categorical_node_match('component_kind', None)
     edge_match = categorical_edge_match('aux_kind', None)

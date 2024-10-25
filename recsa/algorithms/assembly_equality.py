@@ -20,4 +20,4 @@ def assemblies_equal(
     --------
     recsa.is_isomorphic
     """
-    return graphs_equal(assem1.g_snapshot, assem2.g_snapshot)
+    return graphs_equal(assem1.graph, assem2.graph)

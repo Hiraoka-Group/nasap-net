@@ -113,7 +113,7 @@ class Assembly:
         return bindsite_to_connected
     
     @cached_property
-    def g_snapshot(self) -> nx.Graph:
+    def graph(self) -> nx.Graph:
         """Returns a snapshot of the assembly graph.
         
         The snapshot is a deep copy of the assembly graph. Therefore,

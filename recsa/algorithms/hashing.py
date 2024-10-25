@@ -29,7 +29,7 @@ def calc_rough_wl_hash(assembly: Assembly) -> str:
 
 
 def calc_pure_wl_hash(assembly: Assembly) -> str:
-    g = assembly.g_snapshot
+    g = assembly.graph
     _add_attr_for_hash(g)
     
     return nx.weisfeiler_lehman_graph_hash(

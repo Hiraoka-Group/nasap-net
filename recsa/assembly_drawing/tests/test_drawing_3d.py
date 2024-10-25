@@ -21,7 +21,7 @@ def test_draw_3d():
     )
 
     positions = nx.spring_layout(
-        MLX3.g_snapshot, dim=3)
+        MLX3.graph, dim=3)
     draw_3d(MLX3, COMPONENT_STRUCTURES, positions, node_labeling_mode='component_kind')
     draw_3d(MLX3, COMPONENT_STRUCTURES, positions, node_labeling_mode='component_id')
     draw_3d(MLX3, COMPONENT_STRUCTURES, positions, node_labeling_mode='core_and_bindsite_ids')

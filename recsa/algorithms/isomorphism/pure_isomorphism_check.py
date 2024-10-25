@@ -15,5 +15,5 @@ def pure_is_isomorphic(assem1: Assembly, assem2: Assembly) -> bool:
     edge_match = categorical_edge_match('aux_kind', None)
     # QUESTION: Should we use VF2++ instead of VF2?
     return nx.is_isomorphic(
-        assem1.g_snapshot, assem2.g_snapshot,
+        assem1.graph, assem2.graph,
         node_match=node_match, edge_match=edge_match)
