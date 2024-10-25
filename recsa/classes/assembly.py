@@ -71,7 +71,7 @@ class Assembly:
     # ============================================================
 
     @property
-    def component_id_to_kind(self) -> dict[str, str]:
+    def comp_id_to_kind(self) -> dict[str, str]:
         """Return a read-only view of the components.
         
         The returned object can be used like a dictionary, but it is
@@ -126,7 +126,7 @@ class Assembly:
         """Returns a rough graph of the assembly."""
         id_converter = BindsiteIdConverter()
         G = nx.Graph()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             G.add_node(comp_id, component_kind=comp_kind)
         for bindsite1, bindsite2 in self.bonds:
             comp1, rel1 = id_converter.global_to_local(bindsite1)
@@ -142,14 +142,14 @@ class Assembly:
             self, component_id: str, component_kind: str) -> Assembly:
         return Assembly(
             self.comp_kind_to_structure,
-            self.component_id_to_kind | {component_id: component_kind},
+            self.comp_id_to_kind | {component_id: component_kind},
             self.bonds)
     
     def with_added_components(
             self, components: Iterable[tuple[str, str]]) -> Assembly:
         return Assembly(
             self.comp_kind_to_structure,
-            self.component_id_to_kind | dict(components),
+            self.comp_id_to_kind | dict(components),
             self.bonds)
     
     def with_added_bond(
@@ -164,7 +164,7 @@ class Assembly:
                     f'The component "{comp}" does not exist in the assembly.')
         return Assembly(
             self.comp_kind_to_structure,
-            self.component_id_to_kind,
+            self.comp_id_to_kind,
             self.bonds | {frozenset([bindsite1, bindsite2])})
     
     def with_added_bonds(
@@ -179,7 +179,7 @@ class Assembly:
                         f'The component "{comp}" does not exist in the assembly.')
         return Assembly(
             self.comp_kind_to_structure,
-            self.component_id_to_kind,
+            self.comp_id_to_kind,
             self.bonds | {
                 frozenset([bindsite1, bindsite2]) 
                 for bindsite1, bindsite2 in bonds})
@@ -188,14 +188,14 @@ class Assembly:
             self, bindsite1: str, bindsite2: str) -> Assembly:
         return Assembly(
             self.comp_kind_to_structure,
-            self.component_id_to_kind,
+            self.comp_id_to_kind,
             self.bonds - {frozenset([bindsite1, bindsite2])})
 
     def with_removed_bonds(
             self, bonds: Iterable[tuple[str, str]]) -> Assembly:
         return Assembly(
             self.comp_kind_to_structure,
-            self.component_id_to_kind,
+            self.comp_id_to_kind,
             self.bonds - {
                 frozenset([bindsite1, bindsite2]) 
                 for bindsite1, bindsite2 in bonds})
@@ -295,7 +295,7 @@ class Assembly:
 
     def iter_all_cores(self) -> Iterator[str]:
         id_converter = BindsiteIdConverter()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             yield id_converter.local_to_global(comp_id, 'core')
     
     def get_all_bindsites(
@@ -305,7 +305,7 @@ class Assembly:
         # TODO: Consider yielding the binding sites instead of returning a set.
         id_converter = BindsiteIdConverter()
         all_bindsites = set()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
             for bindsite in comp_struct.bindsites:
                 all_bindsites.add(id_converter.local_to_global(comp_id, bindsite))
@@ -315,7 +315,7 @@ class Assembly:
             self, component_structures: Mapping[str, Component]
             ) -> Iterator[AbsAuxEdge]:
         id_converter = BindsiteIdConverter()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
             for rel_aux_edge in comp_struct.aux_edges:
                 yield AbsAuxEdge(
@@ -341,7 +341,7 @@ class Assembly:
             self, component_kind: str,
             component_structures: Mapping[str, Component],
             ) -> Iterator[str]:
-        for comp_id, comp in self.component_id_to_kind.items():
+        for comp_id, comp in self.comp_id_to_kind.items():
             if comp == component_kind:
                 yield from self.get_bindsites_of_component(
                     comp_id, component_structures)
@@ -353,7 +353,7 @@ class Assembly:
         id_converter = BindsiteIdConverter()
         all_bindsites = {
             id_converter.local_to_global(comp_id, bindsite)
-            for comp_id, comp_kind in self.component_id_to_kind.items()
+            for comp_id, comp_kind in self.comp_id_to_kind.items()
             for bindsite in component_structures[comp_kind].bindsites
         }
         connected_bindsites = chain(*self.bonds)
@@ -378,7 +378,7 @@ def assembly_to_graph(
         component_structures: Mapping[str, Component],
         ) -> nx.Graph:
     G = nx.Graph()
-    for comp_id, comp_kind in assembly.component_id_to_kind.items():
+    for comp_id, comp_kind in assembly.comp_id_to_kind.items():
         comp_structure = component_structures[comp_kind]
         add_component_to_graph(G, comp_id, comp_kind, comp_structure)
     for bond in assembly.bonds:

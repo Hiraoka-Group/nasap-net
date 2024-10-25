@@ -37,7 +37,7 @@ def union_assemblies(
         assembly1.comp_kind_to_structure
         | assembly2.comp_kind_to_structure)
     component_id_to_kind = (
-        assembly1.component_id_to_kind | assembly2.component_id_to_kind)
+        assembly1.comp_id_to_kind | assembly2.comp_id_to_kind)
     bonds = assembly1.bonds | assembly2.bonds
 
     return Assembly(

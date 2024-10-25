@@ -35,7 +35,7 @@ def component_structures(M_COMP, L_COMP, X_COMP) -> dict[str, Component]:
 
 def test_init_with_no_args(component_structures) -> None:
     assembly = Assembly(component_structures)
-    assert assembly.component_id_to_kind == {}
+    assert assembly.comp_id_to_kind == {}
     assert assembly.bonds == set()
 
 
@@ -47,7 +47,7 @@ def test_init(component_structures) -> None:
         frozenset(['M1.c', 'X2.a']), frozenset(['M1.d', 'X3.a']),}
     assembly = Assembly(component_structures, components, bonds)
 
-    assert assembly.component_id_to_kind == components
+    assert assembly.comp_id_to_kind == components
     assert assembly.bonds == set(bonds)
 
 
@@ -55,16 +55,16 @@ def test_with_added_component(component_structures) -> None:
     assembly = Assembly(component_structures)
     new_assembly = assembly.with_added_component('M1', 'M')
     
-    assert new_assembly.component_id_to_kind == {'M1': 'M'}
+    assert new_assembly.comp_id_to_kind == {'M1': 'M'}
     assert new_assembly.bonds == set()
-    assert assembly.component_id_to_kind == {}
+    assert assembly.comp_id_to_kind == {}
     assert assembly.bonds == set()
 
     new_assembly = new_assembly.with_added_component('L1', 'L')
     
-    assert new_assembly.component_id_to_kind == {'M1': 'M', 'L1': 'L'}
+    assert new_assembly.comp_id_to_kind == {'M1': 'M', 'L1': 'L'}
     assert new_assembly.bonds == set()
-    assert assembly.component_id_to_kind == {}
+    assert assembly.comp_id_to_kind == {}
     assert assembly.bonds == set()
 
 
@@ -72,16 +72,16 @@ def test_with_added_components(component_structures) -> None:
     assembly = Assembly(component_structures)
     new_assembly = assembly.with_added_components([('M1', 'M'), ('L1', 'L')])
     
-    assert new_assembly.component_id_to_kind == {'M1': 'M', 'L1': 'L'}
+    assert new_assembly.comp_id_to_kind == {'M1': 'M', 'L1': 'L'}
     assert new_assembly.bonds == set()
-    assert assembly.component_id_to_kind == {}
+    assert assembly.comp_id_to_kind == {}
     assert assembly.bonds == set()
 
     new_assembly = new_assembly.with_added_components([('X1', 'X'), ('X2', 'X')])
     
-    assert new_assembly.component_id_to_kind == {'M1': 'M', 'L1': 'L', 'X1': 'X', 'X2': 'X'}
+    assert new_assembly.comp_id_to_kind == {'M1': 'M', 'L1': 'L', 'X1': 'X', 'X2': 'X'}
     assert new_assembly.bonds == set()
-    assert assembly.component_id_to_kind == {}
+    assert assembly.comp_id_to_kind == {}
     assert assembly.bonds == set()
 
 
@@ -98,9 +98,9 @@ def test_with_added_bond(component_structures) -> None:
 
     new_assembly = assembly.with_added_bond('M2.b', 'L2.b')
     
-    assert new_assembly.component_id_to_kind == components
+    assert new_assembly.comp_id_to_kind == components
     assert new_assembly.bonds == bonds | {frozenset(['M2.b', 'L2.b'])}
-    assert assembly.component_id_to_kind == components
+    assert assembly.comp_id_to_kind == components
     assert assembly.bonds == bonds
 
 
@@ -118,10 +118,10 @@ def test_with_added_bonds(component_structures) -> None:
     new_assembly = assembly.with_added_bonds([
         ('M2.b', 'L2.b'), ('M2.c', 'L3.b')])
     
-    assert new_assembly.component_id_to_kind == components
+    assert new_assembly.comp_id_to_kind == components
     assert new_assembly.bonds == bonds | {
         frozenset(['M2.b', 'L2.b']), frozenset(['M2.c', 'L3.b'])}
-    assert assembly.component_id_to_kind == components
+    assert assembly.comp_id_to_kind == components
     assert assembly.bonds == bonds
 
 
@@ -155,19 +155,19 @@ def test_with_removed_bonds(component_structures) -> None:
     new_assembly = assembly.with_removed_bonds([
         ('M1.a', 'L1.a'), ('M2.b', 'L2.b')])
     
-    assert new_assembly.component_id_to_kind == components
+    assert new_assembly.comp_id_to_kind == components
     assert new_assembly.bonds == bonds - {
         frozenset(['M1.a', 'L1.a']), frozenset(['M2.b', 'L2.b'])}
-    assert assembly.component_id_to_kind == components
+    assert assembly.comp_id_to_kind == components
     assert assembly.bonds == bonds
 
     # Remove a non-existing bond
     new_assembly = assembly.with_removed_bonds([
         ('M1.a', 'L1.c')])
     
-    assert new_assembly.component_id_to_kind == components
+    assert new_assembly.comp_id_to_kind == components
     assert new_assembly.bonds == bonds
-    assert assembly.component_id_to_kind == components
+    assert assembly.comp_id_to_kind == components
     assert assembly.bonds == bonds
 
 
