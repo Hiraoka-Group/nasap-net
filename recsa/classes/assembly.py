@@ -155,6 +155,12 @@ class Assembly:
         """
         self.__components[component_id] = component_kind
 
+    def with_added_component(
+            self, component_id: str, component_kind: str) -> Assembly:
+        return Assembly(
+            self.component_id_to_kind | {component_id: component_kind},
+            self.bonds)
+    
     @clear_g_caches
     def remove_component(self, component_id: str) -> None:
         del self.__components[component_id]
