@@ -43,9 +43,7 @@ class Assembly:
             bonds: (
                 Iterable[tuple[str, str]] | Iterable[Iterable[str]] | None
                 ) = None,
-            id_: str | None = None,
             ) -> None:
-        self.id = id_
         self._components: dict[str, str] = {}
         self._bonds: set[frozenset[str]] = set()
         self._bindsite_to_connected: dict[str, str] = {}
