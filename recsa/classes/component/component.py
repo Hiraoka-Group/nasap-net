@@ -13,7 +13,7 @@ __all__ = ['Component']
 
 
 class Component:
-    """A component of an assembly."""
+    """A component of an assembly. (Immutable)"""
 
     def __init__(
             self,
@@ -38,28 +38,28 @@ class Component:
         """
         for bindsite in binding_sites:
             validate_name_of_binding_site(bindsite)
-        self.__binding_sites = frozenset(binding_sites)
+        self._binding_sites = frozenset(binding_sites)
 
         if aux_edges is None:
-            self.__aux_edges = frozenset[AuxEdge]()
+            self._aux_edges = frozenset[AuxEdge]()
         elif all(isinstance(edge, AuxEdge) for edge in aux_edges):
             aux_edges = cast(Iterable[AuxEdge], aux_edges)
-            self.__aux_edges = frozenset(aux_edges)
+            self._aux_edges = frozenset(aux_edges)
         else:
             aux_edges = cast(Iterable[tuple[str, str, str]], aux_edges)
-            self.__aux_edges = frozenset(
+            self._aux_edges = frozenset(
                 {AuxEdge(*edge) for edge in aux_edges})
 
         check_bindsites_of_aux_edges_exists(
-            self.__aux_edges, self.__binding_sites)
+            self._aux_edges, self._binding_sites)
     
     def __eq__(self, value: object) -> bool:
         return NotImplemented
     
     @property
     def binding_sites(self) -> set[str]:
-        return set(self.__binding_sites)
+        return set(self._binding_sites)
 
     @property
     def aux_edges(self) -> set[AuxEdge]:
-        return set(self.__aux_edges)
+        return set(self._aux_edges)
