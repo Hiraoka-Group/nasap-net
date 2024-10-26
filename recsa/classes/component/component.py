@@ -53,7 +53,7 @@ class Component:
         return NotImplemented
     
     @property
-    def binding_sites(self) -> set[str]:
+    def bindsites(self) -> set[str]:
         return set(self._bindsites)
 
     @property

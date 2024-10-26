@@ -329,7 +329,7 @@ class Assembly:
         all_bindsites = set()
         for comp_id, comp_kind in self.component_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
-            for bindsite in comp_struct.binding_sites:
+            for bindsite in comp_struct.bindsites:
                 all_bindsites.add(id_converter.local_to_global(comp_id, bindsite))
         return all_bindsites
 
@@ -357,7 +357,7 @@ class Assembly:
         comp_struct = component_structures[comp_kind]
         return {
             id_converter.local_to_global(component_id, bindsite)
-            for bindsite in comp_struct.binding_sites}
+            for bindsite in comp_struct.bindsites}
     
     def get_all_bindsites_of_kind(
             self, component_kind: str,
@@ -376,7 +376,7 @@ class Assembly:
         all_bindsites = {
             id_converter.local_to_global(comp_id, bindsite)
             for comp_id, comp_kind in self.component_id_to_kind.items()
-            for bindsite in component_structures[comp_kind].binding_sites
+            for bindsite in component_structures[comp_kind].bindsites
         }
         connected_bindsites = chain(*self.bonds)
         free_bindsites = all_bindsites - set(connected_bindsites)
@@ -436,7 +436,7 @@ def add_component_to_graph(
         core_abs, core_or_bindsite='core', component_kind=component_kind)
     
     # Add the binding sites
-    for bindsite in component_structure.binding_sites:
+    for bindsite in component_structure.bindsites:
         bindsite_abs = id_converter.local_to_global(component_id, bindsite)
         g.add_node(bindsite_abs, core_or_bindsite='bindsite')
         g.add_edge(core_abs, bindsite_abs)
