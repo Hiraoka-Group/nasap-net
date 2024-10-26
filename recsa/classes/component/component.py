@@ -38,16 +38,17 @@ class Component:
         """
         for bindsite in binding_sites:
             validate_name_of_binding_site(bindsite)
-        self.__binding_sites = set(binding_sites)
+        self.__binding_sites = frozenset(binding_sites)
 
         if aux_edges is None:
-            self.__aux_edges = set[AuxEdge]()
+            self.__aux_edges = frozenset[AuxEdge]()
         elif all(isinstance(edge, AuxEdge) for edge in aux_edges):
             aux_edges = cast(Iterable[AuxEdge], aux_edges)
-            self.__aux_edges = set(aux_edges)
+            self.__aux_edges = frozenset(aux_edges)
         else:
             aux_edges = cast(Iterable[tuple[str, str, str]], aux_edges)
-            self.__aux_edges = {AuxEdge(*edge) for edge in aux_edges}
+            self.__aux_edges = frozenset(
+                {AuxEdge(*edge) for edge in aux_edges})
 
         check_bindsites_of_aux_edges_exists(
             self.__aux_edges, self.__binding_sites)
@@ -57,9 +58,8 @@ class Component:
     
     @property
     def binding_sites(self) -> set[str]:
-        return self.__binding_sites.copy()
+        return set(self.__binding_sites)
 
     @property
     def aux_edges(self) -> set[AuxEdge]:
-        # TODO: Consider not to make a deep copy. It's costly.
-        return deepcopy(self.__aux_edges)
+        return set(self.__aux_edges)
