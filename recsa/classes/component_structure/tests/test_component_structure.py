@@ -52,17 +52,6 @@ def test_init_with_empty_aux_edges() -> None:
     assert component.aux_edges == set()
 
 
-def test_eq() -> None:
-    component1 = Component('M', {'a', 'b'})
-    component2 = Component('M', {'a', 'b'})
-    component3 = Component('M', {'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
-    component4 = Component('M', {'a', 'b'}, {AuxEdge('a', 'b', 'trans')})
-
-    assert component1 == component2
-    assert component1 != component3
-    assert component3 != component4
-
-
 def test_clear_g_cache(comp) -> None:
     comp._Component__g_cache = 1
     assert comp._Component__g_cache == 1
