@@ -2,7 +2,7 @@
 
 from .assembly import Assembly
 from .aux_edge import AuxEdge
-from .component_structure import Component
+from .component import Component
 from .mle import MleBindsite
 from .mle import MleKind
 from .reaction import InterReaction
