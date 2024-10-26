@@ -50,12 +50,7 @@ class Component:
         self.__g_cache = None
     
     def __eq__(self, value: object) -> bool:
-        if not isinstance(value, Component):
-            return False
-        return (
-            self.__component_kind == value.__component_kind and
-            self.__binding_sites == value.__binding_sites and
-            self.__aux_edges == value.__aux_edges)
+        return NotImplemented
 
     # Decorator
     @staticmethod
