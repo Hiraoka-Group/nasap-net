@@ -12,7 +12,7 @@ import networkx as nx
 
 from recsa import RecsaValueError
 
-from .aux_edge import LocalAuxEdge
+from .aux_edge import AuxEdge
 from .bindsite_id_converter import BindsiteIdConverter
 from .component_structure import ComponentStructure
 
