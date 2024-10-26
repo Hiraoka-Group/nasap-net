@@ -66,16 +66,6 @@ class Component:
             self.__g_cache = None
             return func(self, *args, **kwargs)
         return wrapper
-
-    @property
-    def component_kind(self) -> str:
-        return self.__component_kind
-    
-    @component_kind.setter
-    @clear_g_cache
-    def component_kind(self, component_kind: str) -> None:
-        validate_name_of_component_kind(component_kind)
-        self.__component_kind = component_kind
     
     @property
     def binding_sites(self) -> set[str]:
