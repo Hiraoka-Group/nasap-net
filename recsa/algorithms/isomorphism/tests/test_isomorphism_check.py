@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from recsa import Assembly, ComponentStructure, LocalAuxEdge, is_isomorphic
+from recsa import Assembly, AuxEdge, ComponentStructure, is_isomorphic
 
 
 @pytest.fixture
@@ -19,8 +19,8 @@ def component_structures() -> dict[str, ComponentStructure]:
     M_COMP = ComponentStructure(
         'M', {'a', 'b', 'c', 'd'},
         {
-            LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-            LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis'),})
+            AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+            AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis'),})
     L_COMP = ComponentStructure('L', {'a', 'b'})
     X_COMP = ComponentStructure('X', {'a'})
     return {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}

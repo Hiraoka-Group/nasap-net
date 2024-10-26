@@ -1,7 +1,7 @@
 import networkx as nx
 import pytest
 
-from recsa import Assembly, ComponentStructure, LocalAuxEdge, draw_2d
+from recsa import Assembly, AuxEdge, ComponentStructure, draw_2d
 
 
 @pytest.mark.skip(reason='This is a visual test.')
@@ -13,8 +13,8 @@ def test_draw_2d():
     COMPONENT_STRUCTURES = {
         'M': ComponentStructure(
             'M', {'a', 'b', 'c', 'd'}, {
-                LocalAuxEdge('a', 'b', 'cis'), LocalAuxEdge('b', 'c', 'cis'),
-                LocalAuxEdge('c', 'd', 'cis'), LocalAuxEdge('d', 'a', 'cis')}),
+                AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
+                AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
         'L': ComponentStructure('L', {'a', 'b'}),
         'X': ComponentStructure('X', {'a'}),
     }
