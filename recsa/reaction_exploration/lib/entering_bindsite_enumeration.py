@@ -3,7 +3,7 @@ from collections.abc import Mapping
 from cachetools import cached
 from cachetools.keys import hashkey
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 __all__ = ['enum_valid_entering_bindsites']
 
@@ -12,7 +12,7 @@ def _cache_key2(
         assembly_id: str,
         assembly: Assembly,
         entering_kind: str,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> tuple:
     return hashkey(assembly_id, entering_kind)
 
@@ -22,7 +22,7 @@ def enum_valid_entering_bindsites(
         assembly_id: str,  # only used for caching
         assembly: Assembly,
         entering_kind: str,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> list[str]:
     """Enumerate valid entering bindsites.
 

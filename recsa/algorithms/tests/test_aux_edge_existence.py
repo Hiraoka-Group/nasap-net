@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, AuxEdge, ComponentStructure, has_aux_edges
+from recsa import Assembly, AuxEdge, Component, has_aux_edges
 
 
 def test_has_aux_edges_true():
@@ -8,11 +8,11 @@ def test_has_aux_edges_true():
         {'M1': 'M', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
         [('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')])
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure(
-            'M', {'a', 'b', 'c', 'd'}, 
+        'M': Component(
+            {'a', 'b', 'c', 'd'}, 
             {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
-        'X': ComponentStructure('X', {'a'})}
+        'X': Component({'a'})}
     assert has_aux_edges(MX4, COMPONENT_STRUCTURES)
 
 
@@ -21,8 +21,8 @@ def test_has_aux_edges_false():
         {'M1': 'M', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
         [('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')])
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure('M', {'a', 'b', 'c', 'd'}),  # No aux edges
-        'X': ComponentStructure('X', {'a'})}
+        'M': Component({'a', 'b', 'c', 'd'}),  # No aux edges
+        'X': Component({'a'})}
     assert not has_aux_edges(MX4, COMPONENT_STRUCTURES)
 
 
@@ -31,12 +31,12 @@ def test_has_aux_edges_false2():
         {'M1': 'M', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
         [('M1.a', 'X1.a'), ('M1.b', 'X2.a'), ('M1.c', 'X3.a'), ('M1.d', 'X4.a')])
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure('M', {'a', 'b', 'c', 'd'}),  # No aux edges
-        'L': ComponentStructure(
-            'L', {'a', 'b', 'c', 'd'},
+        'M': Component({'a', 'b', 'c', 'd'}),  # No aux edges
+        'L': Component(
+            {'a', 'b', 'c', 'd'},
             {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),  # Aux edges but not in assembly
-        'X': ComponentStructure('X', {'a'})}
+        'X': Component({'a'})}
     assert not has_aux_edges(MX4, COMPONENT_STRUCTURES)
 
 

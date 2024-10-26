@@ -1,13 +1,13 @@
 from collections import defaultdict
 from collections.abc import Mapping
 
-from recsa import Assembly, ComponentStructure, calc_wl_hash_of_assembly
+from recsa import Assembly, Component, calc_wl_hash_of_assembly
 
 __all__ = ['group_assemblies_by_hash']
 
 def group_assemblies_by_hash(
         id_to_assembly: Mapping[str, Assembly],
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> dict[str, set[str]]:
     # Group by hash
     hash_to_ids = defaultdict(set)

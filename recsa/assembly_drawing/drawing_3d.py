@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 from .lib import make_complete_color_map
 
@@ -14,7 +14,7 @@ __all__ = ['draw_3d']
 
 def draw_3d(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         positions: Mapping[str, tuple[float, float, float]],
         *,
         show: bool = True,

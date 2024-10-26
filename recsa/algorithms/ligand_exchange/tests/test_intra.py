@@ -1,7 +1,6 @@
 import pytest
 
-from recsa import (Assembly, ComponentStructure, assemblies_equal,
-                   perform_intra_exchange)
+from recsa import Assembly, Component, assemblies_equal, perform_intra_exchange
 
 
 def test_intra_exchange() -> None:
@@ -17,9 +16,9 @@ def test_intra_exchange() -> None:
     X = Assembly({'X1': 'X'}, [])
 
     COMPONENT_KINDS = {
-        'M': ComponentStructure('M', {'a', 'b'}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'})}
+        'M': Component({'a', 'b'}),
+        'L': Component({'a', 'b'}),
+        'X': Component({'a'})}
     
     product, leaving = perform_intra_exchange(
         MLX, 'M1.a', 'X1.a', 'L1.b')

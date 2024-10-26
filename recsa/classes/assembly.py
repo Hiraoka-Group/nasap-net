@@ -14,7 +14,7 @@ from recsa import RecsaValueError
 
 from .aux_edge import AuxEdge
 from .bindsite_id_converter import BindsiteIdConverter
-from .component_structure import ComponentStructure
+from .component import Component
 
 __all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']
 
@@ -123,7 +123,7 @@ class Assembly:
         return MappingProxyType(self.__bindsite_to_connected.copy())
     
     def g_snapshot(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> nx.Graph:
         """Returns a snapshot of the assembly graph.
         
@@ -321,7 +321,7 @@ class Assembly:
             yield id_converter.local_to_global(comp_id, 'core')
     
     def get_all_bindsites(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> set[str]:
         """Get all the binding sites in the assembly."""
         # TODO: Consider yielding the binding sites instead of returning a set.
@@ -329,12 +329,12 @@ class Assembly:
         all_bindsites = set()
         for comp_id, comp_kind in self.component_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
-            for bindsite in comp_struct.binding_sites:
+            for bindsite in comp_struct.bindsites:
                 all_bindsites.add(id_converter.local_to_global(comp_id, bindsite))
         return all_bindsites
 
     def iter_aux_edges(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> Iterator[AbsAuxEdge]:
         id_converter = BindsiteIdConverter()
         for comp_id, comp_kind in self.component_id_to_kind.items():
@@ -349,7 +349,7 @@ class Assembly:
 
     def get_bindsites_of_component(
             self, component_id: str, 
-            component_structures: Mapping[str, ComponentStructure]
+            component_structures: Mapping[str, Component]
             ) -> set[str]:
         """Get the binding sites of the component."""
         id_converter = BindsiteIdConverter()
@@ -357,11 +357,11 @@ class Assembly:
         comp_struct = component_structures[comp_kind]
         return {
             id_converter.local_to_global(component_id, bindsite)
-            for bindsite in comp_struct.binding_sites}
+            for bindsite in comp_struct.bindsites}
     
     def get_all_bindsites_of_kind(
             self, component_kind: str,
-            component_structures: Mapping[str, ComponentStructure],
+            component_structures: Mapping[str, Component],
             ) -> Iterator[str]:
         for comp_id, comp in self.component_id_to_kind.items():
             if comp == component_kind:
@@ -369,14 +369,14 @@ class Assembly:
                     comp_id, component_structures)
 
     def find_free_bindsites(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> set[str]:
         """Find free bindsites."""
         id_converter = BindsiteIdConverter()
         all_bindsites = {
             id_converter.local_to_global(comp_id, bindsite)
             for comp_id, comp_kind in self.component_id_to_kind.items()
-            for bindsite in component_structures[comp_kind].binding_sites
+            for bindsite in component_structures[comp_kind].bindsites
         }
         connected_bindsites = chain(*self.bonds)
         free_bindsites = all_bindsites - set(connected_bindsites)
@@ -387,7 +387,7 @@ class Assembly:
     # ============================================================
 
     def _to_graph(
-            self, component_kinds: Mapping[str, ComponentStructure]
+            self, component_kinds: Mapping[str, Component]
             ) -> nx.Graph:
         return assembly_to_graph(self, component_kinds)
 
@@ -413,7 +413,7 @@ class Assembly:
 
 def assembly_to_graph(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> nx.Graph:
     G = nx.Graph()
     for comp_id, comp_kind in assembly.component_id_to_kind.items():
@@ -427,7 +427,7 @@ def assembly_to_graph(
 def add_component_to_graph(
         g: nx.Graph,
         component_id: str, component_kind: str,
-        component_structure: ComponentStructure,
+        component_structure: Component,
         ) -> None:
     # Add the core node
     id_converter = BindsiteIdConverter()
@@ -436,7 +436,7 @@ def add_component_to_graph(
         core_abs, core_or_bindsite='core', component_kind=component_kind)
     
     # Add the binding sites
-    for bindsite in component_structure.binding_sites:
+    for bindsite in component_structure.bindsites:
         bindsite_abs = id_converter.local_to_global(component_id, bindsite)
         g.add_node(bindsite_abs, core_or_bindsite='bindsite')
         g.add_edge(core_abs, bindsite_abs)

@@ -4,7 +4,7 @@ from typing import Literal
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 from .lib import make_complete_color_map
 
@@ -13,7 +13,7 @@ __all__ = ['draw_2d']
 
 def draw_2d(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         positions: Mapping[str, tuple[float, float]],
         *,
         show: bool = True,

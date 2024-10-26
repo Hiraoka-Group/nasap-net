@@ -1,6 +1,6 @@
 from collections.abc import Mapping
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 from .lib import group_assemblies_by_isomorphism
 
@@ -9,7 +9,7 @@ __all__ = ['exclude_remaining_duplicates']
 
 def exclude_remaining_duplicates(
         id_to_assembly: Mapping[str, Assembly],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> tuple[dict[str, Assembly], dict[str, set[str]]]:
     """Exclude remaining duplicates."""
     unique_id_to_ids = group_assemblies_by_isomorphism(id_to_assembly, component_structures)

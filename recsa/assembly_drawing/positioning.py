@@ -3,7 +3,7 @@ from typing import Literal, TypeAlias, overload
 
 import networkx as nx
 
-from recsa import Assembly, ComponentStructure, RecsaValueError
+from recsa import Assembly, Component, RecsaValueError
 
 LAYOUT_NAME_TO_FUNC = {
     'spring': nx.spring_layout,
@@ -19,7 +19,7 @@ PosDict3D: TypeAlias = dict[str, tuple[float, float, float]]
 @overload
 def calc_positions(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         *,
         dimensions: Literal['2d'] = '2d',
         layout_name: Literal['spring'] = 'spring', 
@@ -31,7 +31,7 @@ def calc_positions(
 @overload
 def calc_positions(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         *,
         dimensions: Literal['3d'],
         layout_name: Literal['spring'] = 'spring', 
@@ -42,7 +42,7 @@ def calc_positions(
     ...
 def calc_positions(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         *,
         dimensions: Literal['2d', '3d'] = '2d',
         layout_name: Literal['spring'] = 'spring', 

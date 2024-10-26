@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 from recsa.duplicate_exclusion import group_assemblies_by_isomorphism
 
 
@@ -23,9 +23,9 @@ def test_group_assemblies_by_isomorphism():
             []),
     }
     component_structures = {
-        'M': ComponentStructure('M', {'a', 'b'}),
-        'L': ComponentStructure('L', {'a', 'b'}),
-        'X': ComponentStructure('X', {'a'}),
+        'M': Component({'a', 'b'}),
+        'L': Component({'a', 'b'}),
+        'X': Component({'a'}),
     }
 
     grouped_ids = group_assemblies_by_isomorphism(id_to_graph, component_structures)

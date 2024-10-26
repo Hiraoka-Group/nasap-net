@@ -4,7 +4,7 @@ from itertools import product
 from cachetools import cached
 from cachetools.keys import hashkey
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 __all__ = ['enum_valid_mles_for_intra']
 
@@ -13,7 +13,7 @@ def _cache_key(
         assembly_id: str,
         assembly: Assembly,
         metal_kind: str, leaving_kind: str, entering_kind: str,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> tuple:
     return hashkey(assembly_id, metal_kind, leaving_kind, entering_kind)
 
@@ -23,7 +23,7 @@ def enum_valid_mles_for_intra(
         assembly_id: str,  # only used for caching
         assembly: Assembly,
         metal_kind: str, leaving_kind: str, entering_kind: str,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> list[tuple[str, str, str]]:
     """
     Get all possible metal-leaving-entering (MLE) site trios in an assembly.

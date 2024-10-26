@@ -3,7 +3,7 @@ from itertools import combinations
 
 from networkx.utils import UnionFind
 
-from recsa import Assembly, ComponentStructure, is_isomorphic
+from recsa import Assembly, Component, is_isomorphic
 
 from .grouping_by_hash import group_assemblies_by_hash
 
@@ -12,7 +12,7 @@ __all__ = ['group_assemblies_by_isomorphism']
 
 def group_assemblies_by_isomorphism(
         id_to_assembly: Mapping[str, Assembly],
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> dict[str, set[str]]:
     """Group duplicates by assembly isomorphism.
 
