@@ -6,16 +6,6 @@ Exceptions
 Base exceptions and errors for RECSA.
 """
 
-__all__ = [
-    'RecsaException',
-    'RecsaFileExistsError',
-    'RecsaNotImplementedError',
-    'RecsaParsingError',
-    'RecsaRuntimeError',
-    'RecsaTypeError',
-    'RecsaValueError',
-]
-
 
 class RecsaException(Exception):
     """Base exception for the RECSA package."""
@@ -33,6 +23,10 @@ class RecsaValueError(RecsaException):
 class RecsaParsingError(RecsaException):
 	"""Base class for parsing errors."""
 	pass
+
+
+class RecsaLoadingError(RecsaException):
+    pass
 
 
 class RecsaNotImplementedError(RecsaException):

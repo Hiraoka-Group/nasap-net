@@ -56,6 +56,12 @@ class Assembly:
             
         self._rough_g_cache: nx.Graph | None = None
         self._bindsite_to_connected_cache: dict[str, str] | None = None
+    
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Assembly):
+            return False
+        return self.comp_id_to_kind == other.comp_id_to_kind and\
+            self.bonds == other.bonds
 
     # Decorator
     # For type hint of the decorator, see the following link:
