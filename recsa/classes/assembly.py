@@ -81,7 +81,7 @@ class Assembly:
         read-only. Changes to the original assembly will be reflected
         in the returned object.
         """
-        return MappingProxyType(self._comp_id_to_kind.copy())
+        return MappingProxyType(self._comp_id_to_kind)
     
     @property
     def component_ids(self) -> set[str]:
@@ -102,7 +102,7 @@ class Assembly:
         Only the binding sites that are connected to other binding sites
         are included in the returned object.
         """
-        return MappingProxyType(self._bindsite_to_connected.copy())
+        return MappingProxyType(self._bindsite_to_connected)
     
     def g_snapshot(
             self, component_structures: Mapping[str, Component]
