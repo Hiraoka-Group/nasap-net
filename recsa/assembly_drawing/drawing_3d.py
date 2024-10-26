@@ -88,7 +88,7 @@ def draw_3d(
         )  # type: ignore
     
     # Draw core-to-bindsite edges
-    for comp_id, comp_kind in assembly.component_id_to_kind.items():
+    for comp_id, comp_kind in assembly.comp_id_to_kind.items():
         color = component_colors[comp_kind]
         core = assembly.get_core_of_the_component(comp_id)
         bindsites_of_the_comp = assembly.get_bindsites_of_component(
@@ -129,7 +129,7 @@ def draw_3d(
     labels = {}
     match node_labeling_mode:
         case 'component_kind':
-            for comp_id, comp_kind in assembly.component_id_to_kind.items():
+            for comp_id, comp_kind in assembly.comp_id_to_kind.items():
                 core = assembly.get_core_of_the_component(comp_id)
                 labels[core] = comp_kind
         case 'component_id':

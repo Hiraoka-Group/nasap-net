@@ -37,7 +37,7 @@ def cap_bindsites(
         assembly = assembly.deepcopy()
 
     target_bindsites: list[str] = []
-    for comp_id, comp_kind in assembly.component_id_to_kind.items():
+    for comp_id, comp_kind in assembly.comp_id_to_kind.items():
         if comp_kind != component_kind_to_be_capped:
             continue
         for bindsite in assembly.get_bindsites_of_component(
