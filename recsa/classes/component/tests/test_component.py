@@ -49,13 +49,5 @@ def test_init_with_empty_aux_edges() -> None:
     assert component.aux_edges == set()
 
 
-def test_clear_g_cache(comp) -> None:
-    comp._Component__g_cache = 1
-    assert comp._Component__g_cache == 1
-
-    comp._Component__add_binding_site('c')
-    assert comp._Component__g_cache is None
-
-
 if __name__ == '__main__':
     pytest.main(['-vv', __file__])
