@@ -54,7 +54,7 @@ def union_assemblies(
         raise ValueError('The assemblies have overlapping component IDs.')
 
     component_id_to_kind = (
-        assembly1.component_id_to_kind | assembly2.component_id_to_kind)
+        assembly1.comp_id_to_kind | assembly2.comp_id_to_kind)
     bonds = assembly1.bonds | assembly2.bonds
 
     return Assembly(component_id_to_kind, bonds)
