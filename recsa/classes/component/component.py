@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from copy import deepcopy
 
 from recsa import RecsaValueError
@@ -15,7 +16,7 @@ class Component:
 
     def __init__(
             self,
-            binding_sites: set[str],
+            binding_sites: Iterable[str],
             aux_edges: set[AuxEdge] | None = None):
         """
         Parameters
@@ -33,7 +34,7 @@ class Component:
         """
         for bindsite in binding_sites:
             validate_name_of_binding_site(bindsite)
-        self.__binding_sites = binding_sites.copy()
+        self.__binding_sites = set(binding_sites)
 
         self.__aux_edges = aux_edges or set()
         check_bindsites_of_aux_edges_exists(
