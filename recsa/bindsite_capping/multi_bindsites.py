@@ -2,7 +2,7 @@ from collections.abc import Mapping
 from itertools import count
 from typing import Literal, overload
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 from .single_bindsite import cap_single_bindsite
 
@@ -12,7 +12,7 @@ __all__ = ['cap_bindsites']
 @overload
 def cap_bindsites(
         assembly: Assembly, 
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         component_kind_to_be_capped: str,
         cap_component_kind: str, cap_bindsite: str,
         copy: Literal[True] = True
@@ -20,14 +20,14 @@ def cap_bindsites(
 @overload
 def cap_bindsites(
         assembly: Assembly, 
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         component_kind_to_be_capped: str,
         cap_component_kind: str, cap_bindsite: str,
         copy: Literal[False]
         ) -> None: ...
 def cap_bindsites(
         assembly: Assembly, 
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         component_kind_to_be_capped: str,
         cap_component_kind: str, cap_bindsite: str,
         copy: bool = True

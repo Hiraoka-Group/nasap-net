@@ -4,7 +4,7 @@ from typing import overload
 from cachetools import cached
 from cachetools.keys import hashkey
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 from recsa.utils import group_equivalent_nodes_or_nodesets
 
 from .cached_self_isomorphism_iteration import \
@@ -17,7 +17,7 @@ def _cache_key(
         assembly_id: str,
         assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[str] | Iterable[tuple[str, ...]],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> tuple:
     return hashkey(assembly_id, frozenset(bindsites_or_bindsite_sets))
 
@@ -26,25 +26,25 @@ def _cache_key(
 def compute_unique_bindsites_or_bindsite_sets(
         assembly_id: str, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[str],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> list[tuple[str, int]]: ...
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
         assembly_id: str, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[tuple[str, str]],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, str], int]]: ...
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
         assembly_id: str, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[tuple[str, str, str]],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, str, str], int]]: ...
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
         assembly_id: str, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[tuple[str, ...]],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, ...], int]]: ...
 @cached(cache={}, key=_cache_key)
 def compute_unique_bindsites_or_bindsite_sets(

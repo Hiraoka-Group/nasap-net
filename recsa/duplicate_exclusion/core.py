@@ -1,7 +1,7 @@
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 
-from recsa import Assembly, ComponentStructure, calc_wl_hash_of_assembly
+from recsa import Assembly, Component, calc_wl_hash_of_assembly
 
 from .lib.is_new_check import is_new
 
@@ -10,7 +10,7 @@ __all__ = ['find_unique_assemblies']
 
 def find_unique_assemblies(
         assemblies: Iterable[tuple[str, Assembly]],
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> Iterator[tuple[str, Assembly]]:
     """Get unique assemblies.
 

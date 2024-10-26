@@ -2,7 +2,7 @@ from collections.abc import Mapping
 
 from cachetools import cached
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 from recsa.algorithms import isomorphisms_iter
 
 __all__ = ['iter_self_isomorphisms_with_cache']
@@ -11,7 +11,7 @@ __all__ = ['iter_self_isomorphisms_with_cache']
 def _cache_key(
         assembly_id: str,
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> str:
     return assembly_id
 
@@ -19,7 +19,7 @@ def _cache_key(
 @cached(cache={}, key=_cache_key)
 def iter_self_isomorphisms_with_cache(
         assembly_id: str, assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> list[dict[str, str]]:
     """Iterate over self-isomorphisms of an assembly.
 

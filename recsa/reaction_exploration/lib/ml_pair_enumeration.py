@@ -3,7 +3,7 @@ from collections.abc import Mapping
 from cachetools import cached
 from cachetools.keys import hashkey
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 __all__ = ['enum_valid_ml_pairs']
 
@@ -12,7 +12,7 @@ def _cache_key(
         assembly_id: str,
         assembly: Assembly,
         metal_kind: str, leaving_kind: str,
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> tuple:
     return hashkey(assembly_id, metal_kind, leaving_kind)
 
@@ -22,7 +22,7 @@ def enum_valid_ml_pairs(
         assembly_id: str,  # only used for caching
         assembly: Assembly,
         metal_kind: str, leaving_kind: str,
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> list[tuple[str, str]]:
     """Enumerate valid metal-leaving pairs in an assembly.
 

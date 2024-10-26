@@ -4,14 +4,14 @@ from networkx.algorithms.isomorphism import (GraphMatcher,
                                              categorical_edge_match,
                                              categorical_node_match)
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 __all__ = ['isomorphisms_iter']
 
 
 def isomorphisms_iter(
         assem1: Assembly, assem2: Assembly,
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> Iterator[dict[str, str]]:
     """Find all isomorphisms between two "g_snapshot" graphs of assemblies.
 

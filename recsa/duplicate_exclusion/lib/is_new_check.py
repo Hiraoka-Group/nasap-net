@@ -1,6 +1,6 @@
 from collections.abc import Mapping
 
-from recsa import Assembly, ComponentStructure, is_isomorphic
+from recsa import Assembly, Component, is_isomorphic
 
 __all__ = ['is_new']
 
@@ -9,7 +9,7 @@ def is_new(
         hash_: str,
         assembly: Assembly,
         hash_to_uniques: Mapping[str, list[Assembly]],
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> bool:
     """Check if the assembly is new."""
     if hash_ not in hash_to_uniques:
