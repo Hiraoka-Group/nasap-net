@@ -13,7 +13,7 @@ class Component:
 
     def __init__(
             self,
-            binding_sites: Iterable[str],
+            bindsites: Iterable[str],
             aux_edges: (
                 Iterable[AuxEdge] 
                 | Iterable[tuple[str, str, str]] | None
@@ -32,9 +32,9 @@ class Component:
             Duplicate pairs of binding sites raise an error regardless of the
             order of the binding sites.
         """
-        for bindsite in binding_sites:
+        for bindsite in bindsites:
             validate_name_of_binding_site(bindsite)
-        self._binding_sites = frozenset(binding_sites)
+        self._binding_sites = frozenset(bindsites)
 
         if aux_edges is None:
             self._aux_edges = frozenset[AuxEdge]()
