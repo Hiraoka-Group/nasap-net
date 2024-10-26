@@ -61,5 +61,23 @@ def test_init_with_invalid_aux_edge():
         Component({'a', 'b'}, {AuxEdge('a', 'c', 'cis')})
 
 
+def test_eq():
+    M1 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
+    M2 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
+    assert M1 == M2
+
+
+def test_eq_with_different_binding_sites():
+    M1 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
+    M2 = Component({'a', 'c'}, {AuxEdge('a', 'c', 'cis')})
+    assert M1 != M2
+
+
+def test_eq_with_different_aux_edges():
+    M1 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
+    M2 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'trans')})
+    assert M1 != M2
+
+
 if __name__ == '__main__':
     pytest.main(['-vv', __file__])
