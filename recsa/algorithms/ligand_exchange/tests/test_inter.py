@@ -21,9 +21,9 @@ def test_inter_exchange() -> None:
     X = X.rename_component_ids({'X1': 'init_X1'})
     
     COMPONENT_KINDS = {
-        'M': Component('M', {'a', 'b'}),
-        'L': Component('L', {'a'}),
-        'X': Component('X', {'a'})}
+        'M': Component({'a', 'b'}),
+        'L': Component({'a'}),
+        'X': Component({'a'})}
     
     product, leaving = perform_inter_exchange(
         MX2, L, 'M1.a', 'X1.a', 'L1.a')
