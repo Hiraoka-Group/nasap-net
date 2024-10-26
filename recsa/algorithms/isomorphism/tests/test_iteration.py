@@ -1,6 +1,6 @@
 import pytest
 
-from recsa import Assembly, AuxEdge, ComponentStructure, isomorphisms_iter
+from recsa import Assembly, AuxEdge, Component, isomorphisms_iter
 
 
 def test_isomorphisms_iter():
@@ -8,12 +8,12 @@ def test_isomorphisms_iter():
         {'M1': 'M', 'L1': 'L', 'L2': 'L', 'X1': 'X', 'X2': 'X'},
         [('M1.a', 'L1.a'), ('M1.b', 'L2.a'), ('M1.c', 'X1.a'), ('M1.d', 'X2.a')])
     COMPONENT_STRUCTURES = {
-        'M': ComponentStructure(
+        'M': Component(
             'M', {'a', 'b', 'c', 'd'},
             {AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
              AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
-        'L': ComponentStructure('L', {'a'}),
-        'X': ComponentStructure('X', {'a'})}
+        'L': Component('L', {'a'}),
+        'X': Component('X', {'a'})}
     
     isomorphisms = list(isomorphisms_iter(ML2X2_CIS, ML2X2_CIS, COMPONENT_STRUCTURES))
 

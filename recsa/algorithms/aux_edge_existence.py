@@ -1,13 +1,13 @@
 from collections.abc import Mapping
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 __all__ = ['has_aux_edges']
 
 
 def has_aux_edges(
         assem: Assembly,
-        component_structures: Mapping[str, ComponentStructure]
+        component_structures: Mapping[str, Component]
         ) -> bool:
     """Check if the assembly has auxiliary edges."""
     comps_with_aux_edges = {

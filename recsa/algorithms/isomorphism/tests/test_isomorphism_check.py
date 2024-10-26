@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from recsa import Assembly, AuxEdge, ComponentStructure, is_isomorphic
+from recsa import Assembly, AuxEdge, Component, is_isomorphic
 
 
 @pytest.fixture
@@ -15,14 +15,14 @@ def assem_without_bonds() -> Assembly:
 
 
 @pytest.fixture
-def component_structures() -> dict[str, ComponentStructure]:
-    M_COMP = ComponentStructure(
+def component_structures() -> dict[str, Component]:
+    M_COMP = Component(
         'M', {'a', 'b', 'c', 'd'},
         {
             AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis'),})
-    L_COMP = ComponentStructure('L', {'a', 'b'})
-    X_COMP = ComponentStructure('X', {'a'})
+    L_COMP = Component('L', {'a', 'b'})
+    X_COMP = Component('X', {'a'})
     return {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}
 
 
@@ -45,21 +45,21 @@ def assem2(assem_without_bonds: Assembly) -> Assembly:
 
 
 def test_is_isomorphic_with_isomorphic_assemblies(
-        assem1: Assembly, component_structures: dict[str, ComponentStructure]
+        assem1: Assembly, component_structures: dict[str, Component]
         ) -> None:
     assem3 = deepcopy(assem1)
     assert is_isomorphic(assem1, assem3, component_structures)
 
 
 def test_is_isomorphic_with_clearly_non_isomorphic_assemblies(
-        assem1: Assembly, component_structures: dict[str, ComponentStructure]):
+        assem1: Assembly, component_structures: dict[str, Component]):
     assem2 = deepcopy(assem1)
     assem2.remove_bond('M1.a', 'L1.a')
     assert not is_isomorphic(assem1, assem2, component_structures)
     
 
 def test_is_isomorphic_with_relabelled_assemblies(
-        assem1: Assembly, component_structures: dict[str, ComponentStructure]
+        assem1: Assembly, component_structures: dict[str, Component]
         ) -> None:
     # Should be isomorphic
     assem2 = deepcopy(assem1)
@@ -69,7 +69,7 @@ def test_is_isomorphic_with_relabelled_assemblies(
 
 def test_is_isomorphic_with_stereo_isomers(
         assem1: Assembly, assem2: Assembly, 
-        component_structures: dict[str, ComponentStructure]
+        component_structures: dict[str, Component]
         ) -> None:
     # Should not be isomorphic, though roughly isomorphic
     assert not is_isomorphic(assem1, assem2, component_structures)

@@ -2,7 +2,7 @@ import itertools
 from collections import defaultdict
 from collections.abc import Iterator, Mapping
 
-from recsa import (Assembly, ComponentStructure, InterReaction, IntraReaction,
+from recsa import (Assembly, Component, InterReaction, IntraReaction,
                    calc_wl_hash_of_assembly)
 from recsa.algorithms.hashing import calc_wl_hash_of_assembly
 
@@ -13,7 +13,7 @@ from .intra import explore_intra_reactions
 def explore_reactions(
         id_to_assembly: Mapping[str, Assembly],
         metal_kind: str, leaving_kind: str, entering_kind: str,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> Iterator[IntraReaction | InterReaction]:
     hash_to_ids = defaultdict(list)
     for assem_id, assembly in id_to_assembly.items():

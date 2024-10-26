@@ -11,10 +11,10 @@ from ..validations import (validate_name_of_binding_site,
                            validate_name_of_component_kind)
 from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 
-__all__ = ['ComponentStructure']
+__all__ = ['Component']
 
 
-class ComponentStructure:
+class Component:
     """A component of an assembly."""
 
     def __init__(
@@ -50,7 +50,7 @@ class ComponentStructure:
         self.__g_cache = None
     
     def __eq__(self, value: object) -> bool:
-        if not isinstance(value, ComponentStructure):
+        if not isinstance(value, Component):
             return False
         return (
             self.__component_kind == value.__component_kind and
@@ -64,7 +64,7 @@ class ComponentStructure:
         calling the method."""
         @wraps(func)
         def wrapper(self, *args, **kwargs):
-            assert hasattr(self, '_ComponentStructure__g_cache'), (
+            assert hasattr(self, '_Component__g_cache'), (
                 'The "__g_cache" attribute is not found. '
                 'Please make sure that the "__g_cache" attribute is '
                 'initialized in the __init__ method.')
