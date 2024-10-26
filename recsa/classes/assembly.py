@@ -48,10 +48,6 @@ class Assembly:
         self._bonds: set[frozenset[str]] = set()
         self._bindsite_to_connected: dict[str, str] = {}
 
-        # NOTE: Make sure that the __rough_g_cache attributes
-        # are initialized before calling any method that modifies the assembly.
-        self._rough_g_cache = None
-
         if comp_id_to_kind is not None:
             for component_id, component_kind in comp_id_to_kind.items():
                 self.add_component(component_id, component_kind)
@@ -122,7 +118,7 @@ class Assembly:
     @property
     def rough_g_snapshot(self) -> nx.Graph:
         """Returns a rough graph of the assembly."""
-        if self._rough_g_cache is None:
+        if getattr(self, '_rough_g_cache', None) is None:
             self._rough_g_cache = self._to_rough_graph()
         return deepcopy(self._rough_g_cache)
     
