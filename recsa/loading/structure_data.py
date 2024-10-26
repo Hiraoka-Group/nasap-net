@@ -6,7 +6,7 @@ from typing import Any
 import yaml
 from pydantic import BaseModel, ConfigDict, field_validator
 
-from recsa import ComponentStructure, LocalAuxEdge
+from recsa import AuxEdge, ComponentStructure
 
 __all__ = ['load_structure_data']
 
@@ -78,7 +78,7 @@ def convert_data_to_args(data: StructureData) -> Args:
     component_structures = {
         comp_kind.id: ComponentStructure(
             comp_kind.id, set(comp_kind.bindsites),
-            {LocalAuxEdge(edge.bindsites[0], edge.bindsites[1], edge.kind)
+            {AuxEdge(edge.bindsites[0], edge.bindsites[1], edge.kind)
              for edge in comp_kind.aux_edges or []})
         for comp_kind in data.component_structures
     }
