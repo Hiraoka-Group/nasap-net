@@ -1,7 +1,6 @@
 import pytest
 
-from recsa.classes.component_structure import \
-    check_bindsites_of_aux_edges_exists
+from recsa.classes.component import check_bindsites_of_aux_edges_exists
 
 
 def test_check_bindsites_of_aux_edges_exists():

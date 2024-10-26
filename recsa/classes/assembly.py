@@ -14,7 +14,7 @@ from recsa import RecsaValueError
 
 from .aux_edge import AuxEdge
 from .bindsite_id_converter import BindsiteIdConverter
-from .component_structure import Component
+from .component import Component
 
 __all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']
 
