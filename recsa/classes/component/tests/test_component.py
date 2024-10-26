@@ -13,12 +13,10 @@ def comp_with_aux_edges() -> Component:
 
 
 def test_init_with_valid_args(comp) -> None:
-    assert comp.component_kind == 'M'
     assert set(comp.binding_sites) == {'a', 'b'}
 
 
 def test_init_with_valid_args_with_single_aux_edge(comp_with_aux_edges) -> None:
-    assert comp_with_aux_edges.component_kind == 'M'
     assert set(comp_with_aux_edges.binding_sites) == {'a', 'b'}
     assert comp_with_aux_edges.aux_edges == {AuxEdge('a', 'b', 'cis')}
 
@@ -28,7 +26,6 @@ def test_init_with_valid_args_with_multiple_aux_edges() -> None:
         AuxEdge('a', 'b', 'cis'), AuxEdge('a', 'c', 'cis'), 
         AuxEdge('b', 'c', 'trans')})
     
-    assert component.component_kind == 'M'
     assert set(component.binding_sites) == {'a', 'b', 'c'}
     assert component.aux_edges == {
         AuxEdge('a', 'b', 'cis'), AuxEdge('a', 'c', 'cis'), 
