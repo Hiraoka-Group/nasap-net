@@ -34,7 +34,7 @@ class Component:
         """
         for bindsite in bindsites:
             validate_name_of_binding_site(bindsite)
-        self._binding_sites = frozenset(bindsites)
+        self._bindsites = frozenset(bindsites)
 
         if aux_edges is None:
             self._aux_edges = frozenset[AuxEdge]()
@@ -47,14 +47,14 @@ class Component:
                 {AuxEdge(*edge) for edge in aux_edges})
 
         check_bindsites_of_aux_edges_exists(
-            self._aux_edges, self._binding_sites)
+            self._aux_edges, self._bindsites)
     
     def __eq__(self, value: object) -> bool:
         return NotImplemented
     
     @property
     def binding_sites(self) -> set[str]:
-        return set(self._binding_sites)
+        return set(self._bindsites)
 
     @property
     def aux_edges(self) -> set[AuxEdge]:
