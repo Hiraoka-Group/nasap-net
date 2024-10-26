@@ -50,7 +50,11 @@ class Component:
             self._aux_edges, self._bindsites)
     
     def __eq__(self, value: object) -> bool:
-        return NotImplemented
+        if not isinstance(value, Component):
+            return False
+        return (
+            self.bindsites == value.bindsites
+            and self.aux_edges == value.aux_edges)
     
     @property
     def bindsites(self) -> set[str]:
