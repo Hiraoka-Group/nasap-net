@@ -12,11 +12,11 @@ def test_draw_2d():
     )
     COMPONENT_STRUCTURES = {
         'M': Component(
-            'M', {'a', 'b', 'c', 'd'}, {
+            {'a', 'b', 'c', 'd'}, {
                 AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
                 AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')}),
-        'L': Component('L', {'a', 'b'}),
-        'X': Component('X', {'a'}),
+        'L': Component({'a', 'b'}),
+        'X': Component({'a'}),
     }
 
     positions = nx.spring_layout(MLX3.g_snapshot(COMPONENT_STRUCTURES))

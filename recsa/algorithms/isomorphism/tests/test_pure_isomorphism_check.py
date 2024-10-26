@@ -18,12 +18,12 @@ def assem_without_bonds() -> Assembly:
 @pytest.fixture
 def component_structures() -> dict[str, Component]:
     M_COMP = Component(
-        'M', {'a', 'b', 'c', 'd'},
+        {'a', 'b', 'c', 'd'},
         {
             AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis'),})
-    L_COMP = Component('L', {'a', 'b'})
-    X_COMP = Component('X', {'a'})
+    L_COMP = Component({'a', 'b'})
+    X_COMP = Component({'a'})
     return {'M': M_COMP, 'L': L_COMP, 'X': X_COMP}
 
 

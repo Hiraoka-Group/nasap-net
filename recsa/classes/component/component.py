@@ -14,7 +14,7 @@ class Component:
     """A component of an assembly."""
 
     def __init__(
-            self, component_kind: str, 
+            self,
             binding_sites: set[str],
             aux_edges: set[AuxEdge] | None = None):
         """
@@ -31,9 +31,6 @@ class Component:
             Duplicate pairs of binding sites raise an error regardless of the
             order of the binding sites.
         """
-        validate_name_of_component_kind(component_kind)
-        self.__component_kind = component_kind
-
         for bindsite in binding_sites:
             validate_name_of_binding_site(bindsite)
         self.__binding_sites = binding_sites.copy()

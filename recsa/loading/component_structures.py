@@ -62,5 +62,5 @@ def create_component_structures_from_data(
                     kind = aux_edge.kind
                     aux_edges.add(AuxEdge(bindsite1, bindsite2, kind))
         component_structures[component_structure.id] = Component(
-            component_structure.id, bindsites, aux_edges)
+            bindsites, aux_edges)
     return component_structures

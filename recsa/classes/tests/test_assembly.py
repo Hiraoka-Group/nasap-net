@@ -5,13 +5,13 @@ from recsa import Assembly, AuxEdge, Component
 
 @pytest.fixture
 def M_COMP() -> Component:
-    return Component('M', {'a', 'b', 'c', 'd'})
+    return Component({'a', 'b', 'c', 'd'})
 
 
 @pytest.fixture
 def M_WITH_AUX_EDGES() -> Component:
     return Component(
-        'M', {'a', 'b', 'c', 'd'}, 
+        {'a', 'b', 'c', 'd'}, 
         {
             AuxEdge('a', 'b', 'cis'), AuxEdge('b', 'c', 'cis'),
             AuxEdge('c', 'd', 'cis'), AuxEdge('d', 'a', 'cis')
@@ -20,12 +20,12 @@ def M_WITH_AUX_EDGES() -> Component:
 
 @pytest.fixture
 def L_COMP() -> Component:
-    return Component('L', {'a', 'b'})
+    return Component({'a', 'b'})
 
 
 @pytest.fixture
 def X_COMP() -> Component:
-    return Component('X', {'a'})
+    return Component({'a'})
 
 
 def test_init_with_no_args() -> None:
