@@ -40,7 +40,9 @@ class Assembly:
     def __init__(
             self, 
             comp_id_to_kind: Mapping[str, str] | None = None,
-            bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
+            bonds: (
+                Iterable[tuple[str, str]] | Iterable[Iterable[str]] | None
+                ) = None,
             id_: str | None = None,
             ) -> None:
         self.id = id_
