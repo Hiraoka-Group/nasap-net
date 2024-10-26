@@ -30,7 +30,7 @@ def X_COMP() -> Component:
 
 def test_init_with_no_args() -> None:
     assembly = Assembly()
-    assert assembly.component_id_to_kind == {}
+    assert assembly.comp_id_to_kind == {}
     assert assembly.bonds == set()
 
 
@@ -42,7 +42,7 @@ def test_init() -> None:
         frozenset(['M1.c', 'X2.a']), frozenset(['M1.d', 'X3.a']),}
     assembly = Assembly(components, bonds)
 
-    assert assembly.component_id_to_kind == components
+    assert assembly.comp_id_to_kind == components
     assert assembly.bonds == set(bonds)
 
 
@@ -55,7 +55,7 @@ def test_add_component() -> None:
     assembly.add_bonds([
         ('M1.b', 'X1.a'), ('M1.c', 'X2.a'), ('M1.d', 'X3.a')])
 
-    assert assembly.component_id_to_kind == {
+    assert assembly.comp_id_to_kind == {
         'M1': 'M', 'L1': 'L', 'X1': 'X', 'X2': 'X', 'X3': 'X'}
     assert assembly.bonds == {
         frozenset(['M1.a', 'X1.a']), frozenset(['M1.b', 'X1.a']),
