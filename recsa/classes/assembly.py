@@ -63,7 +63,7 @@ class Assembly:
     # For type hint of the decorator, see the following link:
     # https://github.com/microsoft/pyright/issues/6472
     @staticmethod
-    def clear_g_caches(func: Callable[Concatenate[Assembly, P], R]
+    def _clear_g_caches(func: Callable[Concatenate[Assembly, P], R]
             ) -> Callable[Concatenate[Assembly, P], R]:
         """Decorator to clear the cache of the graph snapshot before
         calling the method."""
@@ -130,7 +130,7 @@ class Assembly:
     # Methods to modify the assembly (using relative names)
     # ============================================================
     
-    @clear_g_caches
+    @_clear_g_caches
     def add_component(
             self, component_id: str, component_kind: str) -> None:
         """Add a component to the assembly.
@@ -141,11 +141,11 @@ class Assembly:
         """
         self._components[component_id] = component_kind
 
-    @clear_g_caches
+    @_clear_g_caches
     def remove_component(self, component_id: str) -> None:
         del self._components[component_id]
     
-    @clear_g_caches
+    @_clear_g_caches
     def add_bond(self, bindsite1: str, bindsite2: str) -> None:
         """Add a bond to the assembly."""
         id_converter = BindsiteIdConverter()
@@ -159,7 +159,7 @@ class Assembly:
         self._bindsite_to_connected[bindsite1] = bindsite2
         self._bindsite_to_connected[bindsite2] = bindsite1
 
-    @clear_g_caches
+    @_clear_g_caches
     def remove_bond(
             self, bindsite1: str, bindsite2: str) -> None:
         """Remove a bond from the assembly."""
@@ -196,18 +196,18 @@ class Assembly:
     # `@overload` decorator is just for type hinting;
     # it does not affect the behavior of the method.
     @overload
-    @clear_g_caches
+    @_clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str],
             *, copy: Literal[True] = True) -> Assembly:
         ...
     @overload
-    @clear_g_caches
+    @_clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str],
             *, copy: Literal[False]) -> None:
         ...
-    @clear_g_caches
+    @_clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str],
             *, copy: bool = True) -> Assembly | None:
