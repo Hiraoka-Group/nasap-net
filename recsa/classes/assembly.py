@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from copy import deepcopy
+from copy import copy, deepcopy
 from dataclasses import dataclass
 from functools import wraps
 from itertools import chain
@@ -46,7 +46,6 @@ class Assembly:
             ) -> None:
         self._comp_id_to_kind = dict[str, str]()
         self._bonds = set[frozenset[str]]()
-        self._bindsite_to_connected = dict[str, str]()
 
         if comp_id_to_kind is not None:
             for component_id, component_kind in comp_id_to_kind.items():
@@ -54,6 +53,9 @@ class Assembly:
         if bonds is not None:
             for bindsite1, bindsite2 in bonds:
                 self.add_bond(bindsite1, bindsite2)
+            
+        self._rough_g_cache: nx.Graph | None = None
+        self._bindsite_to_connected_cache: dict[str, str] | None = None
 
     # Decorator
     # For type hint of the decorator, see the following link:
@@ -66,6 +68,7 @@ class Assembly:
         @wraps(func)
         def wrapper(self: Assembly, *args: P.args, **kwargs: P.kwargs):
             self._rough_g_cache = None
+            self._bindsite_to_connected_cache = None
             return func(self, *args, **kwargs)
         return wrapper
 
@@ -96,13 +99,20 @@ class Assembly:
         return self._bonds.copy()
     
     @property
-    def bindsite_to_connected(self) -> MappingProxyType[str, str]:
-        """Return a read-only view of the connected binding sites.
-        
-        Only the binding sites that are connected to other binding sites
-        are included in the returned object.
-        """
-        return MappingProxyType(self._bindsite_to_connected)
+    def bindsite_to_connected(self) -> dict[str, str]:
+        if getattr(self, '_bindsite_to_connected', None) is None:
+            self._bindsite_to_connected_cache =\
+                self.create_bindsite_to_connected()
+        assert self._bindsite_to_connected_cache is not None
+        return copy(self._bindsite_to_connected_cache)
+    
+    def create_bindsite_to_connected(self) -> dict[str, str]:
+        d = {}
+        for bond in self._bonds:
+            bindsite1, bindsite2 = bond
+            d[bindsite1] = bindsite2
+            d[bindsite2] = bindsite1
+        return d
     
     def g_snapshot(
             self, component_structures: Mapping[str, Component]
@@ -152,16 +162,12 @@ class Assembly:
                 raise RecsaValueError(
                     f'The component "{comp}" does not exist in the assembly.')
         self._bonds.add(frozenset([bindsite1, bindsite2]))
-        self._bindsite_to_connected[bindsite1] = bindsite2
-        self._bindsite_to_connected[bindsite2] = bindsite1
 
     @_clear_g_caches
     def remove_bond(
             self, bindsite1: str, bindsite2: str) -> None:
         """Remove a bond from the assembly."""
         self._bonds.remove(frozenset([bindsite1, bindsite2]))
-        del self._bindsite_to_connected[bindsite1]
-        del self._bindsite_to_connected[bindsite2]
 
     # ============================================================
     # Methods to make multiple modifications at once
@@ -268,7 +274,7 @@ class Assembly:
             The connected binding site. If the binding site is free,
             and `error_if_free` is False, return None.
         """
-        connected = self._bindsite_to_connected.get(bindsite)
+        connected = self.bindsite_to_connected.get(bindsite)
         if connected is None and error_if_free:
             raise RecsaValueError(
                 f'The binding site "{bindsite}" is free.')
