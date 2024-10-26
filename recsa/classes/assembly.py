@@ -44,13 +44,13 @@ class Assembly:
             id_: str | None = None,
             ) -> None:
         self.id = id_
-        self.__components: dict[str, str] = {}
-        self.__bonds: set[frozenset[str]] = set()
-        self.__bindsite_to_connected: dict[str, str] = {}
+        self._components: dict[str, str] = {}
+        self._bonds: set[frozenset[str]] = set()
+        self._bindsite_to_connected: dict[str, str] = {}
 
         # NOTE: Make sure that the __rough_g_cache attributes
         # are initialized before calling any method that modifies the assembly.
-        self.__rough_g_cache = None
+        self._rough_g_cache = None
 
         if comp_id_to_kind is not None:
             for component_id, component_kind in comp_id_to_kind.items():
@@ -69,11 +69,11 @@ class Assembly:
         calling the method."""
         @wraps(func)
         def wrapper(self: Assembly, *args: P.args, **kwargs: P.kwargs):
-            assert hasattr(self, '_Assembly__rough_g_cache'), (
-                'The "__g_cache" attribute is not found. '
-                'Please make sure that the "__rough_g_cache" attribute is '
+            assert hasattr(self, '_rough_g_cache'), (
+                'The "_rough_g_cache" attribute is not found. '
+                'Please make sure that the "_rough_g_cache" attribute is '
                 'initialized in the __init__ method.')
-            self.__rough_g_cache = None
+            self._rough_g_cache = None
             return func(self, *args, **kwargs)
         return wrapper
 
@@ -89,19 +89,19 @@ class Assembly:
         read-only. Changes to the original assembly will be reflected
         in the returned object.
         """
-        return MappingProxyType(self.__components.copy())
+        return MappingProxyType(self._components.copy())
     
     @property
     def component_ids(self) -> set[str]:
-        return set(self.__components.keys())
+        return set(self._components.keys())
 
     @property
     def component_kinds(self) -> set[str]:
-        return set(self.__components.values())
+        return set(self._components.values())
     
     @property
     def bonds(self) -> set[frozenset[str]]:
-        return self.__bonds.copy()
+        return self._bonds.copy()
     
     @property
     def bindsite_to_connected(self) -> MappingProxyType[str, str]:
@@ -110,7 +110,7 @@ class Assembly:
         Only the binding sites that are connected to other binding sites
         are included in the returned object.
         """
-        return MappingProxyType(self.__bindsite_to_connected.copy())
+        return MappingProxyType(self._bindsite_to_connected.copy())
     
     def g_snapshot(
             self, component_structures: Mapping[str, Component]
@@ -126,9 +126,9 @@ class Assembly:
     @property
     def rough_g_snapshot(self) -> nx.Graph:
         """Returns a rough graph of the assembly."""
-        if self.__rough_g_cache is None:
-            self.__rough_g_cache = self._to_rough_graph()
-        return deepcopy(self.__rough_g_cache)
+        if self._rough_g_cache is None:
+            self._rough_g_cache = self._to_rough_graph()
+        return deepcopy(self._rough_g_cache)
     
     # ============================================================
     # Methods to modify the assembly (using relative names)
@@ -143,11 +143,11 @@ class Assembly:
         The user should add bonds between the component and the assembly
         if necessary.
         """
-        self.__components[component_id] = component_kind
+        self._components[component_id] = component_kind
 
     @clear_g_caches
     def remove_component(self, component_id: str) -> None:
-        del self.__components[component_id]
+        del self._components[component_id]
     
     @clear_g_caches
     def add_bond(self, bindsite1: str, bindsite2: str) -> None:
@@ -156,20 +156,20 @@ class Assembly:
         comp1, rel1 = id_converter.global_to_local(bindsite1)
         comp2, rel2 = id_converter.global_to_local(bindsite2)
         for comp in [comp1, comp2]:
-            if comp not in self.__components:
+            if comp not in self._components:
                 raise RecsaValueError(
                     f'The component "{comp}" does not exist in the assembly.')
-        self.__bonds.add(frozenset([bindsite1, bindsite2]))
-        self.__bindsite_to_connected[bindsite1] = bindsite2
-        self.__bindsite_to_connected[bindsite2] = bindsite1
+        self._bonds.add(frozenset([bindsite1, bindsite2]))
+        self._bindsite_to_connected[bindsite1] = bindsite2
+        self._bindsite_to_connected[bindsite2] = bindsite1
 
     @clear_g_caches
     def remove_bond(
             self, bindsite1: str, bindsite2: str) -> None:
         """Remove a bond from the assembly."""
-        self.__bonds.remove(frozenset([bindsite1, bindsite2]))
-        del self.__bindsite_to_connected[bindsite1]
-        del self.__bindsite_to_connected[bindsite2]
+        self._bonds.remove(frozenset([bindsite1, bindsite2]))
+        del self._bindsite_to_connected[bindsite1]
+        del self._bindsite_to_connected[bindsite2]
 
     # ============================================================
     # Methods to make multiple modifications at once
@@ -223,12 +223,12 @@ class Assembly:
         id_converter = BindsiteIdConverter()
 
         new_components = {}
-        for old_id, component in assem.__components.items():
+        for old_id, component in assem._components.items():
             new_id = mapping.get(old_id, old_id)
             new_components[new_id] = component
         
         new_bonds = set()
-        for bindsite1, bindsite2 in assem.__bonds:
+        for bindsite1, bindsite2 in assem._bonds:
             comp1, rel1 = id_converter.global_to_local(bindsite1)
             comp2, rel2 = id_converter.global_to_local(bindsite2)
             new_bindsite1 = id_converter.local_to_global(
@@ -237,9 +237,9 @@ class Assembly:
                 mapping.get(comp2, comp2), rel2)
             new_bonds.add(frozenset([new_bindsite1, new_bindsite2]))
 
-        assem.__components = new_components
-        assem.__bonds = new_bonds
-        assem.__rough_g_cache = None
+        assem._components = new_components
+        assem._bonds = new_bonds
+        assem._rough_g_cache = None
 
         # TODO: Check if the new component IDs are valid.
         
@@ -276,7 +276,7 @@ class Assembly:
             The connected binding site. If the binding site is free,
             and `error_if_free` is False, return None.
         """
-        connected = self.__bindsite_to_connected.get(bindsite)
+        connected = self._bindsite_to_connected.get(bindsite)
         if connected is None and error_if_free:
             raise RecsaValueError(
                 f'The binding site "{bindsite}" is free.')
@@ -286,7 +286,7 @@ class Assembly:
         return self.get_connected_bindsite(bindsite) is None
     
     def get_component_kind(self, component_id: str) -> str:
-        return self.__components[component_id]
+        return self._components[component_id]
     
     def get_component_kind_of_core(self, core: str) -> str:
         id_converter = BindsiteIdConverter()
