@@ -39,20 +39,10 @@ class Assembly:
     """
     def __init__(
             self, 
-            component_id_to_kind: Mapping[str, str] | None = None,
+            comp_id_to_kind: Mapping[str, str] | None = None,
             bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
             id_: str | None = None,
             ) -> None:
-        """
-        Parameters
-        ----------
-        component_id_to_kind : Mapping[str, str], optional
-            The components of the assembly. The keys are the component IDs,
-            and the values are the component kinds.
-        bonds : Iterable[tuple[str, str]], optional
-            The bonds between the components. Each bond is a tuple of two
-            binding sites.
-        """
         self.id = id_
         self.__components: dict[str, str] = {}
         self.__bonds: set[frozenset[str]] = set()
@@ -62,8 +52,8 @@ class Assembly:
         # are initialized before calling any method that modifies the assembly.
         self.__rough_g_cache = None
 
-        if component_id_to_kind is not None:
-            for component_id, component_kind in component_id_to_kind.items():
+        if comp_id_to_kind is not None:
+            for component_id, component_kind in comp_id_to_kind.items():
                 self.add_component(component_id, component_kind)
         if bonds is not None:
             for bindsite1, bindsite2 in bonds:
