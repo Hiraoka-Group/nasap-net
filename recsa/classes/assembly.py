@@ -69,10 +69,6 @@ class Assembly:
         calling the method."""
         @wraps(func)
         def wrapper(self: Assembly, *args: P.args, **kwargs: P.kwargs):
-            assert hasattr(self, '_rough_g_cache'), (
-                'The "_rough_g_cache" attribute is not found. '
-                'Please make sure that the "_rough_g_cache" attribute is '
-                'initialized in the __init__ method.')
             self._rough_g_cache = None
             return func(self, *args, **kwargs)
         return wrapper
