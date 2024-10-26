@@ -44,9 +44,9 @@ class Assembly:
                 Iterable[tuple[str, str]] | Iterable[Iterable[str]] | None
                 ) = None,
             ) -> None:
-        self._comp_id_to_kind: dict[str, str] = {}
-        self._bonds: set[frozenset[str]] = set()
-        self._bindsite_to_connected: dict[str, str] = {}
+        self._comp_id_to_kind = dict[str, str]()
+        self._bonds = set[frozenset[str]]()
+        self._bindsite_to_connected = dict[str, str]()
 
         if comp_id_to_kind is not None:
             for component_id, component_kind in comp_id_to_kind.items():
