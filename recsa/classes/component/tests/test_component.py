@@ -1,52 +1,64 @@
 import pytest
 
-from recsa import AuxEdge, Component, RecsaValueError
+import recsa as rx
+from recsa import AuxEdge, Component
 
 
-@pytest.fixture
-def comp() -> Component:
-    return Component({'a', 'b'})
-
-@pytest.fixture
-def comp_with_aux_edges() -> Component:
-    return Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
-
-
-def test_init_with_valid_args(comp) -> None:
-    assert set(comp.binding_sites) == {'a', 'b'}
+def test_typical_usage():
+    bindsites = ['a', 'b', 'c', 'd']
+    aux_edges = [('a', 'b', 'cis'), ('b', 'c', 'cis'),
+                 ('c', 'd', 'cis'), ('d', 'a', 'cis')]
+    M = Component(bindsites, aux_edges)
+    assert M.binding_sites == set(bindsites)
+    assert M.aux_edges == {AuxEdge(*edge) for edge in aux_edges}
 
 
-def test_init_with_valid_args_with_single_aux_edge(comp_with_aux_edges) -> None:
-    assert set(comp_with_aux_edges.binding_sites) == {'a', 'b'}
-    assert comp_with_aux_edges.aux_edges == {AuxEdge('a', 'b', 'cis')}
+def test_init():
+    bindsites = {'a', 'b'}
+    M = Component(bindsites)
+    assert M.binding_sites == bindsites
+    assert M.aux_edges == set()
 
 
-def test_init_with_valid_args_with_multiple_aux_edges() -> None:
-    component = Component({'a', 'b', 'c'}, {
-        AuxEdge('a', 'b', 'cis'), AuxEdge('a', 'c', 'cis'), 
-        AuxEdge('b', 'c', 'trans')})
-    
-    assert set(component.binding_sites) == {'a', 'b', 'c'}
-    assert component.aux_edges == {
-        AuxEdge('a', 'b', 'cis'), AuxEdge('a', 'c', 'cis'), 
-        AuxEdge('b', 'c', 'trans')}
+def test_init_with_bindsites_of_type_tuple():
+    bindsites = ['a', 'b']
+    M = Component(bindsites)
+    assert M.binding_sites == set(bindsites)
+    assert M.aux_edges == set()
 
 
-def test_init_with_invalid_aux_edge_whose_binding_sites_not_in_binding_sites() -> None:
-    with pytest.raises(RecsaValueError):
+def test_init_with_aux_edges():
+    bindsites = {'a', 'b'}
+    aux_edges = {AuxEdge('a', 'b', 'cis')}
+    M = Component(bindsites, aux_edges)
+    assert M.binding_sites == bindsites
+    assert M.aux_edges == aux_edges
+
+
+def test_init_with_aux_edges_of_type_tuple():
+    bindsites = {'a', 'b'}
+    aux_edges = [('a', 'b', 'cis')]
+    M = Component(bindsites, aux_edges)
+    assert M.binding_sites == bindsites
+    assert M.aux_edges == {AuxEdge(*edge) for edge in aux_edges}
+
+
+def test_init_with_empty_binding_sites():
+    # Raises no error.
+    M = Component(set())
+    assert M.binding_sites == set()
+
+
+def test_init_with_empty_aux_edges():
+    # Raises no error.
+    M = Component({'a', 'b'}, set())
+    assert M.aux_edges == set()
+
+
+def test_init_with_invalid_aux_edge():
+    with pytest.raises(rx.RecsaValueError):
+        # The binding site 'c' is not in the binding sites.
         Component({'a', 'b'}, {AuxEdge('a', 'c', 'cis')})
-
-
-def test_init_with_empty_binding_sites() -> None:
-    # Empty binding sites is allowed.
-    component = Component(set())
-    assert component.binding_sites == set()
-
-
-def test_init_with_empty_aux_edges() -> None:
-    # Empty aux_edges is allowed.
-    component = Component({'a', 'b'}, set())
-    assert component.aux_edges == set()
 
 
 if __name__ == '__main__':
