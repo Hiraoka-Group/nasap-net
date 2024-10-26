@@ -1,5 +1,6 @@
 from collections.abc import Iterable
 from copy import deepcopy
+from typing import cast
 
 from recsa import RecsaValueError
 
@@ -17,7 +18,10 @@ class Component:
     def __init__(
             self,
             binding_sites: Iterable[str],
-            aux_edges: set[AuxEdge] | None = None):
+            aux_edges: (
+                Iterable[AuxEdge] 
+                | Iterable[tuple[str, str, str]] | None
+                ) = None):
         """
         Parameters
         ----------
@@ -36,12 +40,17 @@ class Component:
             validate_name_of_binding_site(bindsite)
         self.__binding_sites = set(binding_sites)
 
-        self.__aux_edges = aux_edges or set()
+        if aux_edges is None:
+            self.__aux_edges = set[AuxEdge]()
+        elif all(isinstance(edge, AuxEdge) for edge in aux_edges):
+            aux_edges = cast(Iterable[AuxEdge], aux_edges)
+            self.__aux_edges = set(aux_edges)
+        else:
+            aux_edges = cast(Iterable[tuple[str, str, str]], aux_edges)
+            self.__aux_edges = {AuxEdge(*edge) for edge in aux_edges}
+
         check_bindsites_of_aux_edges_exists(
             self.__aux_edges, self.__binding_sites)
-        
-        # The graph snapshot cache.
-        self.__g_cache = None
     
     def __eq__(self, value: object) -> bool:
         return NotImplemented
