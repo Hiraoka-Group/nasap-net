@@ -44,7 +44,7 @@ class Assembly:
                 Iterable[tuple[str, str]] | Iterable[Iterable[str]] | None
                 ) = None,
             ) -> None:
-        self._components: dict[str, str] = {}
+        self._comp_id_to_kind: dict[str, str] = {}
         self._bonds: set[frozenset[str]] = set()
         self._bindsite_to_connected: dict[str, str] = {}
 
@@ -81,15 +81,15 @@ class Assembly:
         read-only. Changes to the original assembly will be reflected
         in the returned object.
         """
-        return MappingProxyType(self._components.copy())
+        return MappingProxyType(self._comp_id_to_kind.copy())
     
     @property
     def component_ids(self) -> set[str]:
-        return set(self._components.keys())
+        return set(self._comp_id_to_kind.keys())
 
     @property
     def component_kinds(self) -> set[str]:
-        return set(self._components.values())
+        return set(self._comp_id_to_kind.values())
     
     @property
     def bonds(self) -> set[frozenset[str]]:
@@ -135,11 +135,11 @@ class Assembly:
         The user should add bonds between the component and the assembly
         if necessary.
         """
-        self._components[component_id] = component_kind
+        self._comp_id_to_kind[component_id] = component_kind
 
     @_clear_g_caches
     def remove_component(self, component_id: str) -> None:
-        del self._components[component_id]
+        del self._comp_id_to_kind[component_id]
     
     @_clear_g_caches
     def add_bond(self, bindsite1: str, bindsite2: str) -> None:
@@ -148,7 +148,7 @@ class Assembly:
         comp1, rel1 = id_converter.global_to_local(bindsite1)
         comp2, rel2 = id_converter.global_to_local(bindsite2)
         for comp in [comp1, comp2]:
-            if comp not in self._components:
+            if comp not in self._comp_id_to_kind:
                 raise RecsaValueError(
                     f'The component "{comp}" does not exist in the assembly.')
         self._bonds.add(frozenset([bindsite1, bindsite2]))
@@ -215,7 +215,7 @@ class Assembly:
         id_converter = BindsiteIdConverter()
 
         new_components = {}
-        for old_id, component in assem._components.items():
+        for old_id, component in assem._comp_id_to_kind.items():
             new_id = mapping.get(old_id, old_id)
             new_components[new_id] = component
         
@@ -229,7 +229,7 @@ class Assembly:
                 mapping.get(comp2, comp2), rel2)
             new_bonds.add(frozenset([new_bindsite1, new_bindsite2]))
 
-        assem._components = new_components
+        assem._comp_id_to_kind = new_components
         assem._bonds = new_bonds
         assem._rough_g_cache = None
 
@@ -278,7 +278,7 @@ class Assembly:
         return self.get_connected_bindsite(bindsite) is None
     
     def get_component_kind(self, component_id: str) -> str:
-        return self._components[component_id]
+        return self._comp_id_to_kind[component_id]
     
     def get_component_kind_of_core(self, core: str) -> str:
         id_converter = BindsiteIdConverter()
