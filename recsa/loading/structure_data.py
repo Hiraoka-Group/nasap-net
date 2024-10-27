@@ -28,7 +28,6 @@ class AuxEdgeData(BaseModel):
 class ComponentStructureData(BaseModel):
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-    id: str
     bindsites: list[str]
     aux_edges: list[AuxEdgeData] | None = None
 
@@ -50,7 +49,7 @@ class BondData(BaseModel):
 class StructureData(BaseModel):
     model_config = ConfigDict(coerce_numbers_to_str=True)
     
-    comp_kinds: list[ComponentStructureData]
+    comp_kinds: dict[str, ComponentStructureData]
     components: list[ComponentData]
     bonds: list[BondData] | None = None
 
@@ -75,14 +74,14 @@ def load_yaml(file_path: str | Path) -> StructureData:
 
 
 def convert_data_to_args(data: StructureData) -> Args:
-    component_structures = {
-        comp_kind.id: Component(
-            set(comp_kind.bindsites),
+    comp_kinds = {
+        kind_id: Component(
+            set(comp_data.bindsites),
             {AuxEdge(edge.bindsites[0], edge.bindsites[1], edge.kind)
-             for edge in comp_kind.aux_edges or []})
-        for comp_kind in data.component_structures
+             for edge in comp_data.aux_edges or []})
+        for kind_id, comp_data in data.comp_kinds.items()
     }
     components = {comp.id: comp.kind for comp in data.components}
     bonds = {bond.id: frozenset(bond.bindsites) for bond in data.bonds or []}
     
-    return Args(component_structures, components, bonds)
+    return Args(comp_kinds, components, bonds)
