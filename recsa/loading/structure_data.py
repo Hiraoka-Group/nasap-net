@@ -50,7 +50,7 @@ class BondData(BaseModel):
 class StructureData(BaseModel):
     model_config = ConfigDict(coerce_numbers_to_str=True)
     
-    component_structures: list[ComponentStructureData]
+    comp_kinds: list[ComponentStructureData]
     components: list[ComponentData]
     bonds: list[BondData] | None = None
 
