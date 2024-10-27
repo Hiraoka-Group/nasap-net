@@ -18,18 +18,11 @@ class Args:
     bond_id_to_bindsites: dict[str, frozenset[str]]
 
 
-class AuxEdgeData(BaseModel):
-    model_config = ConfigDict(coerce_numbers_to_str=True)
-
-    bindsites: tuple[str, str]
-    kind: str
-
-
 class ComponentStructureData(BaseModel):
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
     bindsites: list[str]
-    aux_edges: list[AuxEdgeData] | None = None
+    aux_edges: list[tuple[str, str, str]] | None = None
 
 
 class ComponentData(BaseModel):
@@ -77,8 +70,7 @@ def convert_data_to_args(data: StructureData) -> Args:
     comp_kinds = {
         kind_id: Component(
             set(comp_data.bindsites),
-            {AuxEdge(edge.bindsites[0], edge.bindsites[1], edge.kind)
-             for edge in comp_data.aux_edges or []})
+            {AuxEdge(*edge) for edge in comp_data.aux_edges or []})
         for kind_id, comp_data in data.comp_kinds.items()
     }
     components = {comp.id: comp.kind for comp in data.components}
