@@ -20,7 +20,7 @@ def create_component_structures_from_data(
         data: Any) -> dict[str, Component]:
     """Create ComponentStructure objects from a dictionary."""
     # Expected format:
-    # {'components': {
+    # {'comp_kinds': {
     #     'M': {
     #         'bindsites': ['a', 'b'],
     #         'aux_edges': [['a', 'b', 'cis']]
@@ -32,10 +32,10 @@ def create_component_structures_from_data(
 
     if not isinstance(data, dict):
         raise ValueError('Expected a dictionary')
-    if 'components' not in data:
-        raise ValueError('Expected a key "component_structures"')
+    if 'comp_kinds' not in data:
+        raise ValueError('Expected a key "comp_kinds"')
     
-    comp_kind_to_data = data['components']
+    comp_kind_to_data = data['comp_kinds']
     if not isinstance(comp_kind_to_data, dict):
         raise ValueError('Expected a dictionary')
     
