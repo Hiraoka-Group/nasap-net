@@ -54,3 +54,5 @@ from .assembly_enumeration import enumerate_assemblies
 from .assembly_enumeration import enumerate_assemblies_pipeline
 
 from .reaction_exploration import explore_reactions
+
+from .reaction_classification import ReactionClassifier
