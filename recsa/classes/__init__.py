@@ -6,5 +6,7 @@ from .component import Component
 from .mle import MleBindsite
 from .mle import MleKind
 from .reaction import InterReaction
+from .reaction import InterReactionEmbedded
 from .reaction import IntraReaction
+from .reaction import IntraReactionEmbedded
 from .bindsite_id_converter import BindsiteIdConverter
