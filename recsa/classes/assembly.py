@@ -387,7 +387,7 @@ class Assembly:
 
     def _to_rough_graph(self) -> nx.Graph:
         id_converter = BindsiteIdConverter()
-        G = nx.Graph()
+        G = nx.MultiGraph()
         for comp_id, comp_kind in self.comp_id_to_kind.items():
             G.add_node(comp_id, component_kind=comp_kind)
         for bindsite1, bindsite2 in self.bonds:

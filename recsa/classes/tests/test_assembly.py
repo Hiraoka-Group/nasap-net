@@ -1,3 +1,4 @@
+import networkx as nx
 import pytest
 
 from recsa import Assembly, AuxEdge, Component
@@ -60,6 +61,25 @@ def test_add_component() -> None:
     assert assembly.bonds == {
         frozenset(['M1.a', 'X1.a']), frozenset(['M1.b', 'X1.a']),
         frozenset(['M1.c', 'X2.a']), frozenset(['M1.d', 'X3.a'])}
+
+
+def test_rough_g_snapshot():
+    # Test for Issue #31: 
+    # https://github.com/Hiraoka-Group/recsa/issues/31#issue-2617886112
+    
+    # In cases where the assembly has parallel bonds, i.e., multiple bonds
+    # between the same pair of components, the rough_g_snapshot method 
+    # should return a MultiGraph with multiple edges between the same pair
+    # of nodes.
+
+    ML_RING = Assembly({'M1': 'M', 'L1': 'L'},
+                       [('M1.a', 'L1.a'), ('M1.b', 'L1.b')])
+
+    rough_g = ML_RING.rough_g_snapshot
+    
+    assert isinstance(rough_g, nx.MultiGraph)
+    assert [set(e) for e in rough_g.edges()] == [
+        {'M1', 'L1'}, {'M1', 'L1'}]
 
 
 if __name__ == '__main__':
