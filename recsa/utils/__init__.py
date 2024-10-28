@@ -1,3 +1,4 @@
+from .circular_perm_comparison import *
 from .custom_zip import *
 from .cyclic_perm import *
 from .frozen_unordered_pair import *
