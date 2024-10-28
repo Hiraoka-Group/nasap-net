@@ -2,7 +2,7 @@ import pytest
 
 from recsa import (Assembly, InterReaction, InterReactionEmbedded,
                    IntraReaction, IntraReactionEmbedded,
-                   embed_assemblies_into_reactions)
+                   embed_assemblies_into_reaction)
 
 
 def test_inter():
@@ -21,7 +21,7 @@ def test_inter():
         'X': Assembly({'X1': 'X'}),
     }
         
-    embed_reaction = embed_assemblies_into_reactions(
+    embed_reaction = embed_assemblies_into_reaction(
         REACTION, ID_TO_ASSEMBLY)
     
     assert embed_reaction == InterReactionEmbedded(
@@ -47,7 +47,7 @@ def test_intra():
         'X': Assembly({'X1': 'X'}),
     }
     
-    embed_reaction = embed_assemblies_into_reactions(
+    embed_reaction = embed_assemblies_into_reaction(
         REACTION, ID_TO_ASSEMBLY)
     
     assert embed_reaction == IntraReactionEmbedded(

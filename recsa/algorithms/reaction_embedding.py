@@ -5,16 +5,16 @@ from recsa import (Assembly, InterReaction, InterReactionEmbedded,
 
 
 @overload
-def embed_assemblies_into_reactions(
+def embed_assemblies_into_reaction(
     reaction: IntraReaction,
     id_to_assembly: dict[str, Assembly]
     ) -> IntraReactionEmbedded: ...
 @overload
-def embed_assemblies_into_reactions(
+def embed_assemblies_into_reaction(
     reaction: InterReaction,
     id_to_assembly: dict[str, Assembly]
     ) -> InterReactionEmbedded: ...
-def embed_assemblies_into_reactions(
+def embed_assemblies_into_reaction(
         reaction: IntraReaction | InterReaction,
         id_to_assembly: dict[str, Assembly]):
     """Embed the assemblies into the reaction."""
