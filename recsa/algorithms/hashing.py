@@ -10,6 +10,27 @@ def calc_graph_hash_of_assembly(
         assembly: Assembly, 
         component_structures: Mapping[str, Component]
         ) -> str:
+    """Calculate the hash of the graph of the assembly.
+
+    Parameters
+    ----------
+    assembly : Assembly
+        The assembly to calculate the hash of.
+    component_structures : Mapping[str, Component]
+        The structures of the components in the assembly.
+
+    Returns
+    -------
+    str
+        The hash of the graph of the assembly.
+
+    Notes
+    -----
+    The hash is calculated using the Weisfeiler-Lehman graph hash
+    algorithm. The hash is calculated based on the rough graph if the
+    assembly does not have auxiliary edges, and based on the detailed
+    graph if the assembly has auxiliary edges.
+    """
     if has_aux_edges(assembly, component_structures):
         return calc_detailed_graph_hash(assembly, component_structures)
     else:
