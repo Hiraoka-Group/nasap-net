@@ -39,14 +39,6 @@ def calc_pure_wl_hash(
         g, node_attr='for_hash', edge_attr='for_hash')
 
 
-# def calc_wl_hash_of_graph(g: nx.Graph) -> str:
-#     g_copy = g.copy()
-#     _add_attr_for_hash(g_copy)
-    
-#     return nx.weisfeiler_lehman_graph_hash(
-#         g_copy, node_attr='for_hash', edge_attr='for_hash')
-
-
 def _add_attr_for_hash(g: nx.Graph) -> None:
     for node, data in g.nodes(data=True):
         if data['core_or_bindsite'] == 'core':
