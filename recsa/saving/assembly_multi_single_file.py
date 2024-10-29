@@ -19,15 +19,10 @@ def save_assemblies_to_single_file(
         assemblies: Iterable[Assembly],
         output_file: str | Path,
         *,
-        id_gen: Callable[[Assembly], str] | None = None,
         overwrite: bool = False,
         show_progress: bool = True) -> None:
     """Save assemblies to a single YAML file."""
     output_file = Path(output_file)
-
-    if id_gen is None:
-        counter = (f'{i:06}' for i in count())
-        id_gen = lambda _: next(counter)
 
     if output_file.exists() and not overwrite:
         raise FileExistsError(
