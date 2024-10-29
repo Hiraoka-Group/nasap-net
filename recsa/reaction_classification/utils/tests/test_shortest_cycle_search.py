@@ -25,7 +25,8 @@ def test_one_ring():
          ('M2.b', 'L2.a'), ('L2.b', 'M1.a')])
     result = find_shortest_cycle(M2L2_RING)
     assert result is not None
-    assert are_same_circular_perm(result, ['M1', 'L1', 'M2', 'L2'])
+    assert are_same_circular_perm(
+        result, ['M1', 'L1', 'M2', 'L2'], consider_reverse=True)
 
 
 def test_one_parallel():
@@ -44,7 +45,8 @@ def test_one_parallel():
     
     result = find_shortest_cycle(ML_RING)
     assert result is not None
-    assert are_same_circular_perm(result, ['M1', 'L1'])
+    assert are_same_circular_perm(
+        result, ['M1', 'L1'], consider_reverse=True)
 
 
 def test_multi_rings_of_same_length():
@@ -67,9 +69,12 @@ def test_multi_rings_of_same_length():
 
     assert result is not None
     # Which cycle is returned is not guaranteed.
-    assert are_same_circular_perm(result, ['M1', 'L1', 'M2', 'L2'])\
-        or are_same_circular_perm(result, ['M1', 'L2', 'M2', 'L3'])\
-        or are_same_circular_perm(result, ['M1', 'L3', 'M2', 'L1'])
+    assert are_same_circular_perm(
+        result, ['M1', 'L1', 'M2', 'L2'], consider_reverse=True)\
+        or are_same_circular_perm(
+            result, ['M1', 'L2', 'M2', 'L3'], consider_reverse=True)\
+        or are_same_circular_perm(
+            result, ['M1', 'L3', 'M2', 'L1'], consider_reverse=True)
 
 
 def test_multi_rings_of_different_length():
@@ -95,7 +100,8 @@ def test_multi_rings_of_different_length():
     result = find_shortest_cycle(M3L3_RING)
 
     assert result is not None
-    assert are_same_circular_perm(result, ['M1', 'L1', 'M2', 'L2'])
+    assert are_same_circular_perm(
+        result, ['M1', 'L1', 'M2', 'L2'], consider_reverse=True)
 
 
 def test_one_ring_and_one_parallel():
@@ -117,7 +123,8 @@ def test_one_ring_and_one_parallel():
     result = find_shortest_cycle(ML_PARALLEL_RING)
 
     assert result is not None
-    assert are_same_circular_perm(result, ['M1', 'L1'])
+    assert are_same_circular_perm(
+        result, ['M1', 'L1'], consider_reverse=True)
 
 
 if __name__ == '__main__':
