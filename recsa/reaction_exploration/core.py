@@ -3,8 +3,8 @@ from collections import defaultdict
 from collections.abc import Iterator, Mapping
 
 from recsa import (Assembly, Component, InterReaction, IntraReaction,
-                   calc_wl_hash_of_assembly)
-from recsa.algorithms.hashing import calc_wl_hash_of_assembly
+                   calc_graph_hash_of_assembly)
+from recsa.algorithms.hashing import calc_graph_hash_of_assembly
 
 from .inter import explore_inter_reactions
 from .intra import explore_intra_reactions
@@ -17,7 +17,7 @@ def explore_reactions(
         ) -> Iterator[IntraReaction | InterReaction]:
     hash_to_ids = defaultdict(list)
     for assem_id, assembly in id_to_assembly.items():
-        hash_ = calc_wl_hash_of_assembly(assembly, component_structures)
+        hash_ = calc_graph_hash_of_assembly(assembly, component_structures)
         hash_to_ids[hash_].append(assem_id)
     
     # Intra-molecular ligand exchange

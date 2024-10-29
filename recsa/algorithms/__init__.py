@@ -20,7 +20,7 @@ from .assembly_equality import assemblies_equal
 from .assembly_separation import separate_product_if_possible
 from .aux_edge_existence import has_aux_edges
 from .bondset_sorting import sort_bondsets
-from .hashing import calc_wl_hash_of_assembly
+from .hashing import calc_graph_hash_of_assembly
 from .isomorphic_assembly_search import find_isomorphic_assembly
 from .isomorphism import is_isomorphic
 from .isomorphism import isomorphisms_iter
