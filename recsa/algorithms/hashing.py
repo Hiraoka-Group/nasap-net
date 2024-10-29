@@ -52,10 +52,10 @@ def calc_rough_graph_hash(assembly: Assembly) -> str:
 
 def _multi_graph_to_graph(G_multi: nx.MultiGraph) -> nx.Graph:
     G_single = nx.Graph()
+    for node, data in G_multi.nodes(data=True):
+        G_single.add_node(node, **data)
     for u, v, data in G_multi.edges(data=True):
         G_single.add_edge(u, v)
-    for node, data in G_multi.nodes(data=True):
-        G_single.nodes[node].update(data)
     return G_single
 
 
