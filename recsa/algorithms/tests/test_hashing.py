@@ -3,9 +3,10 @@ from unittest.mock import patch
 import pytest
 
 import recsa.algorithms.hashing as hashing
-from recsa import Assembly, Component, calc_wl_hash_of_assembly
-from recsa.algorithms.hashing import (_multi_graph_to_graph, calc_pure_wl_hash,
-                                      calc_rough_wl_hash)
+from recsa import Assembly, Component, calc_graph_hash_of_assembly
+from recsa.algorithms.hashing import (_multi_graph_to_graph,
+                                      calc_detailed_graph_hash,
+                                      calc_rough_graph_hash)
 
 # ==========================================
 # Tests for calc_wl_hash_of_assembly
@@ -18,14 +19,14 @@ def test_calc_wl_hash_of_assembly_with_aux_edges():
     with (
             patch('recsa.algorithms.hashing.has_aux_edges', 
                   return_value=True) as mock_has_aux_edges,
-            patch('recsa.algorithms.hashing.calc_pure_wl_hash')\
-                as mock_pure_wl_hash,
-            patch('recsa.algorithms.hashing.calc_rough_wl_hash')\
+            patch('recsa.algorithms.hashing.calc_detailed_graph_hash')\
+                as mock_detailed_wl_hash,
+            patch('recsa.algorithms.hashing.calc_rough_graph_hash')\
                 as mock_rough_wl_hash):
-        calc_wl_hash_of_assembly(assembly, components)
+        calc_graph_hash_of_assembly(assembly, components)
         
         mock_has_aux_edges.assert_called_once_with(assembly, components)
-        mock_pure_wl_hash.assert_called_once_with(assembly, components)
+        mock_detailed_wl_hash.assert_called_once_with(assembly, components)
         mock_rough_wl_hash.assert_not_called()
 
 
@@ -36,14 +37,14 @@ def test_calc_wl_hash_of_assembly_without_aux_edges():
     with (
             patch('recsa.algorithms.hashing.has_aux_edges', 
                   return_value=False) as mock_has_aux_edges,
-            patch('recsa.algorithms.hashing.calc_pure_wl_hash')\
-                as mock_pure_wl_hash,
-            patch('recsa.algorithms.hashing.calc_rough_wl_hash')\
+            patch('recsa.algorithms.hashing.calc_detailed_graph_hash')\
+                as mock_detailed_wl_hash,
+            patch('recsa.algorithms.hashing.calc_rough_graph_hash')\
                 as mock_rough_wl_hash):
-        calc_wl_hash_of_assembly(assembly, components)
+        calc_graph_hash_of_assembly(assembly, components)
         
         mock_has_aux_edges.assert_called_once_with(assembly, components)
-        mock_pure_wl_hash.assert_not_called()
+        mock_detailed_wl_hash.assert_not_called()
         mock_rough_wl_hash.assert_called_once_with(assembly)
 
 
@@ -91,10 +92,10 @@ def ML2X2_TRANS():
 
 
 # ==========================================
-# Tests for calc_pure_wl_hash
+# Tests for calc_detailed_wl_hash
 # ==========================================
 
-def test_pure_hash_with_same_assemblies():
+def test_detailed_hash_with_same_assemblies():
     MX2_ALPHA = Assembly({'M1': 'M', 'X1': 'X', 'X2': 'X'},
                      [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MX2_BETA = Assembly({'M10': 'M', 'X10': 'X', 'X20': 'X'},
@@ -104,8 +105,8 @@ def test_pure_hash_with_same_assemblies():
         'X': Component({'a'}),
     }
 
-    hash_mx2_alpha = calc_pure_wl_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
-    hash_mx2_beta = calc_pure_wl_hash(MX2_BETA, COMP_KIND_TO_OBJ)
+    hash_mx2_alpha = calc_detailed_graph_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
+    hash_mx2_beta = calc_detailed_graph_hash(MX2_BETA, COMP_KIND_TO_OBJ)
 
     # Since the graphs of MX2_ALPHA and MX2_BETA are isomorphic 
     # considering the component kinds, the hashes of them should be 
@@ -113,7 +114,7 @@ def test_pure_hash_with_same_assemblies():
     assert hash_mx2_alpha == hash_mx2_beta
 
 
-def test_pure_hash_with_different_component_kinds():
+def test_detailed_hash_with_different_component_kinds():
     MX2 = Assembly({'M1': 'M', 'X1': 'X', 'X2': 'X'},
                    [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MY2 = Assembly({'M1': 'M', 'Y1': 'Y', 'Y2': 'Y'},
@@ -124,8 +125,8 @@ def test_pure_hash_with_different_component_kinds():
         'Y': Component({'a'}),
     }
 
-    hash_mx2 = calc_pure_wl_hash(MX2, COMP_KIND_TO_OBJ)
-    hash_my2 = calc_pure_wl_hash(MY2, COMP_KIND_TO_OBJ)
+    hash_mx2 = calc_detailed_graph_hash(MX2, COMP_KIND_TO_OBJ)
+    hash_my2 = calc_detailed_graph_hash(MY2, COMP_KIND_TO_OBJ)
 
     # Even though the graphs of MX2 and MY2 are isomorphic without
     # considering the component kinds, the hashes of them should be
@@ -134,7 +135,7 @@ def test_pure_hash_with_different_component_kinds():
     assert hash_mx2 != hash_my2
 
 
-def test_pure_hash_with_same_assemblies_and_same_aux_edges():
+def test_detailed_hash_with_same_assemblies_and_same_aux_edges():
     MX2_ALPHA = Assembly({'M1': 'M', 'X1': 'X', 'X2': 'X'},
                         [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MX2_BETA = Assembly({'M10': 'M', 'X10': 'X', 'X20': 'X'},
@@ -144,8 +145,8 @@ def test_pure_hash_with_same_assemblies_and_same_aux_edges():
         'X': Component({'a'}),
     }
 
-    hash_mx2_alpha = calc_pure_wl_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
-    hash_mx2_beta = calc_pure_wl_hash(MX2_BETA, COMP_KIND_TO_OBJ)
+    hash_mx2_alpha = calc_detailed_graph_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
+    hash_mx2_beta = calc_detailed_graph_hash(MX2_BETA, COMP_KIND_TO_OBJ)
 
     # Since the graphs of MX2_ALPHA and MX2_BETA are isomorphic
     # considering the component kinds and the kinds of the aux edges,
@@ -153,7 +154,7 @@ def test_pure_hash_with_same_assemblies_and_same_aux_edges():
     assert hash_mx2_alpha == hash_mx2_beta
 
 
-def test_pure_hash_with_different_connectivities():
+def test_detailed_hash_with_different_connectivities():
     # X1---X2---X3
     LINEAR = Assembly(
         {'X1': 'X', 'X2': 'X', 'X3': 'X'},
@@ -165,13 +166,13 @@ def test_pure_hash_with_different_connectivities():
         {'X1': 'X', 'X2': 'X', 'X3': 'X'},
         [('X1.b', 'X2.a'), ('X2.b', 'X3.a'), ('X3.b', 'X1.a')])
 
-    hash_linear = calc_rough_wl_hash(LINEAR)
-    hash_ring = calc_rough_wl_hash(RING)
+    hash_linear = calc_rough_graph_hash(LINEAR)
+    hash_ring = calc_rough_graph_hash(RING)
 
     assert hash_linear != hash_ring
 
 
-def test_pure_hash_with_different_aux_edge_existence():
+def test_detailed_hash_with_different_aux_edge_existence():
     MX2_ALPHA = Assembly({'M1': 'M_WITH_AUX', 'X1': 'X', 'X2': 'X'},
                         [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MX2_BETA = Assembly({'M10': 'M_WITHOUT_AUX', 'X10': 'X', 'X20': 'X'},
@@ -182,8 +183,8 @@ def test_pure_hash_with_different_aux_edge_existence():
         'X': Component({'a'}),
     }
 
-    hash_mx2_alpha = calc_pure_wl_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
-    hash_mx2_beta = calc_pure_wl_hash(MX2_BETA, COMP_KIND_TO_OBJ)
+    hash_mx2_alpha = calc_detailed_graph_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
+    hash_mx2_beta = calc_detailed_graph_hash(MX2_BETA, COMP_KIND_TO_OBJ)
 
     # Even though the graphs of MX2_ALPHA and MX2_BETA are isomorphic
     # considering only the component kinds, the hashes of them should be
@@ -191,7 +192,7 @@ def test_pure_hash_with_different_aux_edge_existence():
     assert hash_mx2_alpha != hash_mx2_beta
 
 
-def test_pure_hash_with_different_aux_edge_kinds():
+def test_detailed_hash_with_different_aux_edge_kinds():
     MX2_ALPHA = Assembly({'M1': 'M_CIS', 'X1': 'X', 'X2': 'X'},
                         [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MX2_BETA = Assembly({'M10': 'M_TRANS', 'X10': 'X', 'X20': 'X'},
@@ -202,8 +203,8 @@ def test_pure_hash_with_different_aux_edge_kinds():
         'X': Component({'a'}),
     }
 
-    hash_mx2_alpha = calc_pure_wl_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
-    hash_mx2_beta = calc_pure_wl_hash(MX2_BETA, COMP_KIND_TO_OBJ)
+    hash_mx2_alpha = calc_detailed_graph_hash(MX2_ALPHA, COMP_KIND_TO_OBJ)
+    hash_mx2_beta = calc_detailed_graph_hash(MX2_BETA, COMP_KIND_TO_OBJ)
 
     # Even though the graphs of MX2_ALPHA and MX2_BETA are isomorphic
     # considering only the component kinds, the hashes of them should be
@@ -211,7 +212,7 @@ def test_pure_hash_with_different_aux_edge_kinds():
     assert hash_mx2_alpha != hash_mx2_beta
 
 
-def test_pure_hash_with_different_configurations():
+def test_detailed_hash_with_different_configurations():
     COMP_ID_TO_KIND = {
         'M1': 'M', 'L1': 'L', 'L2': 'L',
         'X1': 'X', 'X2': 'X'}
@@ -231,8 +232,8 @@ def test_pure_hash_with_different_configurations():
         'L': Component({'a', 'b'}),
         'X': Component({'a'}),
     }
-    hash_ml2x2_cis = calc_pure_wl_hash(ML2X2_CIS, COMP_KIND_TO_OBJ)
-    hash_ml2x2_trans = calc_pure_wl_hash(ML2X2_TRANS, COMP_KIND_TO_OBJ)
+    hash_ml2x2_cis = calc_detailed_graph_hash(ML2X2_CIS, COMP_KIND_TO_OBJ)
+    hash_ml2x2_trans = calc_detailed_graph_hash(ML2X2_TRANS, COMP_KIND_TO_OBJ)
 
     # Even though the graphs of ML2_CIS and ML_TRANS are isomorphic
     # considering only the component kinds, the hashes of them should be
@@ -248,8 +249,8 @@ def test_rough_hash_with_same_assemblies():
                      [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MX2_BETA = Assembly({'M10': 'M', 'X10': 'X', 'X20': 'X'},
                      [('M10.a', 'X10.a'), ('M10.b', 'X20.a')])
-    hash_mx2_alpha = calc_rough_wl_hash(MX2_ALPHA)
-    hash_mx2_beta = calc_rough_wl_hash(MX2_BETA)
+    hash_mx2_alpha = calc_rough_graph_hash(MX2_ALPHA)
+    hash_mx2_beta = calc_rough_graph_hash(MX2_BETA)
 
     # Since the rough graphs of MX2_ALPHA and MX2_BETA are isomorphic 
     # considering the component kinds, the hashes of them should be 
@@ -262,8 +263,8 @@ def test_rough_hash_with_different_component_kinds():
                    [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
     MY2 = Assembly({'M1': 'M', 'Y1': 'Y', 'Y2': 'Y'},
                    [('M1.a', 'Y1.a'), ('M1.b', 'Y2.a')])
-    hash_mx2 = calc_rough_wl_hash(MX2)
-    hash_my2 = calc_rough_wl_hash(MY2)
+    hash_mx2 = calc_rough_graph_hash(MX2)
+    hash_my2 = calc_rough_graph_hash(MY2)
 
     # Even though the rough graphs of MX2 and MY2 are isomorphic without
     # considering the component kinds, the hashes of them should be
@@ -284,8 +285,8 @@ def test_rough_hash_with_different_connectivities():
         {'X1': 'X', 'X2': 'X', 'X3': 'X'},
         [('X1.b', 'X2.a'), ('X2.b', 'X3.a'), ('X3.b', 'X1.a')])
 
-    hash_linear = calc_rough_wl_hash(LINEAR)
-    hash_ring = calc_rough_wl_hash(RING)
+    hash_linear = calc_rough_graph_hash(LINEAR)
+    hash_ring = calc_rough_graph_hash(RING)
 
     assert hash_linear != hash_ring
 

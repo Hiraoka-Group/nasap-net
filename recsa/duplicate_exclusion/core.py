@@ -1,7 +1,7 @@
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 
-from recsa import Assembly, Component, calc_wl_hash_of_assembly
+from recsa import Assembly, Component, calc_graph_hash_of_assembly
 
 from .lib.is_new_check import is_new
 
@@ -41,7 +41,7 @@ def find_unique_assemblies(
     """
     hash_to_uniques: dict[str, list[Assembly]] = defaultdict(list)
     for id_, assembly in assemblies:
-        hash_ = calc_wl_hash_of_assembly(assembly, component_structures)
+        hash_ = calc_graph_hash_of_assembly(assembly, component_structures)
         if is_new(
                 hash_, assembly, hash_to_uniques, component_structures):
             hash_to_uniques[hash_].append(assembly)

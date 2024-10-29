@@ -6,17 +6,17 @@ from recsa import Assembly, Component
 from recsa.algorithms.aux_edge_existence import has_aux_edges
 
 
-def calc_wl_hash_of_assembly(
+def calc_graph_hash_of_assembly(
         assembly: Assembly, 
         component_structures: Mapping[str, Component]
         ) -> str:
     if has_aux_edges(assembly, component_structures):
-        return calc_pure_wl_hash(assembly, component_structures)
+        return calc_detailed_graph_hash(assembly, component_structures)
     else:
-        return calc_rough_wl_hash(assembly)
+        return calc_rough_graph_hash(assembly)
 
 
-def calc_rough_wl_hash(assembly: Assembly) -> str:
+def calc_rough_graph_hash(assembly: Assembly) -> str:
     # Since nx.weisfeiler_lehman_graph_hash() is not supported for
     # MultiGraph, which is used for the rough graph, we need to convert
     # it to Graph, i.e., remove parallel edges.
@@ -38,7 +38,7 @@ def _multi_graph_to_graph(G_multi: nx.MultiGraph) -> nx.Graph:
     return G_single
 
 
-def calc_pure_wl_hash(
+def calc_detailed_graph_hash(
         assembly: Assembly, 
         component_structures: Mapping[str, Component]
         ) -> str:
