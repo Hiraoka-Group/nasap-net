@@ -5,13 +5,6 @@ import networkx as nx
 from recsa import Assembly, Component
 from recsa.algorithms.aux_edge_existence import has_aux_edges
 
-__all__ = [
-    'calc_wl_hash_of_assembly',
-    'calc_rough_wl_hash',
-    'calc_pure_wl_hash',
-    # 'calc_wl_hash_of_graph',
-]
-
 
 def calc_wl_hash_of_assembly(
         assembly: Assembly, 
@@ -24,8 +17,25 @@ def calc_wl_hash_of_assembly(
 
 
 def calc_rough_wl_hash(assembly: Assembly) -> str:
+    # Since nx.weisfeiler_lehman_graph_hash() is not supported for
+    # MultiGraph, which is used for the rough graph, we need to convert
+    # it to Graph, i.e., remove parallel edges.
+    # Consequently, the result of this function will be the same for
+    # assemblies with the same rough graph except for the existence of
+    # parallel edges.
+    rough_g = assembly.rough_g_snapshot
+    rough_g_without_parallel_edges = _multi_graph_to_graph(rough_g)
     return nx.weisfeiler_lehman_graph_hash(
-        assembly.rough_g_snapshot, node_attr='component_kind')
+        rough_g_without_parallel_edges, node_attr='component_kind')
+
+
+def _multi_graph_to_graph(G_multi: nx.MultiGraph) -> nx.Graph:
+    G_single = nx.Graph()
+    for u, v, data in G_multi.edges(data=True):
+        G_single.add_edge(u, v)
+    for node, data in G_multi.nodes(data=True):
+        G_single.nodes[node].update(data)
+    return G_single
 
 
 def calc_pure_wl_hash(
