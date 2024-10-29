@@ -102,7 +102,7 @@ def test_overwrite(tmp_path):
     save_assemblies_to_single_file([], output_file, overwrite=True)
 
 
-def test_show_progress(capsys, tmp_path):
+def test_show_progress_true(capsys, tmp_path):
     assemblies = [Assembly({'M1': 'M', 'X1': 'X'}, [('M1.a', 'X1.a')])
                   for _ in range(3)]
     output_file = tmp_path / 'assemblies.yml'
@@ -117,6 +117,18 @@ def test_show_progress(capsys, tmp_path):
         'All assemblies saved successfully.\r?\n?'
     )
     assert re.match(expected_output, captured.out)
+
+
+def test_show_progress_false(capsys, tmp_path):
+    assemblies = [Assembly({'M1': 'M', 'X1': 'X'}, [('M1.a', 'X1.a')])
+                  for _ in range(3)]
+    output_file = tmp_path / 'assemblies.yml'
+
+    save_assemblies_to_single_file(assemblies, output_file, show_progress=False)
+
+    # No output should be printed
+    captured = capsys.readouterr()
+    assert captured.out == ''
 
 
 if __name__ == '__main__':
