@@ -16,7 +16,7 @@ add_assembly_representer()
 
 
 def save_assemblies_to_single_file(
-        assemblies: Iterable,
+        assemblies: Iterable[Assembly],
         output_file: str | Path,
         *,
         id_gen: Callable[[Assembly], str] | None = None,
