@@ -1,16 +1,15 @@
 from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
-from typing import Any, TypeAlias
+from typing import Any
 
 from recsa import Assembly
 
-from .assembly import load_assembly
 from .yaml_safe_load_all import load_yaml_all_safely
 
-__all__ = ['load_assemblies_in_one_file']
+__all__ = ['load_assemblies_in_single_file']
 
 
-def load_assemblies_in_one_file(
+def load_assemblies_in_single_file(
         filepath: str | Path
         ) -> Iterator[tuple[str, Assembly]]:
     for data in load_yaml_all_safely(filepath):

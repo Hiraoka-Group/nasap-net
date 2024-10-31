@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 import yaml
 
-from recsa import Assembly, assembly_equality, load_assemblies_in_one_file
+from recsa import Assembly, assembly_equality, load_assemblies_in_single_file
 
 
 # Helper function
@@ -24,7 +24,7 @@ def test_typical_case(tmp_path):
     ]
     assemblies_file = write_safe_data_to_file(tmp_path, data)
     
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
 
     assert list(loaded) == [
         ('MX2', Assembly(
@@ -37,7 +37,7 @@ def test_typical_case(tmp_path):
 def test_basic(tmp_path):
     data = [{'comp_id_to_kind': {'M1': 'M'}}]
     assemblies_file = write_safe_data_to_file(tmp_path, data)
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
     assert list(loaded) == [
         (None, Assembly(comp_id_to_kind={'M1': 'M'}, bonds=[]))]
 
@@ -45,7 +45,7 @@ def test_basic(tmp_path):
 def test_id(tmp_path):
     data = [{'id': 'freeM', 'comp_id_to_kind': {'M1': 'M'}}]
     assemblies_file = write_safe_data_to_file(tmp_path, data)
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
     assert list(loaded) == [
         ('freeM', Assembly(comp_id_to_kind={'M1': 'M'}, bonds=[]))]
 
@@ -53,21 +53,21 @@ def test_id(tmp_path):
 def test_without_comp_id_to_kind(tmp_path):
     data = [{}]  # type: ignore
     assemblies_file = write_safe_data_to_file(tmp_path, data)
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
     assert list(loaded) == [(None, Assembly(comp_id_to_kind={}, bonds=[]))]
 
 
 def test_empty_comp_id_to_kind(tmp_path):
     data = [{'comp_id_to_kind': {}}]  # type: ignore
     assemblies_file = write_safe_data_to_file(tmp_path, data)
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
     assert list(loaded) == [(None, Assembly(comp_id_to_kind={}, bonds=[]))]
 
 
 def test_without_bonds(tmp_path):
     data = [{'comp_id_to_kind': {'M1': 'M'}}]
     assemblies_file = write_safe_data_to_file(tmp_path, data)
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
     assert list(loaded) == [
         (None, Assembly(comp_id_to_kind={'M1': 'M'}, bonds=[]))]
 
@@ -75,7 +75,7 @@ def test_without_bonds(tmp_path):
 def test_empty_bonds(tmp_path):
     data = [{'comp_id_to_kind': {'M1': 'M'}, 'bonds': []}]
     assemblies_file = write_safe_data_to_file(tmp_path, data)
-    loaded = load_assemblies_in_one_file(assemblies_file)
+    loaded = load_assemblies_in_single_file(assemblies_file)
     assert list(loaded) == [
         (None, Assembly(comp_id_to_kind={'M1': 'M'}, bonds=[]))]
 
