@@ -1,21 +1,28 @@
+from collections.abc import Iterable
+from typing import TypeVar
+
 __all__ = ['sort_bondsets']
 
 
-def sort_bondsets(
-        bond_subsets: set[frozenset[str]]) -> list[set[str]]:
-    """Sort assemblies by the number of bonds and the bond IDs.
+T = TypeVar('T', bound=Iterable[str])
 
-    The number of bonds is the primary key, and the sorted tuple of
-    bond IDs is the secondary key.
 
-    Duplicate bond IDs may cause unexpected behavior.
+def sort_bondsets(bondsets: Iterable[T]) -> list[T]:
+    """Sort bondsets by the number of bonds and the sorted bond IDs.
 
-    # TODO: Add an example.
+    The number of bonds is the primary key, and the sorted bond IDs 
+    is the secondary key.
+
+    The order of the equal elements is preserved.
     """
     return sorted(
-        bond_subsets,  # type: ignore
-        # mypy states that the `sorted` function expects
-        # `Iterable[set[str]]`, but the reason is unclear.
+        bondsets,
+        key=lambda bondset: (len(list(bondset)), sorted(bondset))
+        )
 
-        key=lambda subset: (len(subset), sorted(subset))
+
+def sort_bondsets_and_bonds(bondsets: Iterable[Iterable[str]]) -> list[list[str]]:
+    """Sort bondsets and bonds in the bondsets."""
+    return sort_bondsets(
+        (sorted(bondset) for bondset in bondsets)
         )
