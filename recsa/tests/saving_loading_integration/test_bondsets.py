@@ -7,9 +7,9 @@ def test_typical_case(tmp_path):
     BONDSETS = [
         ['1'], ['2'], ['1', '2'], ['1', '2', '3']
     ]
-    EXPECTED_BONDSETS = [
-        ['1'], ['2'], ['1', '2'], ['1', '2', '3']
-    ]
+    EXPECTED_BONDSETS = {
+        0: {'1'}, 1: {'2'}, 2: {'1', '2'}, 3: {'1', '2', '3'}
+    }
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.json")
     loaded_bondsets = load_bondsets(tmp_path / "bondsets.json")
