@@ -8,9 +8,9 @@ def test_typical_case(tmp_path):
     BONDSETS = [
         ['2'], ['1', '2'], ['1'], ['1', '3', '2']
     ]
-    EXPECTED_BONDSETS = [
-        ['1'], ['2'], ['1', '2'], ['1', '2', '3']
-    ]
+    EXPECTED_BONDSETS = {
+        0: ['1'], 1: ['2'], 2: ['1', '2'], 3: ['1', '2', '3']
+    }
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
 
@@ -23,7 +23,7 @@ def test_typical_case(tmp_path):
 def test_overwrite_false(tmp_path):
     BONDSETS = [['1']]
     NEW_BONDSETS = [['2']]
-    EXPECTED_BONDSETS = [['1']]
+    EXPECTED_BONDSETS = {0: ['1']}
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
     save_bondsets(NEW_BONDSETS, tmp_path / "bondsets.yaml", overwrite=False)
@@ -37,7 +37,7 @@ def test_overwrite_false(tmp_path):
 def test_overwrite_true(tmp_path):
     BONDSETS = [['1']]
     NEW_BONDSETS = [['2']]
-    EXPECTED_BONDSETS = [['2']]
+    EXPECTED_BONDSETS = {0: ['2']}
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
     save_bondsets(NEW_BONDSETS, tmp_path / "bondsets.yaml", overwrite=True)
@@ -50,7 +50,7 @@ def test_overwrite_true(tmp_path):
 
 def test_bond_ordering(tmp_path):
     BONDSETS = [['2', '3', '1']]
-    EXPECTED_BONDSETS = [['1', '2', '3']]
+    EXPECTED_BONDSETS = {0: ['1', '2', '3']}
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
 
@@ -62,7 +62,7 @@ def test_bond_ordering(tmp_path):
 
 def test_bondset_ordering_by_alphabet(tmp_path):
     BONDSETS = [['2'], ['3'], ['1']]
-    EXPECTED_BONDSETS = [['1'], ['2'], ['3']]
+    EXPECTED_BONDSETS = {0: ['1'], 1: ['2'], 2: ['3']}
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
 
@@ -76,7 +76,7 @@ def test_bondset_ordering_by_length(tmp_path):
     # The bondsets are sorted by length first, 
     # then by the elements in the bondset
     BONDSETS = [['1', '2', '3'], ['4'], ['5', '6']]
-    EXPECTED_BONDSETS = [['4'], ['5', '6'], ['1', '2', '3']]
+    EXPECTED_BONDSETS = {0: ['4'], 1: ['5', '6'], 2: ['1', '2', '3']}
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
 
@@ -92,7 +92,7 @@ def test_test_zero_padded_numbers(tmp_path):
     # https://github.com/Hiraoka-Group/recsa/issues/43#issue-2630091131
 
     BONDSETS = {frozenset({'07', '08', '09', '10'})}
-    EXPECTED_TEXT = "- ['07', '08', '09', '10']\n"
+    EXPECTED_TEXT = "0: ['07', '08', '09', '10']\n"
 
     save_bondsets(BONDSETS, tmp_path / "bondsets.yaml")
 

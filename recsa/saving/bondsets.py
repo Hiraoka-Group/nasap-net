@@ -29,7 +29,7 @@ def save_bondsets(
 
     with output_path.open('w') as f:
         yaml.dump(
-            sort_bondsets_and_bonds(bondsets),
+            {i: bondset for i, bondset in enumerate(sort_bondsets_and_bonds(bondsets))},
             f, default_flow_style=None,
             Dumper=CoreDumper)
         print(f'Saved! ---> "{output_path}"')
