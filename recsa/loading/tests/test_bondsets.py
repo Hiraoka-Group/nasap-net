@@ -49,5 +49,12 @@ def test_convert_int_to_str(tmp_path):
     assert loaded == {0: {'1'}, 1: {'1', '2'}}
 
 
+def test_dict_data(tmp_path):
+    BONDSETS = {10: ['1'], 20: ['1', '2']}
+    bondsets_file = write_bondsets_to_file(tmp_path, BONDSETS)
+    loaded = load_bondsets(bondsets_file)
+    assert loaded == {10: {'1'}, 20: {'1', '2'}}
+
+
 if __name__ == '__main__':
     pytest.main(['-vv', __file__])
