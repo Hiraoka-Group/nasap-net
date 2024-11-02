@@ -137,7 +137,7 @@ def _calc_normalized_to_orig_bondsets(
             normalize_bondset_under_sym_ops(bondset, sym_ops))
         if normalized in d:
             raise ValueError(
-                f'Duplicate bondset found: '
+                f'Duplicate bondset under symmetry operations: '
                 f'{sorted(bondset)} and {sorted(d[normalized])}'
                 )
         d[normalized] = frozenset(bondset)
