@@ -3,14 +3,11 @@ from pathlib import Path
 from typing import NewType
 
 import yaml
+from yamlcore import CoreDumper
 
 from recsa.utils import find_unique_filepath
 
-from .representers import BondSets, add_bondsets_representer
-
 __all__ = ['save_bondsets']
-
-add_bondsets_representer()
 
 
 def save_bondsets(
@@ -30,9 +27,12 @@ def save_bondsets(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    bondsets_obj = BondSets(
-        {frozenset(bondset) for bondset in bondsets})
+    formatted = sorted(
+        (sorted(bondset) for bondset in bondsets),
+        key=lambda x: (len(x), x))
 
     with output_path.open('w') as f:
-        yaml.dump(bondsets_obj, f, default_flow_style=None)
+        yaml.dump(
+            formatted, f, default_flow_style=None,
+            Dumper=CoreDumper)
         print(f'Saved! ---> "{output_path}"')
