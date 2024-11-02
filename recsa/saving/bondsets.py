@@ -1,6 +1,5 @@
 from collections.abc import Iterable
 from pathlib import Path
-from typing import NewType
 
 import yaml
 from yamlcore import CoreDumper
