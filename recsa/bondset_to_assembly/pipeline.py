@@ -10,11 +10,11 @@ def convert_bondsets_to_assemblies_pipeline(
         output_dir: str, overwrite: bool = False
         ) -> None:
     """Translate bond subsets to assembly objects and save them to a file."""
-    bondsets = load_bondsets(bondsets_path)
+    id_to_bondset = load_bondsets(bondsets_path)
     args = load_structure_data(structure_path)
 
     assemblies = convert_bondsets_to_assemblies(
-        bondsets=[frozenset(bondset) for bondset in bondsets],
+        bondsets=[frozenset(bondset) for bondset in id_to_bondset.values()],
         components=args.components,
         bond_id_to_bindsites=args.bond_id_to_bindsites,
     )
