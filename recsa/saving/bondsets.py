@@ -5,6 +5,7 @@ from typing import NewType
 import yaml
 from yamlcore import CoreDumper
 
+from recsa import sort_bondsets_and_bonds
 from recsa.utils import find_unique_filepath
 
 __all__ = ['save_bondsets']
@@ -27,12 +28,9 @@ def save_bondsets(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    formatted = sorted(
-        (sorted(bondset) for bondset in bondsets),
-        key=lambda x: (len(x), x))
-
     with output_path.open('w') as f:
         yaml.dump(
-            formatted, f, default_flow_style=None,
+            sort_bondsets_and_bonds(bondsets),
+            f, default_flow_style=None,
             Dumper=CoreDumper)
         print(f'Saved! ---> "{output_path}"')
