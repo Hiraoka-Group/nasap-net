@@ -1,4 +1,4 @@
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -8,7 +8,7 @@ import recsa as rx
 from recsa.loading.yaml_safe_load import load_yaml_safely
 
 
-def load_bondsets(file_path: str | Path) -> list[list[str]]:
+def load_bondsets(file_path: str | Path) -> dict[int, set[str]]:
     """Load bondsets from a YAML file.
 
     Parameters
@@ -18,8 +18,9 @@ def load_bondsets(file_path: str | Path) -> list[list[str]]:
 
     Returns
     -------
-    list[list[str]]
-        The bondsets.
+    dict[int, set[str]]
+        The bondsets loaded from the file. 
+        The keys are the indices of the bondsets.
 
     Raises
     ------
@@ -37,42 +38,25 @@ def load_bondsets(file_path: str | Path) -> list[list[str]]:
     return bondsets
 
 
-def _convert_data_to_bondsets(data: Any) -> list[list[str]]:
-    """Convert data to a list of bondsets.
+def _convert_data_to_bondsets(data: Any) -> dict[int, set[str]]:
+    """Convert data to a list of bondsets."""
+    if isinstance(data, dict):
+        return _convert_dict_data_to_bondsets(data)
+    if isinstance(data, list):
+        return _convert_list_data_to_bondsets(data)
+    raise rx.RecsaParsingError(
+        f'Expected a list or dict of bondsets, got {type(data)}')
 
-    The data should be a list of lists of strings or integers.
-    Integers will be converted to strings.
 
-    The order of the bondsets and bonds will be preserved.
-    
-    Parameters
-    ----------
-    data : Any
-        The data to convert. Should be a list of lists of strings 
-        or integers.
+def _convert_list_data_to_bondsets(
+        bondsets: Iterable[Iterable[str]]) -> dict[int, set[str]]:
+    return {
+        i: set(str(bond) for bond in bondset) 
+        for i, bondset in enumerate(bondsets)}
 
-    Returns
-    -------
-    list[list[str]]
-        The converted data.
 
-    Raises
-    ------
-    RecsaParsingError
-        If the data is not a list of lists of strings
-    """
-    if not isinstance(data, list):
-        raise rx.RecsaParsingError(
-            f'Expected a list of bondsets, got {type(data)}'
-        )
-    for bondset in data:
-        if not isinstance(bondset, list):
-            raise rx.RecsaParsingError(
-                f'Expected a list of bonds, got {type(bondset)}'
-            )
-        for bond in bondset:
-            if not isinstance(bond, str) and not isinstance(bond, int):
-                raise rx.RecsaParsingError(
-                    f'Expected a string or integer bond, got {type(bond)}'
-                )
-    return [[str(bond) for bond in bondset] for bondset in data]
+def _convert_dict_data_to_bondsets(
+        data: Mapping[int, Iterable[str]]) -> dict[int, set[str]]:
+    return {
+        i: set(str(bond) for bond in bondset)
+        for i, bondset in data.items()}

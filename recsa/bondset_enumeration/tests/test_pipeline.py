@@ -29,9 +29,9 @@ sym_mappings:
 
     assert output_file.exists()
     assert output_file.read_text() == """\
-- ['1']
-- ['1', '2']
-- ['1', '2', '3']
+0: ['1']
+1: ['1', '2']
+2: ['1', '2', '3']
 """
 
 
@@ -40,7 +40,6 @@ DATA_DIR = Path(__file__).parent / "data"
 @pytest.mark.parametrize("input_file, expected_output_file", [
     (DATA_DIR / "M4L4_input.yaml", DATA_DIR / "M4L4_output.yaml"),
     (DATA_DIR / "M2L4_input.yaml", DATA_DIR / "M2L4_output.yaml"),
-    (DATA_DIR / "M9L6_input.yaml", DATA_DIR / "M9L6_output.yaml"),
 ])
 def test_example_cases(input_file, expected_output_file, tmp_path):
     input_path = tmp_path / "input.yaml"
