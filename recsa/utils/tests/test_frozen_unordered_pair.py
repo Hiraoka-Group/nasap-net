@@ -46,7 +46,7 @@ def test_hash():
 
 def test_repr():
     pair = FrozenUnorderedPair(1, 2)
-    assert repr(pair) == 'FrozenUnorderedPair((1, 2))'
+    assert repr(pair) == 'FrozenUnorderedPair(1, 2)'
 
 
 def test_iteration():
