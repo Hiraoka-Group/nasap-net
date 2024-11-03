@@ -1,4 +1,5 @@
 import pytest
+import yaml
 
 import recsa as rx
 from recsa import AuxEdge
@@ -44,6 +45,13 @@ def test_lt():
     edge2 = AuxEdge('b', 'c', 'cis')
     assert edge1 < edge2
     assert not edge2 < edge1
+
+
+def test_yaml():
+    edge = AuxEdge('a', 'b', 'cis')
+    edge_yaml = yaml.dump(edge, default_flow_style=None)
+    loaded_edge = yaml.safe_load(edge_yaml)
+    assert edge == loaded_edge
 
 
 if __name__ == '__main__':
