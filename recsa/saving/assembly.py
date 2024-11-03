@@ -5,12 +5,7 @@ import yaml
 from recsa import Assembly
 from recsa.utils import find_unique_filepath
 
-from .representers import add_assembly_representer
-
 __all__ = ['save_assembly']
-
-
-add_assembly_representer()
 
 
 def save_assembly(
