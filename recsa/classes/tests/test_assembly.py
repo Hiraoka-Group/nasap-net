@@ -1,5 +1,6 @@
 import networkx as nx
 import pytest
+import yaml
 
 from recsa import Assembly, AuxEdge, Component
 
@@ -85,6 +86,17 @@ def test_rough_g_snapshot():
     assert isinstance(rough_g, nx.MultiGraph)
     assert [set(e) for e in rough_g.edges()] == [
         {'M1', 'L1'}, {'M1', 'L1'}]
+
+
+def test_yaml():
+    assembly = Assembly(
+        {'M1': 'M', 'X1': 'X', 'X2': 'X'},
+        [('M1.a', 'X1.a'), ('M1.b', 'X2.a')])
+
+    assembly_yaml = yaml.dump(assembly)
+    loaded_assembly = yaml.safe_load(assembly_yaml)
+
+    assert assembly == loaded_assembly
 
 
 if __name__ == '__main__':
