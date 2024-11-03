@@ -1,7 +1,8 @@
 from itertools import tee
 from pathlib import Path
 
-from recsa import load_assemblies, load_component_structures, save_assemblies
+from recsa import (load_assemblies, load_component_structures,
+                   save_assemblies_to_single_file)
 
 from .core import find_unique_assemblies
 
@@ -26,6 +27,5 @@ def find_unique_assemblies_pipeline(
     ids = (id_ for id_, _ in paris1)
     assemblies = (assembly for _, assembly in pairs2)
     
-    save_assemblies(
-        assemblies, output_dir, 
-        names=ids, overwrite_folder=overwrite)
+    save_assemblies_to_single_file(
+        assemblies, output_dir, overwrite=overwrite)

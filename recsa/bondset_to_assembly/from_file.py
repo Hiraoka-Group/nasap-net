@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 
-from recsa import Assembly, load_bondsets, load_structure_data, save_assemblies
+from recsa import Assembly, load_bondsets, load_structure_data
 
 from .single_assembly import convert_bondset_to_assembly
 
