@@ -39,17 +39,21 @@ def test_typical_usage(tmp_path):
         data = list(yaml.safe_load_all(f))
 
     assert len(data) == 4
-    assert data[0]['comp_id_to_kind'] == {'M1': 'M', 'X1': 'X', 'X2': 'X'}
-    assert to_set_of_frozenset(data[0]['bonds']) == to_set_of_frozenset(
-        [['M1.a', 'X1.a'], ['M1.b', 'X2.a']])
-    assert data[1]['comp_id_to_kind'] == {'L1': 'L'}
-    assert data[1]['bonds'] == []
-    assert data[2]['comp_id_to_kind'] == {'M1': 'M', 'L1': 'L', 'X1': 'X'}
-    assert to_set_of_frozenset(data[2]['bonds']) == to_set_of_frozenset(
-        [['M1.a', 'L1.a'], ['M1.b', 'X1.a']])
-    assert data[3]['comp_id_to_kind'] == {'M1': 'M', 'L1': 'L', 'L2': 'L'}
-    assert to_set_of_frozenset(data[3]['bonds']) == to_set_of_frozenset(
-        [['M1.a', 'L1.a'], ['M1.b', 'L2.a']])
+    assert data[0]['id'] == 0
+    assert data[0]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'X1': 'X', 'X2': 'X'}
+    assert to_set_of_frozenset(data[0]['assembly']['bonds']) == {
+        frozenset(['M1.a', 'X1.a']), frozenset(['M1.b', 'X2.a'])}
+    assert data[1]['id'] == 1
+    assert data[1]['assembly']['comp_id_to_kind'] == {'L1': 'L'}
+    assert data[1]['assembly']['bonds'] == []
+    assert data[2]['id'] == 2
+    assert data[2]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'L1': 'L', 'X1': 'X'}
+    assert to_set_of_frozenset(data[2]['assembly']['bonds']) == {
+        frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'X1.a'])}
+    assert data[3]['id'] == 3
+    assert data[3]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'L1': 'L', 'L2': 'L'}
+    assert to_set_of_frozenset(data[3]['assembly']['bonds']) == {
+        frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'L2.a'])}
 
 
 def test_single_assembly(tmp_path):
@@ -62,9 +66,10 @@ def test_single_assembly(tmp_path):
         data = list(yaml.safe_load_all(f))
 
     assert len(data) == 1
-    assert data[0]['comp_id_to_kind'] == {'M1': 'M', 'X1': 'X'}
-    assert to_set_of_frozenset(data[0]['bonds']) == to_set_of_frozenset(
-        [['M1.a', 'X1.a']])
+    assert data[0]['id'] == 0
+    assert data[0]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'X1': 'X'}
+    assert to_set_of_frozenset(data[0]['assembly']['bonds']) == {
+        frozenset(['M1.a', 'X1.a'])}
 
 
 def test_empty_assembly(tmp_path):
@@ -88,8 +93,9 @@ def test_assembly_without_bonds(tmp_path):
         data = list(yaml.safe_load_all(f))
 
     assert len(data) == 1
-    assert data[0]['comp_id_to_kind'] == {'L1': 'L'}
-    assert data[0]['bonds'] == []
+    assert data[0]['id'] == 0
+    assert data[0]['assembly']['comp_id_to_kind'] == {'L1': 'L'}
+    assert data[0]['assembly']['bonds'] == []
 
 
 def test_overwrite(tmp_path):
