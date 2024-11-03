@@ -36,7 +36,14 @@ def test_LocalAuxEdge_hash():
 
 def test_LocalAuxEdge_repr():
     edge = AuxEdge('site1', 'site2', 'cis')
-    assert repr(edge) == "LocalAuxEdge('site1', 'site2', 'cis')"
+    assert repr(edge) == "AuxEdge('site1', 'site2', 'cis')"
+
+
+def test_lt():
+    edge1 = AuxEdge('d', 'a', 'cis')
+    edge2 = AuxEdge('b', 'c', 'cis')
+    assert edge1 < edge2
+    assert not edge2 < edge1
 
 
 if __name__ == '__main__':
