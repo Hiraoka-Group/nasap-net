@@ -35,7 +35,7 @@ def save_assemblies_to_single_file(
         for index, assembly in enumerate(assemblies):
             if not first:
                 f.write('---\n')  # YAML document separator
-            yaml.dump({'id': index, 'assembly': assembly}, f)
+            yaml.dump({'index': index, 'assembly': assembly}, f)
             first = False
             if show_progress:
                 # Update progress on the same line
