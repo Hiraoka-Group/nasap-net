@@ -19,4 +19,4 @@ def convert_bondsets_to_assemblies_pipeline(
         bond_id_to_bindsites=args.bond_id_to_bindsites,
     )
 
-    save_assemblies(assemblies, output_dir, overwrite_folder=overwrite)
+    save_assemblies(assemblies, output_dir, overwrite=overwrite)

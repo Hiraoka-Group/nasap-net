@@ -27,5 +27,4 @@ def find_unique_assemblies_pipeline(
     assemblies = (assembly for _, assembly in pairs2)
     
     save_assemblies(
-        assemblies, output_dir, 
-        names=ids, overwrite_folder=overwrite)
+        assemblies, output_dir, overwrite=overwrite)

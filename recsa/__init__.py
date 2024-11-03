@@ -25,12 +25,11 @@ from .algorithms import *
 # isort: split
 from .loading import *
 
-from .saving import save_assemblies
 from .saving import save_assembly
 from .saving import save_bondsets
 from .saving import save_reactions
 from .saving import save_reaction
-from .saving import save_assemblies_to_single_file
+from .saving import save_assemblies
 
 # isort: split
 from .assembly_drawing import draw_2d
