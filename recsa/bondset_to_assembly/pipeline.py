@@ -1,5 +1,4 @@
-from recsa import (load_bondsets, load_structure_data,
-                   save_assemblies_to_single_file)
+from recsa import load_bondsets, load_structure_data, save_assemblies
 
 from .multiple_assemblies import convert_bondsets_to_assemblies
 
@@ -20,4 +19,4 @@ def convert_bondsets_to_assemblies_pipeline(
         bond_id_to_bindsites=args.bond_id_to_bindsites,
     )
 
-    save_assemblies_to_single_file(assemblies, output_dir, overwrite=overwrite)
+    save_assemblies(assemblies, output_dir, overwrite=overwrite)

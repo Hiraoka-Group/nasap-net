@@ -5,7 +5,7 @@ from typing import TypeVar
 import pytest
 import yaml
 
-from recsa import Assembly, save_assemblies_to_single_file
+from recsa import Assembly, save_assemblies
 
 # ====================
 # Helper functions
@@ -33,7 +33,7 @@ def test_typical_usage(tmp_path):
     assemblies = [MX2, L, MLX, ML2]
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies_to_single_file(assemblies, output_file)
+    save_assemblies(assemblies, output_file)
 
     with open(output_file) as f:
         data = list(yaml.safe_load_all(f))
@@ -60,7 +60,7 @@ def test_single_assembly(tmp_path):
     MX = Assembly({'M1': 'M', 'X1': 'X'}, [('M1.a', 'X1.a')])
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies_to_single_file([MX], output_file)
+    save_assemblies([MX], output_file)
 
     with open(output_file) as f:
         data = list(yaml.safe_load_all(f))
@@ -75,7 +75,7 @@ def test_single_assembly(tmp_path):
 def test_empty_assembly(tmp_path):
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies_to_single_file([], output_file)
+    save_assemblies([], output_file)
 
     with open(output_file) as f:
         data = list(yaml.safe_load_all(f))
@@ -87,7 +87,7 @@ def test_assembly_without_bonds(tmp_path):
     L = Assembly({'L1': 'L'})
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies_to_single_file([L], output_file)
+    save_assemblies([L], output_file)
 
     with open(output_file) as f:
         data = list(yaml.safe_load_all(f))
@@ -103,9 +103,9 @@ def test_overwrite(tmp_path):
     output_file.touch()
 
     with pytest.raises(FileExistsError):
-        save_assemblies_to_single_file([], output_file, overwrite=False)
+        save_assemblies([], output_file, overwrite=False)
 
-    save_assemblies_to_single_file([], output_file, overwrite=True)
+    save_assemblies([], output_file, overwrite=True)
 
 
 def test_show_progress_true(capsys, tmp_path):
@@ -113,7 +113,7 @@ def test_show_progress_true(capsys, tmp_path):
                   for _ in range(3)]
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies_to_single_file(assemblies, output_file, show_progress=True)
+    save_assemblies(assemblies, output_file, show_progress=True)
 
     captured = capsys.readouterr()
     expected_output = (
@@ -130,7 +130,7 @@ def test_show_progress_false(capsys, tmp_path):
                   for _ in range(3)]
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies_to_single_file(assemblies, output_file, show_progress=False)
+    save_assemblies(assemblies, output_file, show_progress=False)
 
     # No output should be printed
     captured = capsys.readouterr()
