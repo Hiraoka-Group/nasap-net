@@ -40,20 +40,13 @@ def test_typical_usage(tmp_path):
 
     assert len(data) == 4
     assert data[0]['index'] == 0
-    assert data[0]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'X1': 'X', 'X2': 'X'}
-    assert to_set_of_frozenset(data[0]['assembly']['bonds']) == {
-        frozenset(['M1.a', 'X1.a']), frozenset(['M1.b', 'X2.a'])}
+    assert data[0]['assembly'] == MX2
     assert data[1]['index'] == 1
-    assert data[1]['assembly']['comp_id_to_kind'] == {'L1': 'L'}
-    assert data[1]['assembly']['bonds'] == []
+    assert data[1]['assembly'] == L
     assert data[2]['index'] == 2
-    assert data[2]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'L1': 'L', 'X1': 'X'}
-    assert to_set_of_frozenset(data[2]['assembly']['bonds']) == {
-        frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'X1.a'])}
+    assert data[2]['assembly'] == MLX
     assert data[3]['index'] == 3
-    assert data[3]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'L1': 'L', 'L2': 'L'}
-    assert to_set_of_frozenset(data[3]['assembly']['bonds']) == {
-        frozenset(['M1.a', 'L1.a']), frozenset(['M1.b', 'L2.a'])}
+    assert data[3]['assembly'] == ML2
 
 
 def test_single_assembly(tmp_path):
@@ -67,9 +60,7 @@ def test_single_assembly(tmp_path):
 
     assert len(data) == 1
     assert data[0]['index'] == 0
-    assert data[0]['assembly']['comp_id_to_kind'] == {'M1': 'M', 'X1': 'X'}
-    assert to_set_of_frozenset(data[0]['assembly']['bonds']) == {
-        frozenset(['M1.a', 'X1.a'])}
+    assert data[0]['assembly'] == MX
 
 
 def test_empty_assembly(tmp_path):
@@ -94,8 +85,7 @@ def test_assembly_without_bonds(tmp_path):
 
     assert len(data) == 1
     assert data[0]['index'] == 0
-    assert data[0]['assembly']['comp_id_to_kind'] == {'L1': 'L'}
-    assert data[0]['assembly']['bonds'] == []
+    assert data[0]['assembly'] == L
 
 
 def test_overwrite(tmp_path):

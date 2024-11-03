@@ -7,12 +7,7 @@ import yaml
 
 from recsa import Assembly
 
-from .representers import add_assembly_representer
-
 __all__ = ['save_assemblies']
-
-
-add_assembly_representer()
 
 
 def save_assemblies(

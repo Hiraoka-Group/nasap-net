@@ -6,9 +6,11 @@ from dataclasses import dataclass
 from functools import wraps
 from itertools import chain
 from types import MappingProxyType
-from typing import Concatenate, Literal, ParamSpec, TypeVar, overload
+from typing import (Concatenate, Literal, ParamSpec, TypeAlias, TypedDict,
+                    TypeVar, overload)
 
 import networkx as nx
+import yaml
 
 from recsa import RecsaValueError
 
@@ -32,11 +34,16 @@ class AbsAuxEdge:
     aux_type: str
 
 
-class Assembly:
+class Assembly(yaml.YAMLObject):
     """A class to represent an assembly.
     
     An assembly is a group of components connected by bonds.
     """
+    yaml_loader = yaml.SafeLoader
+    yaml_dumper = yaml.Dumper
+    yaml_tag = '!Assembly'
+    yaml_flow_style = None
+    
     def __init__(
             self, 
             comp_id_to_kind: Mapping[str, str] | None = None,
@@ -405,6 +412,32 @@ class Assembly:
         comp1, rel1 = id_converter.global_to_local(next(iter(bond)))
         comp2, rel2 = id_converter.global_to_local(next(iter(bond - {next(iter(bond))})))
         return frozenset([comp1, comp2])
+    
+    @classmethod
+    def from_yaml(cls, loader, node):
+        data = loader.construct_mapping(node, deep=True)
+        return cls(
+            data.get('comp_id_to_kind', None),
+            data.get('bonds', None),
+            data.get('name', None))
+    
+    @classmethod
+    def to_yaml(cls, dumper, data: Assembly):
+        DataDict = TypedDict(
+            'DataDict', {
+                'comp_id_to_kind': dict[str, str],
+                'bonds': list[list[str]],
+                'name': str},
+            total=False)
+        data_dict: DataDict = {}
+        if data.comp_id_to_kind:
+            data_dict['comp_id_to_kind'] = dict(data.comp_id_to_kind)
+        if data.bonds:
+            data_dict['bonds'] = sorted(sorted(bond) for bond in data.bonds)
+        if data.name:
+            data_dict['name'] = data.name
+        return dumper.represent_mapping(
+            cls.yaml_tag, data_dict, flow_style=cls.yaml_flow_style)
 
 
 def assembly_to_graph(
