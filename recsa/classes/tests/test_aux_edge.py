@@ -1,4 +1,5 @@
 import pytest
+import yaml
 
 import recsa as rx
 from recsa import AuxEdge
@@ -36,7 +37,21 @@ def test_LocalAuxEdge_hash():
 
 def test_LocalAuxEdge_repr():
     edge = AuxEdge('site1', 'site2', 'cis')
-    assert repr(edge) == "LocalAuxEdge('site1', 'site2', 'cis')"
+    assert repr(edge) == "AuxEdge('site1', 'site2', 'cis')"
+
+
+def test_lt():
+    edge1 = AuxEdge('d', 'a', 'cis')
+    edge2 = AuxEdge('b', 'c', 'cis')
+    assert edge1 < edge2
+    assert not edge2 < edge1
+
+
+def test_yaml():
+    edge = AuxEdge('a', 'b', 'cis')
+    edge_yaml = yaml.dump(edge, default_flow_style=None)
+    loaded_edge = yaml.safe_load(edge_yaml)
+    assert edge == loaded_edge
 
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 from typing import Any
 
+import yaml
+
 import recsa as rx
 from recsa.utils import FrozenUnorderedPair
 
@@ -9,8 +11,13 @@ from .validations import (validate_name_of_aux_type,
 __all__ = ['AuxEdge']
 
 
-class AuxEdge:
+class AuxEdge(yaml.YAMLObject):
     """An auxiliary edge between two binding sites. (Immutable)"""
+    yaml_loader = yaml.SafeLoader
+    yaml_dumper = yaml.Dumper
+    yaml_tag = '!AuxEdge'
+    yaml_flow_style = None
+
     def __init__(
             self, local_bindsite1: str, local_bindsite2: str, aux_kind: str):
         """Initialize an auxiliary edge.
@@ -72,8 +79,24 @@ class AuxEdge:
         return (
             self.bindsites == other.bindsites and
             self.aux_kind == other.aux_kind)
-
+    
+    def __lt__(self, other: 'AuxEdge') -> bool:
+        return (sorted(self.bindsites), self.aux_kind) < (
+            sorted(other.bindsites), other.aux_kind)
+    
     def __repr__(self) -> str:
-        return (
-            f'LocalAuxEdge({self.local_bindsite1!r}, '
-            f'{self.local_bindsite2!r}, {self.aux_kind!r})')
+        return f'AuxEdge({self.local_bindsite1!r}, {self.local_bindsite2!r}, {self.aux_kind!r})'
+    
+    @classmethod
+    def from_yaml(cls, loader, node):
+        data = loader.construct_mapping(node, deep=True)
+        return AuxEdge(
+            data['bindsites'][0], data['bindsites'][1], data['aux_kind'])
+
+    @classmethod
+    def to_yaml(cls, dumper, data):
+        return dumper.represent_mapping(
+            cls.yaml_tag, {
+            'bindsites': sorted(data.bindsites),
+            'aux_kind': data.aux_kind},
+            flow_style=cls.yaml_flow_style)
