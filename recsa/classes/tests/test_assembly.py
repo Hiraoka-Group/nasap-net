@@ -47,6 +47,11 @@ def test_init() -> None:
     assert assembly.bonds == set(bonds)
 
 
+def test_init_with_name() -> None:
+    assembly = Assembly(name='MX')
+    assert assembly.name == 'MX'
+
+
 def test_add_component() -> None:
     assembly = Assembly()
     assembly.add_component('M1', 'M')
