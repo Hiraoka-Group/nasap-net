@@ -43,9 +43,11 @@ class Assembly:
             bonds: (
                 Iterable[tuple[str, str]] | Iterable[Iterable[str]] | None
                 ) = None,
+            name: str | None = None
             ) -> None:
         self._comp_id_to_kind = dict[str, str]()
         self._bonds = set[frozenset[str]]()
+        self.name = name
 
         if comp_id_to_kind is not None:
             for component_id, component_kind in comp_id_to_kind.items():
@@ -61,7 +63,7 @@ class Assembly:
         if not isinstance(other, Assembly):
             return False
         return self.comp_id_to_kind == other.comp_id_to_kind and\
-            self.bonds == other.bonds
+            self.bonds == other.bonds and self.name == other.name
 
     # Decorator
     # For type hint of the decorator, see the following link:
