@@ -1,4 +1,5 @@
 import pytest
+import yaml
 
 import recsa as rx
 from recsa import AuxEdge, Component
@@ -77,6 +78,13 @@ def test_eq_with_different_aux_edges():
     M1 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
     M2 = Component({'a', 'b'}, {AuxEdge('a', 'b', 'trans')})
     assert M1 != M2
+
+
+def test_yaml_serialization():
+    M = Component({'a', 'b'}, {AuxEdge('a', 'b', 'cis')})
+    M_yaml = yaml.dump(M, default_flow_style=None)
+    loaded_M = yaml.safe_load(M_yaml)
+    assert M == loaded_M
 
 
 if __name__ == '__main__':

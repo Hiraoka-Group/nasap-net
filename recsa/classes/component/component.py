@@ -1,6 +1,8 @@
 from collections.abc import Iterable
 from typing import cast
 
+import yaml
+
 from ..aux_edge import AuxEdge
 from ..validations import validate_name_of_binding_site
 from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
@@ -8,8 +10,12 @@ from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 __all__ = ['Component']
 
 
-class Component:
+class Component(yaml.YAMLObject):
     """A component of an assembly. (Immutable)"""
+    yaml_loader = yaml.SafeLoader
+    yaml_dumper = yaml.Dumper
+    yaml_tag = '!Component'
+    yaml_flow_style = None
 
     def __init__(
             self,
@@ -56,6 +62,14 @@ class Component:
             self.bindsites == value.bindsites
             and self.aux_edges == value.aux_edges)
     
+    def __repr__(self) -> str:
+        if not self.aux_edges:
+            return f'Component({sorted(self.bindsites)!r})'
+        return (
+            f'Component({sorted(self.bindsites)!r}, '
+            f'{sorted(self.aux_edges)!r})'
+            )
+    
     @property
     def bindsites(self) -> set[str]:
         return set(self._bindsites)
@@ -63,3 +77,21 @@ class Component:
     @property
     def aux_edges(self) -> set[AuxEdge]:
         return set(self._aux_edges)
+    
+    @classmethod
+    def from_yaml(cls, loader, node):
+        data = loader.construct_mapping(node, deep=True)
+        bindsites = data['bindsites']
+        aux_edges = data.get('aux_edges', None)
+        return cls(bindsites, aux_edges)
+
+    @classmethod
+    def to_yaml(cls, dumper, data):
+        data_dict = {'bindsites': sorted(data.bindsites)}
+        if data.aux_edges:
+            data_dict['aux_edges'] = sorted(
+                data.aux_edges,
+                key=lambda edge: sorted(edge.bindsites))
+        return dumper.represent_mapping(
+            cls.yaml_tag, data_dict,
+            flow_style=cls.yaml_flow_style)
