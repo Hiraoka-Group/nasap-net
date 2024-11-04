@@ -33,7 +33,7 @@ def test_typical_usage(tmp_path):
     assemblies = [MX2, L, MLX, ML2]
     output_file = tmp_path / 'assemblies.yml'
 
-    save_assemblies(assemblies, output_file)
+    save_assemblies(assemblies, output_file, with_index=True)
 
     with open(output_file) as f:
         data = list(yaml.safe_load_all(f))
@@ -59,7 +59,6 @@ def test_single_assembly(tmp_path):
         data = list(yaml.safe_load_all(f))
 
     assert len(data) == 1
-    assert data[0]['index'] == 0
     assert data[0]['assembly'] == MX
 
 
@@ -74,6 +73,38 @@ def test_empty_assembly(tmp_path):
     assert len(data) == 0
 
 
+def test_with_index(tmp_path):
+    assemblies = [Assembly({'M1': 'M', 'X1': 'X'}, [('M1.a', 'X1.a')])
+                  for _ in range(3)]
+    output_file = tmp_path / 'assemblies.yml'
+
+    save_assemblies(assemblies, output_file, with_index=True)
+
+    with open(output_file) as f:
+        data = list(yaml.safe_load_all(f))
+
+    assert len(data) == 3
+    for index, assembly in enumerate(assemblies):
+        assert data[index]['index'] == index
+        assert data[index]['assembly'] == assembly
+
+
+def test_without_index(tmp_path):
+    assemblies = [Assembly({'M1': 'M', 'X1': 'X'}, [('M1.a', 'X1.a')])
+                  for _ in range(3)]
+    output_file = tmp_path / 'assemblies.yml'
+
+    save_assemblies(assemblies, output_file, with_index=False)
+
+    with open(output_file) as f:
+        data = list(yaml.safe_load_all(f))
+
+    assert len(data) == 3
+    for index, assembly in enumerate(assemblies):
+        assert 'index' not in data[index]
+        assert data[index]['assembly'] == assembly
+
+
 def test_assembly_without_bonds(tmp_path):
     L = Assembly({'L1': 'L'})
     output_file = tmp_path / 'assemblies.yml'
@@ -84,7 +115,6 @@ def test_assembly_without_bonds(tmp_path):
         data = list(yaml.safe_load_all(f))
 
     assert len(data) == 1
-    assert data[0]['index'] == 0
     assert data[0]['assembly'] == L
 
 

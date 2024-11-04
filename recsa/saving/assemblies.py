@@ -15,7 +15,9 @@ def save_assemblies(
         output_file: str | Path,
         *,
         overwrite: bool = False,
-        show_progress: bool = True) -> None:
+        show_progress: bool = True,
+        with_index: bool = False,
+        ) -> None:
     """Save assemblies to a single YAML file."""
     output_file = Path(output_file)
 
@@ -30,7 +32,10 @@ def save_assemblies(
         for index, assembly in enumerate(assemblies):
             if not first:
                 f.write('---\n')  # YAML document separator
-            yaml.dump({'index': index, 'assembly': assembly}, f)
+            if with_index:
+                yaml.dump({'index': index, 'assembly': assembly}, f)
+            else:
+                yaml.dump({'assembly': assembly}, f)
             first = False
             if show_progress:
                 # Update progress on the same line
