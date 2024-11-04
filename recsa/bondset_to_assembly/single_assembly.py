@@ -14,7 +14,7 @@ def convert_bondset_to_assembly(
     """Converts the connected bonds to a graph."""
     
     connected_bindsite_pairs = {
-        bond_id_to_bindsites[bond] for bond in bond_subset}
+        frozenset(bond_id_to_bindsites[bond]) for bond in bond_subset}
     
     template = Assembly(comp_id_to_kind, set(bond_id_to_bindsites.values()))
     
