@@ -1,10 +1,10 @@
-from recsa import Assembly
+from collections.abc import Iterable
 
-__all__ = ['component_induced_sub_assembly', 'bond_induced_sub_assembly']
+from recsa import Assembly
 
 
 def bond_induced_sub_assembly(
-        assembly: Assembly, bonds: set[frozenset[str]]) -> Assembly:
+        assembly: Assembly, bonds: Iterable[Iterable[str]]) -> Assembly:
     """Create a sub-assembly induced by the bonds.
 
     The induced sub-assembly contains all the bonds in the `bonds` and
