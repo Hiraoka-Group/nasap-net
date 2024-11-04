@@ -1,45 +1,44 @@
-import shutil
 from pathlib import Path
 
-from recsa import load_assemblies, load_component_structures, save_assembly
+import yaml
+
+from recsa import save_assemblies
 from recsa.utils import find_unique_filepath
 
-from .loading import load_cap_args
-from .multi_bindsites import cap_bindsites
+from .loading import CapParams
+from .multi_assemblies import cap_bindsites_for_multi_assemblies
 
 __all__ = ['cap_bindsites_pipeline']
 
 
 def cap_bindsites_pipeline(
-        assemblies_dir: str | Path,
-        component_structures_path: str | Path,
+        assemblies_path: str | Path,
+        comp_structure_path: str | Path,
         cap_params_path: str | Path,
-        output_dir: str | Path,
-        overwrite: bool = False
+        output_path: str | Path,
+        *,
+        overwrite: bool = False,
+        show_progress: bool = True,
+        save_with_index: bool = True,
         ) -> None:
     """Cap bindsites for all assemblies."""
-    id_assembly_pairs = load_assemblies(assemblies_dir)
-    component_structures = load_component_structures(
-        component_structures_path)
-    cap_params = load_cap_args(cap_params_path)
+    with open(assemblies_path) as f:
+        assemblies_with_data = list(yaml.safe_load_all(f))
+    with open(comp_structure_path) as f:
+        components = yaml.safe_load(f)
+    with open(cap_params_path) as f:
+        cap_params_d = yaml.safe_load(f)
+    cap_params = CapParams(**cap_params_d)
 
-    output_dir = Path(output_dir)
-    if output_dir.exists() and not output_dir.is_dir():
-        raise ValueError('Output path should be a directory path.')
-    if output_dir.exists():
-        if overwrite:
-            # Remove the existing folder together with its contents
-            shutil.rmtree(output_dir)
-        else:
-            output_dir = find_unique_filepath(output_dir)
-            assert not output_dir.exists()
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = Path(output_path)
+    if output_path.exists() and not overwrite:
+        output_path = find_unique_filepath(output_path)
+        assert not output_path.exists()
 
-    for id_, assembly in id_assembly_pairs:
-        cap_bindsites(
-            assembly, component_structures, 
-            cap_params.component_kind_to_be_capped,
-            cap_params.cap_component_kind, cap_params.cap_bindsite,
-            copy=False)
-        output_path = output_dir / f'{id_}.yaml'
-        save_assembly(assembly, output_path, overwrite=False)
+    assemblies = (x['assembly'] for x in assemblies_with_data)
+    capped_assemblies = cap_bindsites_for_multi_assemblies(
+        assemblies, components, cap_params)
+    
+    save_assemblies(
+        capped_assemblies, output_path, overwrite=overwrite,
+        show_progress=show_progress, with_index=save_with_index)
