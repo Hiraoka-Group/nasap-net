@@ -37,7 +37,6 @@ from .assembly_drawing import draw_3d
 from .assembly_drawing import draw_assemblies_pipeline
 
 from .bondset_enumeration import enum_bond_subsets
-from .bondset_enumeration import enum_bond_subsets_pipeline
 
 from .bondset_to_assembly import convert_bondset_to_assembly
 from .bondset_to_assembly import convert_bondsets_to_assemblies
