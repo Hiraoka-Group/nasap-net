@@ -407,11 +407,13 @@ class Assembly(yaml.YAMLObject):
 
     @classmethod
     def bond_to_rough_bond(
-            cls, bond: frozenset[str]) -> frozenset[str]:
+            cls, bond: Iterable[str]) -> list[str]:
+        # TODO: Move this method to a separate module.
         id_converter = BindsiteIdConverter()
-        comp1, rel1 = id_converter.global_to_local(next(iter(bond)))
-        comp2, rel2 = id_converter.global_to_local(next(iter(bond - {next(iter(bond))})))
-        return frozenset([comp1, comp2])
+        bindsites = list(bond)
+        comp1, rel1 = id_converter.global_to_local(bindsites[0])
+        comp2, rel2 = id_converter.global_to_local(bindsites[1])
+        return [comp1, comp2]
     
     @classmethod
     def from_yaml(cls, loader, node):
