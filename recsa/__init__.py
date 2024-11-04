@@ -34,7 +34,6 @@ from .saving import save_assemblies
 # isort: split
 from .assembly_drawing import draw_2d
 from .assembly_drawing import draw_3d
-from .assembly_drawing import draw_assemblies_pipeline
 
 from .bondset_enumeration import enum_bond_subsets
 
