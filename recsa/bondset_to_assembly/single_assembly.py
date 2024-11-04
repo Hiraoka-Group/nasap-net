@@ -16,6 +16,6 @@ def convert_bondset_to_assembly(
     connected_bindsite_pairs = {
         frozenset(bond_id_to_bindsites[bond]) for bond in bond_subset}
     
-    template = Assembly(comp_id_to_kind, set(bond_id_to_bindsites.values()))
+    template = Assembly(comp_id_to_kind, bond_id_to_bindsites.values())
     
     return bond_induced_sub_assembly(template, connected_bindsite_pairs)
