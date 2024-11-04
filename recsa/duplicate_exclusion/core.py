@@ -9,9 +9,9 @@ __all__ = ['find_unique_assemblies']
 
 
 def find_unique_assemblies(
-        assemblies: Iterable[tuple[str, Assembly]],
+        assemblies: Iterable[Assembly],
         component_structures: Mapping[str, Component]
-        ) -> Iterator[tuple[str, Assembly]]:
+        ) -> Iterator[Assembly]:
     """Get unique assemblies.
 
     "Unique" here means that the assemblies are not isomorphic to each
@@ -40,9 +40,9 @@ def find_unique_assemblies(
     provided iterable is yielded as a unique assembly.
     """
     hash_to_uniques: dict[str, list[Assembly]] = defaultdict(list)
-    for id_, assembly in assemblies:
+    for assembly in assemblies:
         hash_ = calc_graph_hash_of_assembly(assembly, component_structures)
         if is_new(
                 hash_, assembly, hash_to_uniques, component_structures):
             hash_to_uniques[hash_].append(assembly)
-            yield id_, assembly
+            yield assembly
