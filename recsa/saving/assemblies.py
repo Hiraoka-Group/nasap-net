@@ -16,7 +16,7 @@ def save_assemblies(
         *,
         overwrite: bool = False,
         show_progress: bool = True,
-        with_index: bool = False,
+        with_index: bool = True,
         ) -> None:
     """Save assemblies to a single YAML file."""
     output_file = Path(output_file)
