@@ -40,7 +40,6 @@ from .bondset_enumeration import enum_bond_subsets
 
 from .bondset_to_assembly import convert_bondset_to_assembly
 from .bondset_to_assembly import convert_bondsets_to_assemblies
-from .bondset_to_assembly import convert_bondsets_to_assemblies_pipeline
 
 from .bindsite_capping import cap_bindsites
 from .bindsite_capping import cap_single_bindsite
