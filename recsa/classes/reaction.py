@@ -19,13 +19,8 @@ class IntraReaction:
     duplicate_count: int
 
     def to_dict(self):
-        # This is a workaround to add the 'entering_assem_id' field 
-        # to the dictionary in the proper place (after 'init_assem_id').
-        d = {}
-        d_orig = asdict(self)
-        d['init_assem_id'] = d_orig['init_assem_id']
+        d = asdict(self)
         d['entering_assem_id'] = self.entering_assem_id
-        d.update(d_orig)
         return d
 
 

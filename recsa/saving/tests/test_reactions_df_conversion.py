@@ -1,3 +1,4 @@
+import pandas as pd
 import pytest
 
 from recsa import InterReaction, IntraReaction, reactions_to_df
@@ -6,11 +7,11 @@ from recsa import InterReaction, IntraReaction, reactions_to_df
 def test_basic():
     reactions: list[IntraReaction | InterReaction] = [
         IntraReaction(
-            'init1', 'prod1', 'leave1', 
+            0, 1, 2, 
             'metal_bs1', 'leave_bs1', 'enter_bs1', 
             'metal_kind1', 'leave_kind1', 'enter_kind1', 1),
         InterReaction(
-            'init2', 'enter2', 'prod2', 'leave2',
+            3, 4, 5, None,
             'metal_bs2', 'leave_bs2', 'enter_bs2',
             'metal_kind2', 'leave_kind2', 'enter_kind2', 2)
     ]
@@ -23,10 +24,10 @@ def test_basic():
         'leaving_assem_id', 'metal_bs', 'leaving_bs', 'entering_bs',
         'metal_kind', 'leaving_kind', 'entering_kind', 'duplicate_count'
     ]
-    assert df['init_assem_id'].tolist() == ['init1', 'init2']
-    assert df['entering_assem_id'].tolist() == [None, 'enter2']
-    assert df['product_assem_id'].tolist() == ['prod1', 'prod2']
-    assert df['leaving_assem_id'].tolist() == ['leave1', 'leave2']
+    assert df['init_assem_id'].tolist() == [0, 3]
+    assert df['entering_assem_id'].tolist() == [pd.NA, 4]
+    assert df['product_assem_id'].tolist() == [1, 5]
+    assert df['leaving_assem_id'].tolist() == [2, pd.NA]
     assert df['metal_bs'].tolist() == ['metal_bs1', 'metal_bs2']
     assert df['leaving_bs'].tolist() == ['leave_bs1', 'leave_bs2']
     assert df['entering_bs'].tolist() == ['enter_bs1', 'enter_bs2']
