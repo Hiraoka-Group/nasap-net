@@ -6,10 +6,10 @@ from .assembly import Assembly
 
 @dataclass
 class IntraReaction:
-    init_assem_id: str
+    init_assem_id: str | int
     entering_assem_id: ClassVar[None] = None
-    product_assem_id: str
-    leaving_assem_id: str | None
+    product_assem_id: str | int
+    leaving_assem_id: str | int | None
     metal_bs: str
     leaving_bs: str
     entering_bs: str
@@ -26,10 +26,10 @@ class IntraReaction:
 
 @dataclass
 class InterReaction:
-    init_assem_id: str
-    entering_assem_id: str
-    product_assem_id: str
-    leaving_assem_id: str | None
+    init_assem_id: str | int
+    entering_assem_id: str | int
+    product_assem_id: str | int
+    leaving_assem_id: str | int | None
     metal_bs: str
     leaving_bs: str
     entering_bs: str
