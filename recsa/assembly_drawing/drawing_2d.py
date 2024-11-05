@@ -6,7 +6,7 @@ import networkx as nx
 
 from recsa import Assembly, Component
 
-from .lib import make_complete_color_map
+from .color_map import make_complete_color_map
 
 __all__ = ['draw_2d']
 
