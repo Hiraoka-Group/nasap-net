@@ -1,5 +1,6 @@
-from collections.abc import Iterable, Mapping
+from collections.abc import Hashable, Iterable, Mapping
 from itertools import combinations
+from typing import TypeVar
 
 from networkx.utils import UnionFind
 
@@ -9,11 +10,13 @@ from .grouping_by_hash import group_assemblies_by_hash
 
 __all__ = ['group_assemblies_by_isomorphism']
 
+T = TypeVar('T', bound=Hashable)
+
 
 def group_assemblies_by_isomorphism(
-        id_to_assembly: Mapping[str, Assembly],
+        id_to_assembly: Mapping[T, Assembly],
         component_structures: Mapping[str, Component]
-        ) -> dict[str, set[str]]:
+        ) -> dict[T, set[T]]:
     """Group duplicates by assembly isomorphism.
 
     Parameters
@@ -46,6 +49,6 @@ def group_assemblies_by_isomorphism(
                     component_structures):
                 uf.union(id1, id2)
 
-    grouped_ids: Iterable[set[str]] = uf.to_sets()
+    grouped_ids: Iterable[set[T]] = uf.to_sets()
     unique_id_to_ids = {min(ids): ids for ids in grouped_ids}
     return unique_id_to_ids

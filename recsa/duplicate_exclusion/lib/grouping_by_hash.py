@@ -1,14 +1,18 @@
 from collections import defaultdict
-from collections.abc import Mapping
+from collections.abc import Hashable, Mapping
+from typing import TypeVar
 
 from recsa import Assembly, Component, calc_graph_hash_of_assembly
 
 __all__ = ['group_assemblies_by_hash']
 
+T = TypeVar('T', bound=Hashable)
+
+
 def group_assemblies_by_hash(
-        id_to_assembly: Mapping[str, Assembly],
+        id_to_assembly: Mapping[T, Assembly],
         component_structures: Mapping[str, Component]
-        ) -> dict[str, set[str]]:
+        ) -> dict[str, set[T]]:
     # Group by hash
     hash_to_ids = defaultdict(set)
     for id_, assembly in id_to_assembly.items():
