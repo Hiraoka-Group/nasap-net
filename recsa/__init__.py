@@ -42,9 +42,6 @@ from .bindsite_capping import cap_single_bindsite
 from .duplicate_exclusion import find_unique_assemblies
 from .duplicate_exclusion import group_assemblies_by_isomorphism
 
-from .assembly_enumeration import enumerate_assemblies
-from .assembly_enumeration import enumerate_assemblies_pipeline
-
 from .reaction_exploration import explore_reactions
 
 from .reaction_classification import ReactionClassifier
