@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import ClassVar
 
 from .assembly import Assembly
@@ -18,6 +18,16 @@ class IntraReaction:
     entering_kind: str
     duplicate_count: int
 
+    def to_dict(self):
+        # This is a workaround to add the 'entering_assem_id' field 
+        # to the dictionary in the proper place (after 'init_assem_id').
+        d = {}
+        d_orig = asdict(self)
+        d['init_assem_id'] = d_orig['init_assem_id']
+        d['entering_assem_id'] = self.entering_assem_id
+        d.update(d_orig)
+        return d
+
 
 @dataclass
 class InterReaction:
@@ -32,6 +42,9 @@ class InterReaction:
     leaving_kind: str
     entering_kind: str
     duplicate_count: int
+
+    def to_dict(self):
+        return asdict(self)
 
 
 @dataclass
