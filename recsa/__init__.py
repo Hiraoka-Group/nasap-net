@@ -44,6 +44,7 @@ from .bindsite_capping import cap_bindsites
 from .bindsite_capping import cap_single_bindsite
 
 from .duplicate_exclusion import find_unique_assemblies
+from .duplicate_exclusion import group_assemblies_by_isomorphism
 
 from .assembly_enumeration import enumerate_assemblies
 from .assembly_enumeration import enumerate_assemblies_pipeline
