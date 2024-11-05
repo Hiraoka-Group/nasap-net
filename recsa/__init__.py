@@ -25,7 +25,6 @@ from .algorithms import *
 # isort: split
 from .loading import *
 
-from .saving import save_assemblies
 from .saving import reactions_to_df
 
 # isort: split
