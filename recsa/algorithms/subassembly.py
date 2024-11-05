@@ -1,10 +1,10 @@
-from recsa import Assembly
+from collections.abc import Iterable
 
-__all__ = ['component_induced_sub_assembly', 'bond_induced_sub_assembly']
+from recsa import Assembly
 
 
 def bond_induced_sub_assembly(
-        assembly: Assembly, bonds: set[frozenset[str]]) -> Assembly:
+        assembly: Assembly, bonds: Iterable[Iterable[str]]) -> Assembly:
     """Create a sub-assembly induced by the bonds.
 
     The induced sub-assembly contains all the bonds in the `bonds` and
@@ -12,7 +12,7 @@ def bond_induced_sub_assembly(
     """
     component_ids: set[str] = set()
     for bond in bonds:
-        component_ids.update(Assembly.bond_to_rough_bond(bond))
+        component_ids.update(assembly.bond_to_rough_bond(bond))
 
     components = {
         comp_id: assembly.get_component_kind(comp_id)
@@ -33,7 +33,7 @@ def component_induced_sub_assembly(
         comp_id: assembly.get_component_kind(comp_id) for comp_id in component_ids}
     bonds = {
         bond for bond in assembly.bonds
-        if Assembly.bond_to_rough_bond(bond) <= component_ids}
+        if set(assembly.bond_to_rough_bond(bond)) <= component_ids}
     # i.e., if the both binding sites of a bond are in the component_ids
 
     return Assembly(components, bonds)

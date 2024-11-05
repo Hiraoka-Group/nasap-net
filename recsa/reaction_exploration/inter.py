@@ -1,7 +1,7 @@
 import itertools
 from collections.abc import Iterable, Iterator, Mapping
 
-from recsa import (Assembly, ComponentStructure, find_isomorphic_assembly,
+from recsa import (Assembly, Component, find_isomorphic_assembly,
                    perform_inter_exchange)
 from recsa.classes.reaction import InterReaction
 
@@ -16,7 +16,7 @@ def explore_inter_reactions(
         metal_kind: str, leaving_kind: str, entering_kind: str,
         id_to_assembly: Mapping[str, Assembly],
         hash_to_ids: Mapping[str, Iterable[str]],
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> Iterator[InterReaction]:
     init_assem = id_to_assembly[init_assem_id]
     entering_assem = id_to_assembly[entering_assem_id]

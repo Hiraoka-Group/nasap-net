@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from copy import deepcopy
+from copy import copy, deepcopy
 from dataclasses import dataclass
 from functools import wraps
 from itertools import chain
 from types import MappingProxyType
-from typing import Concatenate, Literal, ParamSpec, TypeVar, overload
+from typing import (Concatenate, Literal, ParamSpec, TypeAlias, TypedDict,
+                    TypeVar, overload)
 
 import networkx as nx
+import yaml
 
 from recsa import RecsaValueError
 
 from .aux_edge import AuxEdge
-from .component_structure import ComponentStructure
+from .bindsite_id_converter import BindsiteIdConverter
+from .component import Component
 
 __all__ = ['Assembly', 'assembly_to_graph', 'assembly_to_rough_graph', 'find_free_bindsites']
 
@@ -31,58 +34,56 @@ class AbsAuxEdge:
     aux_type: str
 
 
-class Assembly:
+class Assembly(yaml.YAMLObject):
     """A class to represent an assembly.
     
     An assembly is a group of components connected by bonds.
     """
+    yaml_loader = yaml.SafeLoader
+    yaml_dumper = yaml.Dumper
+    yaml_tag = '!Assembly'
+    yaml_flow_style = None
+    
     def __init__(
             self, 
-            component_id_to_kind: Mapping[str, str] | None = None,
-            bonds: Iterable[tuple[str, str] | frozenset[str]] | None = None,
-            id_: str | None = None,
+            comp_id_to_kind: Mapping[str, str] | None = None,
+            bonds: (
+                Iterable[tuple[str, str]] | Iterable[Iterable[str]] | None
+                ) = None,
+            name: str | None = None
             ) -> None:
-        """
-        Parameters
-        ----------
-        component_id_to_kind : Mapping[str, str], optional
-            The components of the assembly. The keys are the component IDs,
-            and the values are the component kinds.
-        bonds : Iterable[tuple[str, str]], optional
-            The bonds between the components. Each bond is a tuple of two
-            binding sites.
-        """
-        self.id = id_
-        self.__components: dict[str, str] = {}
-        self.__bonds: set[frozenset[str]] = set()
-        self.__bindsite_to_connected: dict[str, str] = {}
+        self._comp_id_to_kind = dict[str, str]()
+        self._bonds = set[frozenset[str]]()
+        self.name = name
 
-        # NOTE: Make sure that the __rough_g_cache attributes
-        # are initialized before calling any method that modifies the assembly.
-        self.__rough_g_cache = None
-
-        if component_id_to_kind is not None:
-            for component_id, component_kind in component_id_to_kind.items():
+        if comp_id_to_kind is not None:
+            for component_id, component_kind in comp_id_to_kind.items():
                 self.add_component(component_id, component_kind)
         if bonds is not None:
             for bindsite1, bindsite2 in bonds:
                 self.add_bond(bindsite1, bindsite2)
+            
+        self._rough_g_cache: nx.Graph | None = None
+        self._bindsite_to_connected_cache: dict[str, str] | None = None
+    
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Assembly):
+            return False
+        return self.comp_id_to_kind == other.comp_id_to_kind and\
+            self.bonds == other.bonds and self.name == other.name
 
     # Decorator
     # For type hint of the decorator, see the following link:
     # https://github.com/microsoft/pyright/issues/6472
     @staticmethod
-    def clear_g_caches(func: Callable[Concatenate[Assembly, P], R]
+    def _clear_g_caches(func: Callable[Concatenate[Assembly, P], R]
             ) -> Callable[Concatenate[Assembly, P], R]:
         """Decorator to clear the cache of the graph snapshot before
         calling the method."""
         @wraps(func)
         def wrapper(self: Assembly, *args: P.args, **kwargs: P.kwargs):
-            assert hasattr(self, '_Assembly__rough_g_cache'), (
-                'The "__g_cache" attribute is not found. '
-                'Please make sure that the "__rough_g_cache" attribute is '
-                'initialized in the __init__ method.')
-            self.__rough_g_cache = None
+            self._rough_g_cache = None
+            self._bindsite_to_connected_cache = None
             return func(self, *args, **kwargs)
         return wrapper
 
@@ -91,38 +92,45 @@ class Assembly:
     # ============================================================
 
     @property
-    def component_id_to_kind(self) -> MappingProxyType[str, str]:
+    def comp_id_to_kind(self) -> MappingProxyType[str, str]:
         """Return a read-only view of the components.
         
         The returned object can be used like a dictionary, but it is
         read-only. Changes to the original assembly will be reflected
         in the returned object.
         """
-        return MappingProxyType(self.__components.copy())
+        return MappingProxyType(self._comp_id_to_kind)
     
     @property
     def component_ids(self) -> set[str]:
-        return set(self.__components.keys())
+        return set(self._comp_id_to_kind.keys())
 
     @property
     def component_kinds(self) -> set[str]:
-        return set(self.__components.values())
+        return set(self._comp_id_to_kind.values())
     
     @property
     def bonds(self) -> set[frozenset[str]]:
-        return self.__bonds.copy()
+        return self._bonds.copy()
     
     @property
-    def bindsite_to_connected(self) -> MappingProxyType[str, str]:
-        """Return a read-only view of the connected binding sites.
-        
-        Only the binding sites that are connected to other binding sites
-        are included in the returned object.
-        """
-        return MappingProxyType(self.__bindsite_to_connected.copy())
+    def bindsite_to_connected(self) -> dict[str, str]:
+        if getattr(self, '_bindsite_to_connected', None) is None:
+            self._bindsite_to_connected_cache =\
+                self.create_bindsite_to_connected()
+        assert self._bindsite_to_connected_cache is not None
+        return copy(self._bindsite_to_connected_cache)
+    
+    def create_bindsite_to_connected(self) -> dict[str, str]:
+        d = {}
+        for bond in self._bonds:
+            bindsite1, bindsite2 = bond
+            d[bindsite1] = bindsite2
+            d[bindsite2] = bindsite1
+        return d
     
     def g_snapshot(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> nx.Graph:
         """Returns a snapshot of the assembly graph.
         
@@ -135,15 +143,15 @@ class Assembly:
     @property
     def rough_g_snapshot(self) -> nx.Graph:
         """Returns a rough graph of the assembly."""
-        if self.__rough_g_cache is None:
-            self.__rough_g_cache = self._to_rough_graph()
-        return deepcopy(self.__rough_g_cache)
+        if getattr(self, '_rough_g_cache', None) is None:
+            self._rough_g_cache = self._to_rough_graph()
+        return deepcopy(self._rough_g_cache)
     
     # ============================================================
     # Methods to modify the assembly (using relative names)
     # ============================================================
     
-    @clear_g_caches
+    @_clear_g_caches
     def add_component(
             self, component_id: str, component_kind: str) -> None:
         """Add a component to the assembly.
@@ -152,32 +160,29 @@ class Assembly:
         The user should add bonds between the component and the assembly
         if necessary.
         """
-        self.__components[component_id] = component_kind
+        self._comp_id_to_kind[component_id] = component_kind
 
-    @clear_g_caches
+    @_clear_g_caches
     def remove_component(self, component_id: str) -> None:
-        del self.__components[component_id]
+        del self._comp_id_to_kind[component_id]
     
-    @clear_g_caches
+    @_clear_g_caches
     def add_bond(self, bindsite1: str, bindsite2: str) -> None:
         """Add a bond to the assembly."""
-        comp1, rel1 = Assembly.abs_to_rel(bindsite1)
-        comp2, rel2 = Assembly.abs_to_rel(bindsite2)
+        id_converter = BindsiteIdConverter()
+        comp1, rel1 = id_converter.global_to_local(bindsite1)
+        comp2, rel2 = id_converter.global_to_local(bindsite2)
         for comp in [comp1, comp2]:
-            if comp not in self.__components:
+            if comp not in self._comp_id_to_kind:
                 raise RecsaValueError(
                     f'The component "{comp}" does not exist in the assembly.')
-        self.__bonds.add(frozenset([bindsite1, bindsite2]))
-        self.__bindsite_to_connected[bindsite1] = bindsite2
-        self.__bindsite_to_connected[bindsite2] = bindsite1
+        self._bonds.add(frozenset([bindsite1, bindsite2]))
 
-    @clear_g_caches
+    @_clear_g_caches
     def remove_bond(
             self, bindsite1: str, bindsite2: str) -> None:
         """Remove a bond from the assembly."""
-        self.__bonds.remove(frozenset([bindsite1, bindsite2]))
-        del self.__bindsite_to_connected[bindsite1]
-        del self.__bindsite_to_connected[bindsite2]
+        self._bonds.remove(frozenset([bindsite1, bindsite2]))
 
     # ============================================================
     # Methods to make multiple modifications at once
@@ -208,18 +213,18 @@ class Assembly:
     # `@overload` decorator is just for type hinting;
     # it does not affect the behavior of the method.
     @overload
-    @clear_g_caches
+    @_clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str],
             *, copy: Literal[True] = True) -> Assembly:
         ...
     @overload
-    @clear_g_caches
+    @_clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str],
             *, copy: Literal[False]) -> None:
         ...
-    @clear_g_caches
+    @_clear_g_caches
     def rename_component_ids(
             self, mapping: Mapping[str, str],
             *, copy: bool = True) -> Assembly | None:
@@ -228,22 +233,26 @@ class Assembly:
         else:
             assem = self
 
+        id_converter = BindsiteIdConverter()
+
         new_components = {}
-        for old_id, component in assem.__components.items():
+        for old_id, component in assem._comp_id_to_kind.items():
             new_id = mapping.get(old_id, old_id)
             new_components[new_id] = component
         
         new_bonds = set()
-        for bindsite1, bindsite2 in assem.__bonds:
-            comp1, rel1 = Assembly.abs_to_rel(bindsite1)
-            comp2, rel2 = Assembly.abs_to_rel(bindsite2)
-            new_bindsite1 = Assembly.rel_to_abs(mapping.get(comp1, comp1), rel1)
-            new_bindsite2 = Assembly.rel_to_abs(mapping.get(comp2, comp2), rel2)
+        for bindsite1, bindsite2 in assem._bonds:
+            comp1, rel1 = id_converter.global_to_local(bindsite1)
+            comp2, rel2 = id_converter.global_to_local(bindsite2)
+            new_bindsite1 = id_converter.local_to_global(
+                mapping.get(comp1, comp1), rel1)
+            new_bindsite2 = id_converter.local_to_global(
+                mapping.get(comp2, comp2), rel2)
             new_bonds.add(frozenset([new_bindsite1, new_bindsite2]))
 
-        assem.__components = new_components
-        assem.__bonds = new_bonds
-        assem.__rough_g_cache = None
+        assem._comp_id_to_kind = new_components
+        assem._bonds = new_bonds
+        assem._rough_g_cache = None
 
         # TODO: Check if the new component IDs are valid.
         
@@ -280,7 +289,7 @@ class Assembly:
             The connected binding site. If the binding site is free,
             and `error_if_free` is False, return None.
         """
-        connected = self.__bindsite_to_connected.get(bindsite)
+        connected = self.bindsite_to_connected.get(bindsite)
         if connected is None and error_if_free:
             raise RecsaValueError(
                 f'The binding site "{bindsite}" is free.')
@@ -290,77 +299,87 @@ class Assembly:
         return self.get_connected_bindsite(bindsite) is None
     
     def get_component_kind(self, component_id: str) -> str:
-        return self.__components[component_id]
+        return self._comp_id_to_kind[component_id]
     
     def get_component_kind_of_core(self, core: str) -> str:
-        comp_id, rel = Assembly.abs_to_rel(core)
+        id_converter = BindsiteIdConverter()
+        comp_id, rel = id_converter.global_to_local(core)
         return self.get_component_kind(comp_id)
     
     def get_component_kind_of_bindsite(self, bindsite: str) -> str:
-        comp_id, rel = Assembly.abs_to_rel(bindsite)
+        id_converter = BindsiteIdConverter()
+        comp_id, rel = id_converter.global_to_local(bindsite)
         return self.get_component_kind(comp_id)
     
     def deepcopy(self) -> Assembly:
         return deepcopy(self)
     
     def get_core_of_the_component(self, component_id: str) -> str:
-        return Assembly.rel_to_abs(component_id, 'core')
+        id_converter = BindsiteIdConverter()
+        return id_converter.local_to_global(component_id, 'core')
 
     def iter_all_cores(self) -> Iterator[str]:
-        for comp_id, comp_kind in self.component_id_to_kind.items():
-            yield Assembly.rel_to_abs(comp_id, 'core')
+        id_converter = BindsiteIdConverter()
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
+            yield id_converter.local_to_global(comp_id, 'core')
     
     def get_all_bindsites(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> set[str]:
         """Get all the binding sites in the assembly."""
         # TODO: Consider yielding the binding sites instead of returning a set.
+        id_converter = BindsiteIdConverter()
         all_bindsites = set()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
-            for bindsite in comp_struct.binding_sites:
-                all_bindsites.add(Assembly.rel_to_abs(comp_id, bindsite))
+            for bindsite in comp_struct.bindsites:
+                all_bindsites.add(id_converter.local_to_global(comp_id, bindsite))
         return all_bindsites
 
     def iter_aux_edges(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> Iterator[AbsAuxEdge]:
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        id_converter = BindsiteIdConverter()
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
             for rel_aux_edge in comp_struct.aux_edges:
                 yield AbsAuxEdge(
-                    Assembly.rel_to_abs(comp_id, rel_aux_edge.bindsite1),
-                    Assembly.rel_to_abs(comp_id, rel_aux_edge.bindsite2),
-                    rel_aux_edge.aux_type)
+                    id_converter.local_to_global(
+                        comp_id, rel_aux_edge.local_bindsite1),
+                    id_converter.local_to_global(
+                        comp_id, rel_aux_edge.local_bindsite2),
+                    rel_aux_edge.aux_kind)
 
     def get_bindsites_of_component(
             self, component_id: str, 
-            component_structures: Mapping[str, ComponentStructure]
+            component_structures: Mapping[str, Component]
             ) -> set[str]:
         """Get the binding sites of the component."""
+        id_converter = BindsiteIdConverter()
         comp_kind = self.get_component_kind(component_id)
         comp_struct = component_structures[comp_kind]
         return {
-            Assembly.rel_to_abs(component_id, bindsite)
-            for bindsite in comp_struct.binding_sites}
+            id_converter.local_to_global(component_id, bindsite)
+            for bindsite in comp_struct.bindsites}
     
     def get_all_bindsites_of_kind(
             self, component_kind: str,
-            component_structures: Mapping[str, ComponentStructure],
+            component_structures: Mapping[str, Component],
             ) -> Iterator[str]:
-        for comp_id, comp in self.component_id_to_kind.items():
+        for comp_id, comp in self.comp_id_to_kind.items():
             if comp == component_kind:
                 yield from self.get_bindsites_of_component(
                     comp_id, component_structures)
 
     def find_free_bindsites(
-            self, component_structures: Mapping[str, ComponentStructure]
+            self, component_structures: Mapping[str, Component]
             ) -> set[str]:
         """Find free bindsites."""
+        id_converter = BindsiteIdConverter()
         all_bindsites = {
-            Assembly.rel_to_abs(comp_id, bindsite)
-            for comp_id, comp_kind in self.component_id_to_kind.items()
-            for bindsite in component_structures[comp_kind].binding_sites
+            id_converter.local_to_global(comp_id, bindsite)
+            for comp_id, comp_kind in self.comp_id_to_kind.items()
+            for bindsite in component_structures[comp_kind].bindsites
         }
         connected_bindsites = chain(*self.bonds)
         free_bindsites = all_bindsites - set(connected_bindsites)
@@ -371,44 +390,64 @@ class Assembly:
     # ============================================================
 
     def _to_graph(
-            self, component_kinds: Mapping[str, ComponentStructure]
+            self, component_kinds: Mapping[str, Component]
             ) -> nx.Graph:
         return assembly_to_graph(self, component_kinds)
 
     def _to_rough_graph(self) -> nx.Graph:
-        G = nx.Graph()
-        for comp_id, comp_kind in self.component_id_to_kind.items():
+        id_converter = BindsiteIdConverter()
+        G = nx.MultiGraph()
+        for comp_id, comp_kind in self.comp_id_to_kind.items():
             G.add_node(comp_id, component_kind=comp_kind)
         for bindsite1, bindsite2 in self.bonds:
-            comp1, rel1 = Assembly.abs_to_rel(bindsite1)
-            comp2, rel2 = Assembly.abs_to_rel(bindsite2)
+            comp1, rel1 = id_converter.global_to_local(bindsite1)
+            comp2, rel2 = id_converter.global_to_local(bindsite2)
             G.add_edge(comp1, comp2, bindsites={comp1: rel1, comp2: rel2})
         return G
 
-    @staticmethod
-    def rel_to_abs(
-            component_id: str, relative_node_name: str) -> str:
-        return f'{component_id}.{relative_node_name}'
-
-    @staticmethod
-    def abs_to_rel(
-                abs_node_name: str) -> tuple[str, str]:
-            comp_id, local_id = abs_node_name.split('.')
-            return comp_id, local_id
-
-    @staticmethod
-    def bond_to_rough_bond(bond: frozenset[str]) -> frozenset[str]:
-        comp1, rel1 = Assembly.abs_to_rel(next(iter(bond)))
-        comp2, rel2 = Assembly.abs_to_rel(next(iter(bond - {next(iter(bond))})))
-        return frozenset([comp1, comp2])
+    @classmethod
+    def bond_to_rough_bond(
+            cls, bond: Iterable[str]) -> list[str]:
+        # TODO: Move this method to a separate module.
+        id_converter = BindsiteIdConverter()
+        bindsites = list(bond)
+        comp1, rel1 = id_converter.global_to_local(bindsites[0])
+        comp2, rel2 = id_converter.global_to_local(bindsites[1])
+        return [comp1, comp2]
+    
+    @classmethod
+    def from_yaml(cls, loader, node):
+        data = loader.construct_mapping(node, deep=True)
+        return cls(
+            data.get('comp_id_to_kind', None),
+            data.get('bonds', None),
+            data.get('name', None))
+    
+    @classmethod
+    def to_yaml(cls, dumper, data: Assembly):
+        DataDict = TypedDict(
+            'DataDict', {
+                'comp_id_to_kind': dict[str, str],
+                'bonds': list[list[str]],
+                'name': str},
+            total=False)
+        data_dict: DataDict = {}
+        if data.comp_id_to_kind:
+            data_dict['comp_id_to_kind'] = dict(data.comp_id_to_kind)
+        if data.bonds:
+            data_dict['bonds'] = sorted(sorted(bond) for bond in data.bonds)
+        if data.name:
+            data_dict['name'] = data.name
+        return dumper.represent_mapping(
+            cls.yaml_tag, data_dict, flow_style=cls.yaml_flow_style)
 
 
 def assembly_to_graph(
         assembly: Assembly,
-        component_structures: Mapping[str, ComponentStructure],
+        component_structures: Mapping[str, Component],
         ) -> nx.Graph:
     G = nx.Graph()
-    for comp_id, comp_kind in assembly.component_id_to_kind.items():
+    for comp_id, comp_kind in assembly.comp_id_to_kind.items():
         comp_structure = component_structures[comp_kind]
         add_component_to_graph(G, comp_id, comp_kind, comp_structure)
     for bond in assembly.bonds:
@@ -419,21 +458,22 @@ def assembly_to_graph(
 def add_component_to_graph(
         g: nx.Graph,
         component_id: str, component_kind: str,
-        component_structure: ComponentStructure,
+        component_structure: Component,
         ) -> None:
     # Add the core node
-    core_abs = Assembly.rel_to_abs(component_id, 'core')
+    id_converter = BindsiteIdConverter()
+    core_abs = id_converter.local_to_global(component_id, 'core')
     g.add_node(
         core_abs, core_or_bindsite='core', component_kind=component_kind)
     
     # Add the binding sites
-    for bindsite in component_structure.binding_sites:
-        bindsite_abs = Assembly.rel_to_abs(component_id, bindsite)
+    for bindsite in component_structure.bindsites:
+        bindsite_abs = id_converter.local_to_global(component_id, bindsite)
         g.add_node(bindsite_abs, core_or_bindsite='bindsite')
         g.add_edge(core_abs, bindsite_abs)
     
     # Add the auxiliary edges
     for aux_edge in component_structure.aux_edges:
-        bs1_abs = Assembly.rel_to_abs(component_id, aux_edge.bindsite1)
-        bs2_abs = Assembly.rel_to_abs(component_id, aux_edge.bindsite2)
-        g.add_edge(bs1_abs, bs2_abs, aux_type=aux_edge.aux_type)
+        bs1_abs = id_converter.local_to_global(component_id, aux_edge.local_bindsite1)
+        bs2_abs = id_converter.local_to_global(component_id, aux_edge.local_bindsite2)
+        g.add_edge(bs1_abs, bs2_abs, aux_type=aux_edge.aux_kind)

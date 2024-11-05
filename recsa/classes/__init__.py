@@ -2,8 +2,9 @@
 
 from .assembly import Assembly
 from .aux_edge import AuxEdge
-from .component_structure import ComponentStructure
-from .mle import MleBindsite
-from .mle import MleKind
+from .component import Component
 from .reaction import InterReaction
+from .reaction import InterReactionEmbedded
 from .reaction import IntraReaction
+from .reaction import IntraReactionEmbedded
+from .bindsite_id_converter import BindsiteIdConverter

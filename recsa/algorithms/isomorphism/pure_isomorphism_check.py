@@ -4,14 +4,14 @@ import networkx as nx
 from networkx.algorithms.isomorphism import (categorical_edge_match,
                                              categorical_node_match)
 
-from recsa import Assembly, ComponentStructure
+from recsa import Assembly, Component
 
 __all__ = ['pure_is_isomorphic']
 
 
 def pure_is_isomorphic(
         assem1: Assembly, assem2: Assembly,
-        component_kinds: Mapping[str, ComponentStructure]
+        component_kinds: Mapping[str, Component]
         ) -> bool:
     """Check if two assemblies are isomorphic."""
     node_match = categorical_node_match('component_kind', None)
