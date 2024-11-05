@@ -23,8 +23,6 @@ from .classes import *
 from .algorithms import *
 
 # isort: split
-from .loading import *
-
 from .saving import reactions_to_df
 
 # isort: split
