@@ -1,1 +1,2 @@
-from .bondset_comparison import *
+from .bondsets_comparer import *
+from .bondsets_validation import *
