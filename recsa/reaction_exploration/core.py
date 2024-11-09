@@ -11,7 +11,7 @@ from .intra import explore_intra_reactions
 
 
 def explore_reactions(
-        id_to_assembly: Mapping[str, Assembly],
+        id_to_assembly: Mapping[str | int, Assembly],
         metal_kind: str, leaving_kind: str, entering_kind: str,
         component_structures: Mapping[str, Component],
         ) -> Iterator[IntraReaction | InterReaction]:
