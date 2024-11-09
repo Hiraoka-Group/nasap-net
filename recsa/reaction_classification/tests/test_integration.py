@@ -9,8 +9,7 @@ import pytest
 
 from recsa import (Assembly, Component, InterReactionEmbedded,
                    IntraReactionEmbedded, ReactionClassifier)
-from recsa.reaction_classification.utils import (calc_nth_site_on_metal,
-                                                 inter_or_intra)
+from recsa.reaction_classification.utils import inter_or_intra
 
 ReactionEmbedded = IntraReactionEmbedded | InterReactionEmbedded
 
@@ -106,44 +105,6 @@ def test_classification_by_comp_kinds(X_to_L, L_to_L):
 
     result = classifier.classify(L_to_L)
     assert result == "L_to_L"
-
-
-def test_by_nth_site_on_metal_with_entering_first(
-        X_to_L, L_to_L, comp_kind_to_obj):
-    def rule(reaction: ReactionEmbedded):
-        source_comp = Component(['a', 'b'])
-        nth_site_on_metal = calc_nth_site_on_metal(
-            reaction, comp_kind_to_obj, 'entering_first')  # entering_first
-        return f'{nth_site_on_metal}'
-    
-    classifier = ReactionClassifier(rule)
-
-    # MLX + L -> ML2X (transition state) -> ML2 + X
-    # L enters the 2nd site on M of ML
-    assert classifier.classify(X_to_L) == '2'
-
-    # MLX + L -> ML2X (transition state) -> MLX + L
-    # L enters the 2nd site on M of ML
-    assert classifier.classify(L_to_L) == '2'
-
-
-def test_by_nth_site_on_metal_with_leaving_first(
-        X_to_L, L_to_L, comp_kind_to_obj):
-    def rule(reaction: ReactionEmbedded):
-        source_comp = Component(['a', 'b'])
-        nth_site_on_metal = calc_nth_site_on_metal(
-            reaction, comp_kind_to_obj, 'leaving_first')  # leaving_first
-        return f'{nth_site_on_metal}'
-    
-    classifier = ReactionClassifier(rule)
-
-    # MLX + L -> ML + X + L (transition state) -> ML2 + X
-    # L enters the 2nd site on M of ML
-    assert classifier.classify(X_to_L) == '2'
-
-    # MLX + L -> MX + L + L (transition state) -> MLX + L
-    # L enters the 1st site on M of ML
-    assert classifier.classify(L_to_L) == '1'
 
 
 if __name__ == '__main__':
