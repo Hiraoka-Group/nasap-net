@@ -7,7 +7,7 @@ __all__ = ['normalize_bondset_under_sym_ops']
 
 def normalize_bondset_under_sym_ops(
         bondset: Iterable[str],
-        sym_ops: Mapping[str, Mapping[str, str]]
+        sym_ops: Mapping[str, Mapping[str, str]] | None = None
         ) -> set[str]:
     """Find a representative of an assembly under symmetry operations.
 
@@ -18,6 +18,8 @@ def normalize_bondset_under_sym_ops(
     # TODO: Add an example.
     """
     bondset = set(bondset)
+    if sym_ops is None:
+        return bondset
     for sym_op in sym_ops.values():
         transformed_assem = apply_symmetry_operation(bondset, sym_op)
         if sorted(transformed_assem) < sorted(bondset):
