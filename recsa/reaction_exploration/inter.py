@@ -12,10 +12,10 @@ __all__ = ['explore_inter_reactions']
 
 
 def explore_inter_reactions(
-        init_assem_id: str, entering_assem_id: str,
+        init_assem_id: str | int, entering_assem_id: str | int,
         metal_kind: str, leaving_kind: str, entering_kind: str,
-        id_to_assembly: Mapping[str, Assembly],
-        hash_to_ids: Mapping[str, Iterable[str]],
+        id_to_assembly: Mapping[str | int, Assembly],
+        hash_to_ids: Mapping[str, Iterable[str | int]],
         component_structures: Mapping[str, Component],
         ) -> Iterator[InterReaction]:
     init_assem = id_to_assembly[init_assem_id]
@@ -55,7 +55,6 @@ def explore_inter_reactions(
             yield InterReaction(
                 init_assem_id, entering_assem_id, product_id,
                 None, metal_bs, leaving_bs, entering_bs,
-                metal_kind, leaving_kind, entering_kind,
                 duplicate_count)
             continue
 
@@ -68,5 +67,4 @@ def explore_inter_reactions(
         yield InterReaction(
             init_assem_id, entering_assem_id, product_id, leaving_id,
             metal_bs, leaving_bs, entering_bs,
-            metal_kind, leaving_kind, entering_kind,
             duplicate_count)
