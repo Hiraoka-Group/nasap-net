@@ -8,9 +8,7 @@ from recsa import (Assembly, InterReaction, InterReactionEmbedded,
 def test_inter():
     REACTION = InterReaction(
         'MLX', 'L', 'ML2', 'X',
-        'M1.a', 'X1.a', 'L1.a',
-        'M', 'X', 'L', 2
-    )
+        'M1.a', 'X1.a', 'L1.a', 2)
 
     ID_TO_ASSEMBLY = {
         'MLX': Assembly({'M1': 'M', 'L1': 'L', 'X1': 'X'},
@@ -27,17 +25,13 @@ def test_inter():
     assert embed_reaction == InterReactionEmbedded(
         ID_TO_ASSEMBLY['MLX'], ID_TO_ASSEMBLY['L'],
         ID_TO_ASSEMBLY['ML2'], ID_TO_ASSEMBLY['X'],
-        'M1.a', 'X1.a', 'L1.a',
-        'M', 'X', 'L', 2
-    )
+        'M1.a', 'X1.a', 'L1.a', 2)
 
 
 def test_intra():
     REACTION = IntraReaction(
         'MLX', 'ML', 'X',
-        'M1.a', 'X1.a', 'L1.b',
-        'M', 'X', 'L', 1
-    )
+        'M1.a', 'X1.a', 'L1.b', 1)
 
     ID_TO_ASSEMBLY = {
         'MLX': Assembly({'M1': 'M', 'L1': 'L', 'X1': 'X'},
@@ -52,9 +46,7 @@ def test_intra():
     
     assert embed_reaction == IntraReactionEmbedded(
         ID_TO_ASSEMBLY['MLX'], ID_TO_ASSEMBLY['ML'], ID_TO_ASSEMBLY['X'],
-        'M1.a', 'X1.a', 'L1.b',
-        'M', 'X', 'L', 1
-    )
+        'M1.a', 'X1.a', 'L1.b', 1)
 
 
 if __name__ == '__main__':

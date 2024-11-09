@@ -30,7 +30,6 @@ def embed_assemblies_into_reaction(
         return IntraReactionEmbedded(
             init_assem, product_assem, leaving_assem,
             reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
-            reaction.metal_kind, reaction.leaving_kind, reaction.entering_kind,
             reaction.duplicate_count
         )
     elif isinstance(reaction, InterReaction):
@@ -38,7 +37,6 @@ def embed_assemblies_into_reaction(
         return InterReactionEmbedded(
             init_assem, entering_assem, product_assem, leaving_assem,
             reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
-            reaction.metal_kind, reaction.leaving_kind, reaction.entering_kind,
             reaction.duplicate_count
         )
     else:

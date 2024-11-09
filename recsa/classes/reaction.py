@@ -13,9 +13,6 @@ class IntraReaction:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
 
     def to_dict(self):
@@ -33,9 +30,6 @@ class InterReaction:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
 
     def to_dict(self):
@@ -51,10 +45,22 @@ class IntraReactionEmbedded:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
+
+    @property
+    def metal_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.metal_bs)
+    
+    @property
+    def leaving_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.leaving_bs)
+    
+    @property
+    def entering_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.entering_bs)
 
 
 @dataclass
@@ -66,7 +72,19 @@ class InterReactionEmbedded:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
+
+    @property
+    def metal_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.metal_bs)
+    
+    @property
+    def leaving_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.leaving_bs)
+    
+    @property
+    def entering_kind(self) -> str:
+        return self.entering_assem.get_component_kind_of_bindsite(
+            self.entering_bs)
