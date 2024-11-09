@@ -1,4 +1,5 @@
 from dataclasses import asdict, dataclass
+from functools import cached_property
 from typing import ClassVar
 
 from .assembly import Assembly
@@ -13,9 +14,6 @@ class IntraReaction:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
 
     def to_dict(self):
@@ -33,16 +31,13 @@ class InterReaction:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
 
     def to_dict(self):
         return asdict(self)
 
 
-@dataclass
+@dataclass(frozen=True)
 class IntraReactionEmbedded:
     init_assem: Assembly
     entering_assem: ClassVar[None] = None
@@ -51,13 +46,25 @@ class IntraReactionEmbedded:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
 
+    @cached_property
+    def metal_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.metal_bs)
+    
+    @cached_property
+    def leaving_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.leaving_bs)
+    
+    @cached_property
+    def entering_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.entering_bs)
 
-@dataclass
+
+@dataclass(frozen=True)
 class InterReactionEmbedded:
     init_assem: Assembly
     entering_assem: Assembly
@@ -66,7 +73,19 @@ class InterReactionEmbedded:
     metal_bs: str
     leaving_bs: str
     entering_bs: str
-    metal_kind: str
-    leaving_kind: str
-    entering_kind: str
     duplicate_count: int
+
+    @cached_property
+    def metal_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.metal_bs)
+    
+    @cached_property
+    def leaving_kind(self) -> str:
+        return self.init_assem.get_component_kind_of_bindsite(
+            self.leaving_bs)
+    
+    @cached_property
+    def entering_kind(self) -> str:
+        return self.entering_assem.get_component_kind_of_bindsite(
+            self.entering_bs)

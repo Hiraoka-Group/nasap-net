@@ -26,7 +26,6 @@ def test_classification_by_inter_or_intra():
         init_assem=Assembly(), product_assem=Assembly(),
         leaving_assem=Assembly(), 
         metal_bs='', leaving_bs='', entering_bs='',
-        metal_kind='', leaving_kind='', entering_kind='',
         duplicate_count=0
         )
     result = classifier.classify(intra)
@@ -36,7 +35,6 @@ def test_classification_by_inter_or_intra():
         init_assem=Assembly(), entering_assem=Assembly(),
         product_assem=Assembly(), leaving_assem=Assembly(),
         metal_bs='', leaving_bs='', entering_bs='',
-        metal_kind='', leaving_kind='', entering_kind='',
         duplicate_count=0
         )
     result = classifier.classify(inter)
@@ -68,7 +66,6 @@ def X_to_L(MLX, L, ML2, X):
         init_assem=MLX, entering_assem=L,
         product_assem=ML2, leaving_assem=X,
         metal_bs='M1.a', leaving_bs='X1.a', entering_bs='L1.a',
-        metal_kind='M', leaving_kind='X', entering_kind='L',
         duplicate_count=2  # 1 (dup. on MLX) * 2 (dup. on L)
     )
 
@@ -79,7 +76,6 @@ def L_to_L(MLX, L):
         init_assem=MLX, entering_assem=L,
         product_assem=MLX, leaving_assem=L,
         metal_bs='M1.a', leaving_bs='L1.a', entering_bs='L1.a',
-        metal_kind='M', leaving_kind='L', entering_kind='L',
         duplicate_count=2  # 1 (dup. on MLX) * 2 (dup. on L)
     )
 
