@@ -12,9 +12,9 @@ __all__ = ['group_assemblies_by_isomorphism']
 
 
 def group_assemblies_by_isomorphism(
-        id_to_assembly: Mapping[str | int, Assembly],
+        id_to_assembly: Mapping[int, Assembly],
         component_structures: Mapping[str, Component]
-        ) -> dict[str | int, set[str | int]]:
+        ) -> dict[int, set[int]]:
     """Group duplicates by assembly isomorphism.
 
     Parameters
@@ -47,6 +47,6 @@ def group_assemblies_by_isomorphism(
                     component_structures):
                 uf.union(id1, id2)
 
-    grouped_ids: Iterable[set[str | int]] = uf.to_sets()
+    grouped_ids: Iterable[set[int]] = uf.to_sets()
     unique_id_to_ids = {min(ids): ids for ids in grouped_ids}
     return unique_id_to_ids

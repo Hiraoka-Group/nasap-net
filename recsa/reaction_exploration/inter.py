@@ -12,10 +12,10 @@ __all__ = ['explore_inter_reactions']
 
 
 def explore_inter_reactions(
-        init_assem_id: str | int, entering_assem_id: str | int,
+        init_assem_id: int, entering_assem_id: int,
         metal_kind: str, leaving_kind: str, entering_kind: str,
-        id_to_assembly: Mapping[str | int, Assembly],
-        hash_to_ids: Mapping[str, Iterable[str | int]],
+        id_to_assembly: Mapping[int, Assembly],
+        hash_to_ids: Mapping[str, Iterable[int]],
         component_structures: Mapping[str, Component],
         ) -> Iterator[InterReaction]:
     init_assem = id_to_assembly[init_assem_id]

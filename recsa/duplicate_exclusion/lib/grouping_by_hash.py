@@ -8,9 +8,9 @@ __all__ = ['group_assemblies_by_hash']
 
 
 def group_assemblies_by_hash(
-        id_to_assembly: Mapping[str | int, Assembly],
+        id_to_assembly: Mapping[int, Assembly],
         component_structures: Mapping[str, Component]
-        ) -> dict[str, set[str | int]]:
+        ) -> dict[str, set[int]]:
     # Group by hash
     hash_to_ids = defaultdict(set)
     for id_, assembly in id_to_assembly.items():

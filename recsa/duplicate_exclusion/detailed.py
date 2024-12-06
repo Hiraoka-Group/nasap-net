@@ -8,10 +8,9 @@ __all__ = ['exclude_remaining_duplicates']
 
 
 def exclude_remaining_duplicates(
-        id_to_assembly: Mapping[str | int, Assembly],
+        id_to_assembly: Mapping[int, Assembly],
         component_structures: Mapping[str, Component],
-        ) -> tuple[dict[str | int, Assembly], 
-                   dict[str | int, set[str | int]]]:
+        ) -> tuple[dict[int, Assembly], dict[int, set[int]]]:
     """Exclude remaining duplicates."""
     unique_id_to_ids = group_assemblies_by_isomorphism(id_to_assembly, component_structures)
     unique_ids = unique_id_to_ids.keys()
