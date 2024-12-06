@@ -35,7 +35,7 @@ def enum_multi_bond_subsets(
         # the result deterministic.
         for adj_bond in sorted(adj_bonds):
             new_assem = prev | {adj_bond}
-            if is_new_under_symmetry(found, new_assem, sym_ops):
+            if is_new_under_symmetry(found, set(new_assem), sym_ops):
                 found.add(frozenset(new_assem))
 
     return found
