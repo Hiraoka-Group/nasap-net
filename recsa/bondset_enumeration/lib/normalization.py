@@ -6,9 +6,9 @@ __all__ = ['normalize_bondset_under_sym_ops']
 
 
 def normalize_bondset_under_sym_ops(
-        bondset: Iterable[str],
-        sym_ops: Mapping[str, Mapping[str, str]] | None = None
-        ) -> set[str]:
+        bondset: Iterable[int],
+        sym_ops: Mapping[str, Mapping[int, int]] | None = None
+        ) -> set[int]:
     """Find a representative of an assembly under symmetry operations.
 
     There can be multiple symmetry-equivalent assemblies for a given

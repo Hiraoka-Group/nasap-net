@@ -6,13 +6,13 @@ __all__ = ['enum_single_bond_subsets']
 
 
 def enum_single_bond_subsets(
-        bonds: Iterable[str],
-        sym_ops: Mapping[str, Mapping[str, str]] | None = None
-        ) -> set[frozenset[str]]:
+        bonds: Iterable[int],
+        sym_ops: Mapping[str, Mapping[int, int]] | None = None
+        ) -> set[frozenset[int]]:
     """Enumerate single-bond subsets of bonds 
     excluding disconnected ones and symmetry-equivalent ones.
     """
-    found: set[frozenset[str]] = set()
+    found: set[frozenset[int]] = set()
 
     # NOTE: The order of the iteration should be fixed to make the
     # result deterministic.

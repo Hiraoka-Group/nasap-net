@@ -4,17 +4,17 @@ from recsa.bondset_enumeration import normalize_bondset_under_sym_ops
 
 
 def test_1():
-    BONDSET = {'01'}
-    SYM_OPS = {'foo': {'01': '02', '02': '01'}}
+    BONDSET = {1}
+    SYM_OPS = {'foo': {1: 2, 2: 1}}
     result = normalize_bondset_under_sym_ops(BONDSET, SYM_OPS)
-    assert result == {'01'}
+    assert result == {1}
 
 
 def test_2():
-    BONDSET = {'02'}
-    SYM_OPS = {'foo': {'01': '02', '02': '01'}}
+    BONDSET = {2}
+    SYM_OPS = {'foo': {1: 2, 2: 1}}
     result = normalize_bondset_under_sym_ops(BONDSET, SYM_OPS)
-    assert result == {'01'}
+    assert result == {1}
 
 
 if __name__ == '__main__':
