@@ -6,9 +6,9 @@ __all__ = ['is_new_under_symmetry']
 
 
 def is_new_under_symmetry(
-        found_assems: set[frozenset[str]],
-        new_assem: set[str],
-        sym_ops: Mapping[str, Mapping[str, str]] | None = None
+        found_assems: set[frozenset[int]],
+        new_assem: set[int],
+        sym_ops: Mapping[str, Mapping[int, int]] | None = None
         ) -> bool:
     """Check if a new assembly is not symmetry-equivalent to the found ones.
 

@@ -3,7 +3,7 @@ from typing import TypeVar
 
 
 def validate_bondsets(
-        bondsets: Iterable[Iterable[str]]
+        bondsets: Iterable[Iterable[int]]
         ) -> None:
     """Validate bondsets.
 
@@ -11,7 +11,7 @@ def validate_bondsets(
 
     Parameters
     ----------
-    bondsets : Iterable[Iterable[str]]
+    bondsets : Iterable[Iterable[int]]
         Bondsets to validate.
 
     Raises
