@@ -7,54 +7,46 @@ from recsa import (Assembly, InterReaction, InterReactionEmbedded,
 
 def test_inter():
     REACTION = InterReaction(
-        'MLX', 'L', 'ML2', 'X',
-        'M1.a', 'X1.a', 'L1.a',
-        'M', 'X', 'L', 2
-    )
+        0, 1, 2, 3,
+        'M1.a', 'X1.a', 'L1.a', 2)
 
     ID_TO_ASSEMBLY = {
-        'MLX': Assembly({'M1': 'M', 'L1': 'L', 'X1': 'X'},
+        0: Assembly({'M1': 'M', 'L1': 'L', 'X1': 'X'},  # MLX
                         [('M1.a', 'L1.a'), ('M1.b', 'X1.a')]),
-        'L': Assembly({'L1': 'L'}),
-        'ML2': Assembly({'M1': 'M', 'L1': 'L', 'L2': 'L'},
+        1: Assembly({'L1': 'L'}),  # L
+        2: Assembly({'M1': 'M', 'L1': 'L', 'L2': 'L'},  # ML2
                         [('M1.a', 'L1.a'), ('M1.b', 'L2.a')]),
-        'X': Assembly({'X1': 'X'}),
+        3: Assembly({'X1': 'X'}),  # X
     }
         
     embed_reaction = embed_assemblies_into_reaction(
         REACTION, ID_TO_ASSEMBLY)
     
     assert embed_reaction == InterReactionEmbedded(
-        ID_TO_ASSEMBLY['MLX'], ID_TO_ASSEMBLY['L'],
-        ID_TO_ASSEMBLY['ML2'], ID_TO_ASSEMBLY['X'],
-        'M1.a', 'X1.a', 'L1.a',
-        'M', 'X', 'L', 2
-    )
+        ID_TO_ASSEMBLY[0], ID_TO_ASSEMBLY[1],
+        ID_TO_ASSEMBLY[2], ID_TO_ASSEMBLY[3],
+        'M1.a', 'X1.a', 'L1.a', 2)
 
 
 def test_intra():
     REACTION = IntraReaction(
-        'MLX', 'ML', 'X',
-        'M1.a', 'X1.a', 'L1.b',
-        'M', 'X', 'L', 1
-    )
+        0, 1, 2,
+        'M1.a', 'X1.a', 'L1.b', 1)
 
     ID_TO_ASSEMBLY = {
-        'MLX': Assembly({'M1': 'M', 'L1': 'L', 'X1': 'X'},
+        0: Assembly({'M1': 'M', 'L1': 'L', 'X1': 'X'},  # MLX
                         [('M1.a', 'L1.a'), ('M1.b', 'X1.a')]),
-        'ML': Assembly({'M1': 'M', 'L1': 'L'},
+        1: Assembly({'M1': 'M', 'L1': 'L'},  # ML
                         [('M1.a', 'L1.a'), ('M1.b', 'L1.b')]),
-        'X': Assembly({'X1': 'X'}),
+        2: Assembly({'X1': 'X'}),  # X
     }
     
     embed_reaction = embed_assemblies_into_reaction(
         REACTION, ID_TO_ASSEMBLY)
     
     assert embed_reaction == IntraReactionEmbedded(
-        ID_TO_ASSEMBLY['MLX'], ID_TO_ASSEMBLY['ML'], ID_TO_ASSEMBLY['X'],
-        'M1.a', 'X1.a', 'L1.b',
-        'M', 'X', 'L', 1
-    )
+        ID_TO_ASSEMBLY[0], ID_TO_ASSEMBLY[1], ID_TO_ASSEMBLY[2],
+        'M1.a', 'X1.a', 'L1.b', 1)
 
 
 if __name__ == '__main__':

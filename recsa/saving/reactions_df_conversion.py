@@ -15,7 +15,6 @@ def reactions_to_df(reactions: Iterable[Reaction]) -> pd.DataFrame:
             'init_assem_id', 'entering_assem_id', 
             'product_assem_id', 'leaving_assem_id', 
             'metal_bs', 'leaving_bs', 'entering_bs', 
-            'metal_kind', 'leaving_kind', 'entering_kind', 
             'duplicate_count', 
         ]
     )

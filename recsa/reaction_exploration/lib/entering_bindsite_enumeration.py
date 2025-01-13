@@ -9,7 +9,7 @@ __all__ = ['enum_valid_entering_bindsites']
 
 
 def _cache_key2(
-        assembly_id: str,
+        assembly_id: str | int,
         assembly: Assembly,
         entering_kind: str,
         component_structures: Mapping[str, Component],
@@ -19,7 +19,7 @@ def _cache_key2(
 
 @cached(cache={}, key=_cache_key2)
 def enum_valid_entering_bindsites(
-        assembly_id: str,  # only used for caching
+        assembly_id: str | int,  # only used for caching
         assembly: Assembly,
         entering_kind: str,
         component_structures: Mapping[str, Component],

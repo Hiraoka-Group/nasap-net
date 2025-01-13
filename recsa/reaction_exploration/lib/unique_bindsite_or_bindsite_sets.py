@@ -14,7 +14,7 @@ __all__ = ['compute_unique_bindsites_or_bindsite_sets']
 
 
 def _cache_key(
-        assembly_id: str,
+        assembly_id: str | int,
         assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[str] | Iterable[tuple[str, ...]],
         component_structures: Mapping[str, Component],
@@ -24,25 +24,25 @@ def _cache_key(
 
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
-        assembly_id: str, assembly: Assembly,
+        assembly_id: str | int, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[str],
         component_structures: Mapping[str, Component],
         ) -> list[tuple[str, int]]: ...
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
-        assembly_id: str, assembly: Assembly,
+        assembly_id: str | int, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[tuple[str, str]],
         component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, str], int]]: ...
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
-        assembly_id: str, assembly: Assembly,
+        assembly_id: str | int, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[tuple[str, str, str]],
         component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, str, str], int]]: ...
 @overload
 def compute_unique_bindsites_or_bindsite_sets(
-        assembly_id: str, assembly: Assembly,
+        assembly_id: str | int, assembly: Assembly,
         bindsites_or_bindsite_sets: Iterable[tuple[str, ...]],
         component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, ...], int]]: ...

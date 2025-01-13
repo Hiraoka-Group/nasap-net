@@ -9,10 +9,10 @@ from .lib import (compute_unique_bindsites_or_bindsite_sets,
 
 
 def explore_intra_reactions(
-        init_assem_id: str,
+        init_assem_id: int,
         metal_kind: str, leaving_kind: str, entering_kind: str,
-        id_to_assembly: Mapping[str, Assembly],
-        hash_to_ids: Mapping[str, Iterable[str]],
+        id_to_assembly: Mapping[int, Assembly],
+        hash_to_ids: Mapping[str, Iterable[int]],
         component_structures: Mapping[str, Component],
         ) -> Iterator[IntraReaction]:
     init_assem = id_to_assembly[init_assem_id]
@@ -39,8 +39,7 @@ def explore_intra_reactions(
         if leaving is None:
             yield IntraReaction(
                 init_assem_id, product_id, None,
-                metal_bs, leaving_bs, entering_bs, metal_kind,
-                leaving_kind, entering_kind,
+                metal_bs, leaving_bs, entering_bs, 
                 duplicate_count)
             continue
 
@@ -52,7 +51,5 @@ def explore_intra_reactions(
 
         yield IntraReaction(
             init_assem_id, product_id, leaving_id,
-            metal_bs, leaving_bs,
-            entering_bs, metal_kind,
-            leaving_kind, entering_kind,
+            metal_bs, leaving_bs, entering_bs, 
             duplicate_count)

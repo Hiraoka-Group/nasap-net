@@ -7,10 +7,10 @@ from recsa.algorithms.isomorphism import is_isomorphic
 
 def find_isomorphic_assembly(
         target_assembly: Assembly,
-        id_to_assembly: Mapping[str, Assembly],
-        hash_to_ids: Mapping[str, Iterable[str]],
+        id_to_assembly: Mapping[int, Assembly],
+        hash_to_ids: Mapping[str, Iterable[int]],
         component_structures: Mapping[str, Component]
-        ) -> str | None:
+        ) -> int | None:
     # TODO: Reduce the number of calls to calc_wl_hash_of_assembly.
     # Maybe we can use the numbers of each component kind in the assembly.
     hash_ = calc_graph_hash_of_assembly(target_assembly, component_structures)

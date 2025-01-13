@@ -9,7 +9,7 @@ __all__ = ['enum_valid_ml_pairs']
 
 
 def _cache_key(
-        assembly_id: str,
+        assembly_id: str | int,
         assembly: Assembly,
         metal_kind: str, leaving_kind: str,
         component_structures: Mapping[str, Component]
@@ -19,7 +19,7 @@ def _cache_key(
 
 @cached(cache={}, key=_cache_key)
 def enum_valid_ml_pairs(
-        assembly_id: str,  # only used for caching
+        assembly_id: str | int,  # only used for caching
         assembly: Assembly,
         metal_kind: str, leaving_kind: str,
         component_structures: Mapping[str, Component]

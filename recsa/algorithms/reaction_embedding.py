@@ -7,16 +7,16 @@ from recsa import (Assembly, InterReaction, InterReactionEmbedded,
 @overload
 def embed_assemblies_into_reaction(
     reaction: IntraReaction,
-    id_to_assembly: dict[str, Assembly]
+    id_to_assembly: dict[int, Assembly]
     ) -> IntraReactionEmbedded: ...
 @overload
 def embed_assemblies_into_reaction(
     reaction: InterReaction,
-    id_to_assembly: dict[str, Assembly]
+    id_to_assembly: dict[int, Assembly]
     ) -> InterReactionEmbedded: ...
 def embed_assemblies_into_reaction(
         reaction: IntraReaction | InterReaction,
-        id_to_assembly: dict[str, Assembly]):
+        id_to_assembly: dict[int, Assembly]):
     """Embed the assemblies into the reaction."""
     init_assem = id_to_assembly[reaction.init_assem_id]
     product_assem = id_to_assembly[reaction.product_assem_id]
@@ -30,7 +30,6 @@ def embed_assemblies_into_reaction(
         return IntraReactionEmbedded(
             init_assem, product_assem, leaving_assem,
             reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
-            reaction.metal_kind, reaction.leaving_kind, reaction.entering_kind,
             reaction.duplicate_count
         )
     elif isinstance(reaction, InterReaction):
@@ -38,7 +37,6 @@ def embed_assemblies_into_reaction(
         return InterReactionEmbedded(
             init_assem, entering_assem, product_assem, leaving_assem,
             reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
-            reaction.metal_kind, reaction.leaving_kind, reaction.entering_kind,
             reaction.duplicate_count
         )
     else:
