@@ -68,7 +68,7 @@ def test_with_sym_ops(tmp_path):
     assert actual_output == EXPECTED
 
 
-def test_missing_input_key():
+def test_missing_input_key(tmp_path):
     INPUT_DATA = {
         'adj_bonds': {
             1: {2},
@@ -77,7 +77,7 @@ def test_missing_input_key():
             4: {3},
         }
     }
-    input_path = "input.yaml"
+    input_path = tmp_path / "input.yaml"
     with open(input_path, 'w') as f:
         yaml.safe_dump(INPUT_DATA, f)
 
