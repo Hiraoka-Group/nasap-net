@@ -16,7 +16,9 @@ def write_output(
         raise FileExistsError(f'Output file "{output_path}" already exists.')
     if verbose:
         print(f'Saving the results to "{output_path}"...')
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    dir_ = os.path.dirname(output_path)
+    if dir_:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, 'w') as f:
         yaml.safe_dump(data, f, default_flow_style=default_flow_style)
     if verbose:
