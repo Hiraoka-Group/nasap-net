@@ -83,5 +83,17 @@ def test_verbose_false(tmp_path, capsys):
     assert f'Saving the results to "{output_path}"...' not in captured.out
 
 
+def test_write_output_with_filename_only(tmp_path):
+    output_path = tmp_path / "output.yaml"
+    data = {"key": "value"}
+    
+    write_output(str(output_path), data)
+    
+    assert os.path.exists(output_path)
+    with open(output_path, 'r') as f:
+        saved_data = yaml.safe_load(f)
+    assert saved_data == data
+
+
 if __name__ == '__main__':
     pytest.main(['-v', __file__])
