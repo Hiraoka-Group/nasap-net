@@ -1,3 +1,7 @@
+[project]
+name = "recsa"
+dynamic = ["version"]
+
 [tool.poetry]
 name = "recsa"
 version = "0.3.0"
@@ -29,3 +33,6 @@ sphinx = "^8.0.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[project.scripts]
+recsa = "recsa.cli.main:main"
