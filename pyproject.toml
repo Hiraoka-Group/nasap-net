@@ -1,3 +1,7 @@
+[project]
+name = "recsa"
+dynamic = ["version"]
+
 [tool.poetry]
 name = "recsa"
 version = "0.3.0"
@@ -20,6 +24,7 @@ types-pyyaml = "^6.0.12.20240917"
 pydantic = "^2.9.2"
 cachetools = "^5.5.0"
 types-cachetools = "^5.5.0.20240820"
+click = "^8.1.8"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.2"
@@ -28,3 +33,6 @@ sphinx = "^8.0.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[project.scripts]
+recsa = "recsa.cli.main:main"
