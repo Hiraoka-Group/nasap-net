@@ -38,3 +38,6 @@ build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
 recsa = "recsa.cli.main:main"
+
+[tool.setuptools.package-data]
+"recsa" = ["py.typed"]
