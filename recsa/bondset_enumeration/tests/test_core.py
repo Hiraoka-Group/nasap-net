@@ -134,5 +134,34 @@ def test_enum_bond_subsets_M4L4_square():
         BONDS, BOND_TO_ADJ_BONDS, SYMMETRY_OPS) == EXPECTED
 
 
+def test_string():
+    # M2L3 linear: L-M-L-M-L
+    # bonds: 1, 2, 3, 4 from left to right
+
+    # WITHOUT symmetry operations
+    BONDS = ['1', '2', '3', '4']
+    BOND_TO_ADJ_BONDS = {
+        '1': {'2'},
+        '2': {'1', '3'},
+        '3': {'2', '4'},
+        '4': {'3'},
+    }
+    
+    subsets = enum_bond_subsets(BONDS, BOND_TO_ADJ_BONDS)
+
+    assert subsets == {
+        frozenset({'1'}),
+        frozenset({'2'}),
+        frozenset({'3'}),
+        frozenset({'4'}),
+        frozenset({'1', '2'}),
+        frozenset({'2', '3'}),
+        frozenset({'3', '4'}),
+        frozenset({'1', '2', '3'}),
+        frozenset({'2', '3', '4'}),
+        frozenset({'1', '2', '3', '4'}),
+    }
+
+
 if __name__ == '__main__':
     pytest.main(['-vv', __file__])

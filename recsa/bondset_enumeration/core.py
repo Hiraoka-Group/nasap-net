@@ -1,17 +1,20 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Hashable, Iterable, Mapping
+from typing import TypeVar
 
 from .lib import enum_multi_bond_subsets, enum_single_bond_subsets
 
 __all__ = ['enum_bond_subsets']
 
+_T = TypeVar('_T', bound=Hashable)
+
 
 def enum_bond_subsets(
-        bonds: Iterable[int],
-        bond_to_adj_bonds: Mapping[int, Iterable[int]], 
-        sym_ops: Mapping[str, Mapping[int, int]] | None = None
-        ) -> set[frozenset[int]]:
+        bonds: Iterable[_T],
+        bond_to_adj_bonds: Mapping[_T, Iterable[_T]], 
+        sym_ops: Mapping[str, Mapping[_T, _T]] | None = None
+        ) -> set[frozenset[_T]]:
     """Enumerate connected subsets of bonds excluding symmetry-equivalent ones.
 
     When an assembly is represented as a set of bonds, subsets of 
@@ -44,15 +47,15 @@ def enum_bond_subsets(
 
     Parameters
     ----------
-    bonds : Iterable[int]
+    bonds : Iterable[_T]
         An iterable of bond IDs.
         The resulting bondsets are dependent on the order of the bonds.
-    bond_to_adj_bonds : Mapping[int, Iterable[int]]
+    bond_to_adj_bonds : Mapping[_T, Iterable[_T]]
         A dictionary mapping a bond to its adjacent bonds.
         Each key is the ID of a bond, and its value is an iterable
         of IDs of adjacent bonds.
         This dictionary is used for connectivity check.
-    sym_ops : Mapping[str, Mapping[int, int]] | None, optional
+    sym_ops : Mapping[str, Mapping[_T, _T]] | None, optional
         A dictionary of symmetry operations.
         Each key is the name of a symmetry operation, and its value is
         a mapping of bond IDs to their images under the symmetry operation.
@@ -64,7 +67,7 @@ def enum_bond_subsets(
 
     Returns
     -------
-    set[frozenset[int]]
+    set[frozenset[_T]]
         A set of connected subsets of bonds excluding symmetry-equivalent
         ones. Each subset is represented as a frozenset of bond IDs.
 
@@ -114,7 +117,7 @@ def enum_bond_subsets(
     >>> recsa.enum_bond_subsets(BONDS, BOND_TO_ADJ_BONDS, SYM_OPS)
     {frozenset({1}), frozenset({1, 2}), frozenset({1, 2, 3})}
     """
-    found: set[frozenset[int]] = set()
+    found: set[frozenset[_T]] = set()
 
     single_bond_subsets = enum_single_bond_subsets(bonds, sym_ops)
     found.update(single_bond_subsets)

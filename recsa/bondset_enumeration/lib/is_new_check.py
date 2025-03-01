@@ -1,14 +1,17 @@
-from collections.abc import Mapping
+from collections.abc import Hashable, Mapping
+from typing import TypeVar
 
 from .symmetry_application import apply_symmetry_operation
 
 __all__ = ['is_new_under_symmetry']
 
+_T = TypeVar('_T', bound=Hashable)
+
 
 def is_new_under_symmetry(
-        found_assems: set[frozenset[int]],
-        new_assem: set[int],
-        sym_ops: Mapping[str, Mapping[int, int]] | None = None
+        found_assems: set[frozenset[_T]],
+        new_assem: set[_T],
+        sym_ops: Mapping[str, Mapping[_T, _T]] | None = None
         ) -> bool:
     """Check if a new assembly is not symmetry-equivalent to the found ones.
 

@@ -1,6 +1,8 @@
 from collections.abc import Iterable, Sequence
 
 
+# TODO: Add validation
+# TODO: Use generic types
 def cyclic_perm_to_map(
         cyclic_permutation: Sequence[str]) -> dict[str, str]:
     mapping: dict[str, str] = {}
