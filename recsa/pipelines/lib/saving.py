@@ -20,6 +20,6 @@ def write_output(
     if dir_:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, 'w') as f:
-        yaml.safe_dump(data, f, default_flow_style=default_flow_style)
+        yaml.dump(data, f, default_flow_style=default_flow_style)
     if verbose:
         print(f'Successfully saved the results to "{output_path}".')
