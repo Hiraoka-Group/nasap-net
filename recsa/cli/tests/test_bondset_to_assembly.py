@@ -5,43 +5,12 @@ import yaml
 from click.testing import CliRunner
 
 from recsa import Assembly
-from recsa.cli.main import main
+from recsa.cli.commands import run_bondset_to_assembly_pipeline
 
 
-def test_enum_bond_subsets(tmp_path):
-    runner = CliRunner()
-
-    INPUT_DATA = {
-        'bonds': [1, 2, 3, 4],
-        'adj_bonds': {
-            1: {2},
-            2: {1, 3},
-            3: {2, 4},
-            4: {3}}
-        }
-
-    with runner.isolated_filesystem(temp_dir=tmp_path) as td:
-        input_path = os.path.join(td, 'input.yaml')
-        output_path = os.path.join(td, 'output.yaml')
-
-        with open(input_path, 'w') as f:
-            yaml.safe_dump(INPUT_DATA, f)
-        
-        result = runner.invoke(
-            main,
-            [
-                'enum-bond-subsets', '--input', input_path, 
-                '--output', output_path]
-        )
-
-        assert result.exit_code == 0
-        assert os.path.exists(output_path)
-
-
-def test_bondsets_to_assemblies(tmp_path):
-    runner = CliRunner()
-
-    bondsets_data = {
+@pytest.fixture
+def bondsets_data():
+    return {
         0: [1],
         1: [1, 2],
         2: [2, 3],
@@ -49,7 +18,10 @@ def test_bondsets_to_assemblies(tmp_path):
         4: [1, 2, 3, 4]
     }
 
-    structure_data = {
+
+@pytest.fixture
+def structure_data():
+    return {
         'comp_id_to_kind': {
             'M1': 'M',
             'M2': 'M',
@@ -65,7 +37,10 @@ def test_bondsets_to_assemblies(tmp_path):
         }
     }
 
-    expected_assemblies = {
+
+@pytest.fixture
+def expected_assemblies():
+    return {
         0: Assembly({'L1': 'L', 'M1': 'M'}, [('L1.b', 'M1.a')]),
         1: Assembly(
             {'L1': 'L', 'M1': 'M', 'L2': 'L'},
@@ -82,22 +57,25 @@ def test_bondsets_to_assemblies(tmp_path):
              ('M2.b', 'L3.a')])
     }
 
+
+def test_cli_command_a(tmp_path, bondsets_data, structure_data, expected_assemblies):
+    runner = CliRunner()
+
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
-        bondsets_path = os.path.join(td, 'bondsets.yaml')
-        structure_data_path = os.path.join(td, 'structure_data.yaml')
+        bondset_path = os.path.join(td, 'input.yaml')
+        structure_path = os.path.join(td, 'structure.yaml')
         output_path = os.path.join(td, 'output.yaml')
 
-        with open(bondsets_path, 'w') as f:
+        with open(bondset_path, 'w') as f:
             yaml.safe_dump(bondsets_data, f)
 
-        with open(structure_data_path, 'w') as f:
+        with open(structure_path, 'w') as f:
             yaml.safe_dump(structure_data, f)
-
+        
         result = runner.invoke(
-            main,
-            [
-                'bondset-to-assembly', '--bondsets', bondsets_path, 
-                '--structure', structure_data_path, '--output', output_path]
+            run_bondset_to_assembly_pipeline,
+            ['--bondsets', bondset_path, '--structure', structure_path, 
+             '--output', output_path]
         )
 
         assert result.exit_code == 0
@@ -105,7 +83,7 @@ def test_bondsets_to_assemblies(tmp_path):
 
         with open(output_path, 'r') as f:
             actual_output = yaml.safe_load(f)
-        
+            
         assert actual_output == expected_assemblies
 
 
