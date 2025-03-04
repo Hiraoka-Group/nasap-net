@@ -5,7 +5,7 @@ import yaml
 from click.testing import CliRunner
 
 from recsa import Assembly
-from recsa.cli.commands import run_bondset_to_assembly_pipeline
+from recsa.cli.commands import run_bondsets_to_assemblies_pipeline
 
 
 @pytest.fixture
@@ -73,9 +73,8 @@ def test_cli_command_a(tmp_path, bondsets_data, structure_data, expected_assembl
             yaml.safe_dump(structure_data, f)
         
         result = runner.invoke(
-            run_bondset_to_assembly_pipeline,
-            ['--bondsets', bondset_path, '--structure', structure_path, 
-             '--output', output_path]
+            run_bondsets_to_assemblies_pipeline,
+            [bondset_path, structure_path, output_path]
         )
 
         assert result.exit_code == 0
