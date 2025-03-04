@@ -7,7 +7,7 @@ from recsa.pipelines import (bondsets_to_assemblies_pipeline,
 @click.command('enumerate-bond-subsets')
 @click.argument('input', type=click.Path(exists=True))
 @click.argument('output', type=click.Path())
-def run_enum_bond_subset_pipeline(input, output):
+def run_enum_bond_subsets_pipeline(input, output):
     """Enumerates bond subsets.
     
     \b

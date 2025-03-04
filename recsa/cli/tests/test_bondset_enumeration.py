@@ -4,7 +4,7 @@ import pytest
 import yaml
 from click.testing import CliRunner
 
-from recsa.cli.commands import run_enum_bond_subset_pipeline
+from recsa.cli.commands import run_enum_bond_subsets_pipeline
 
 
 def test_cli_command_a(tmp_path):
@@ -34,7 +34,7 @@ def test_cli_command_a(tmp_path):
             yaml.safe_dump(INPUT_DATA, f)
         
         result = runner.invoke(
-            run_enum_bond_subset_pipeline,
+            run_enum_bond_subsets_pipeline,
             [input_path, output_path]
         )
 
