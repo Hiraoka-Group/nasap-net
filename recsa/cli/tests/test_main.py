@@ -17,8 +17,13 @@ def test_enum_bond_subsets(tmp_path):
             1: {2},
             2: {1, 3},
             3: {2, 4},
-            4: {3}}
+            4: {3}},
+        'sym_maps': {
+            'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         }
+    }
+
+    EXPECTED = [[1], [2], [1, 2], [2, 3], [1, 2, 3], [1, 2, 3, 4]]
 
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
         input_path = os.path.join(td, 'input.yaml')
@@ -29,19 +34,22 @@ def test_enum_bond_subsets(tmp_path):
         
         result = runner.invoke(
             main,
-            [
-                'enum-bond-subsets', '--input', input_path, 
-                '--output', output_path]
+            ['enumerate-bond-subsets', input_path, output_path]
         )
 
         assert result.exit_code == 0
         assert os.path.exists(output_path)
 
+        with open(output_path, 'r') as f:
+            actual_output = yaml.safe_load(f)
+
+        assert actual_output == EXPECTED
+
 
 def test_bondsets_to_assemblies(tmp_path):
     runner = CliRunner()
 
-    bondsets_data = {
+    BONDSETS_DATA = {
         0: [1],
         1: [1, 2],
         2: [2, 3],
@@ -49,7 +57,7 @@ def test_bondsets_to_assemblies(tmp_path):
         4: [1, 2, 3, 4]
     }
 
-    structure_data = {
+    STRUCTURE_DATA = {
         'comp_id_to_kind': {
             'M1': 'M',
             'M2': 'M',
@@ -65,7 +73,7 @@ def test_bondsets_to_assemblies(tmp_path):
         }
     }
 
-    expected_assemblies = {
+    EXPECTED = {
         0: Assembly({'L1': 'L', 'M1': 'M'}, [('L1.b', 'M1.a')]),
         1: Assembly(
             {'L1': 'L', 'M1': 'M', 'L2': 'L'},
@@ -88,16 +96,15 @@ def test_bondsets_to_assemblies(tmp_path):
         output_path = os.path.join(td, 'output.yaml')
 
         with open(bondsets_path, 'w') as f:
-            yaml.safe_dump(bondsets_data, f)
+            yaml.safe_dump(BONDSETS_DATA, f)
 
         with open(structure_data_path, 'w') as f:
-            yaml.safe_dump(structure_data, f)
+            yaml.safe_dump(STRUCTURE_DATA, f)
 
         result = runner.invoke(
             main,
-            [
-                'bondset-to-assembly', '--bondsets', bondsets_path, 
-                '--structure', structure_data_path, '--output', output_path]
+            ['bondsets-to-assemblies', bondsets_path, structure_data_path, 
+             output_path]
         )
 
         assert result.exit_code == 0
@@ -106,7 +113,7 @@ def test_bondsets_to_assemblies(tmp_path):
         with open(output_path, 'r') as f:
             actual_output = yaml.safe_load(f)
         
-        assert actual_output == expected_assemblies
+        assert actual_output == EXPECTED
 
 
 if __name__ == '__main__':
