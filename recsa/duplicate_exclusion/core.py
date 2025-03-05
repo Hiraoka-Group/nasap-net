@@ -1,5 +1,5 @@
 from collections import defaultdict
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Iterator, Mapping, Sequence
 
 from recsa import Assembly, Component, calc_graph_hash_of_assembly
 
@@ -9,7 +9,7 @@ __all__ = ['find_unique_assemblies']
 
 
 def find_unique_assemblies(
-        assemblies: Iterable[Assembly],
+        assemblies: Sequence[Assembly],
         component_structures: Mapping[str, Component]
         ) -> Iterator[Assembly]:
     """Get unique assemblies.
@@ -24,9 +24,9 @@ def find_unique_assemblies(
 
     Parameters
     ----------
-    assemblies : Iterable[tuple[str, Assembly]]
-        An iterable of tuples of IDs and assemblies.
-    component_structures : Mapping[str, ComponentStructure]
+    assemblies : Sequence[Assembly]
+        A sequence of assemblies.
+    component_structures : Mapping[str, Component]
         A mapping from component kinds to component structures.
 
     Yields
