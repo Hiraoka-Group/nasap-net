@@ -31,7 +31,7 @@ def bondsets_to_assemblies_pipeline(
     
     # Main process
     if verbose:
-        print('Enumerating bond subsets...')
+        print('Converting bondsets to assemblies...')
     
     id_to_assembly = {
         id_: convert_bondset_to_assembly(
