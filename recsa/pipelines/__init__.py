@@ -1,2 +1,3 @@
 from .bondset_enumeration import enum_bond_subsets_pipeline
 from .bondset_to_assembly import bondsets_to_assemblies_pipeline
+from .duplicate_exclusion import find_unique_assemblies_pipeline
