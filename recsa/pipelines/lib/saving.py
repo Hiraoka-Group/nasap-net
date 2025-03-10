@@ -9,7 +9,8 @@ def write_output(
         *,
         overwrite: bool = False,
         default_flow_style: bool | None = None,
-        verbose: bool = False
+        verbose: bool = False,
+        header: str | None = None,
         ) -> None:
     """Write the output data to a file using YAML format."""
     if not overwrite and os.path.exists(output_path):
@@ -22,4 +23,7 @@ def write_output(
     with open(output_path, 'w') as f:
         yaml.dump(data, f, default_flow_style=default_flow_style)
     if verbose:
-        print(f'Successfully saved the results to "{output_path}".')
+        if header:
+            print(f'{header}: Successfully saved to "{output_path}".')
+        else:
+            print(f'Successfully saved to "{output_path}".')

@@ -52,4 +52,5 @@ def cap_bindsites_pipeline(
     # Output
     write_output(
         output_path, capped_assemblies, 
-        overwrite=overwrite, verbose=verbose)
+        overwrite=overwrite, verbose=verbose,
+        header='Capped assemblies')

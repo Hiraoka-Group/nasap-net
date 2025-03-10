@@ -44,4 +44,5 @@ def find_unique_assemblies_pipeline(
     # Output
     write_output(
         output_path, id_to_unique_assembly, 
-        overwrite=overwrite, verbose=verbose)
+        overwrite=overwrite, verbose=verbose,
+        header='Unique assemblies')
