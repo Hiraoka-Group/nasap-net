@@ -131,7 +131,7 @@ def test_verbose_true(tmp_path, capsys):
     assert f'Number of bond subsets: 10' in captured.out
     assert f'Saving the results to "{output_path}"...' in captured.out
     assert (
-        f'Successfully saved the results to "{output_path}"' in captured.out)
+        f'Successfully saved to "{output_path}"' in captured.out)
 
 
 if __name__ == "__main__":
