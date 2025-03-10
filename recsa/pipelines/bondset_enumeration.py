@@ -144,7 +144,8 @@ def enum_bond_subsets_pipeline(
     # Output
     formatted_result = sort_bond_subsets(result)
     write_output(
-        output_path, formatted_result, overwrite=overwrite, verbose=verbose)
+        output_path, formatted_result, overwrite=overwrite, verbose=verbose,
+        header='Enumerated bond subsets')
 
 
 # ============================================================
