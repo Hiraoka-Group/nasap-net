@@ -44,7 +44,8 @@ def bondsets_to_assemblies_pipeline(
     
     # Output
     write_output(
-        output_path, id_to_assembly, overwrite=overwrite, verbose=verbose)
+        output_path, id_to_assembly, overwrite=overwrite, verbose=verbose,
+        header='Converted assemblies')
 
 
 # ============================================================

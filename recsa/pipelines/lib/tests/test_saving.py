@@ -95,5 +95,16 @@ def test_write_output_with_filename_only(tmp_path):
     assert saved_data == data
 
 
+def test_header_with_verbose(tmp_path, capsys):
+    output_path = tmp_path / "output.yaml"
+    data = {"key": "value"}
+    header = "Test Header"
+    
+    write_output(output_path, data, verbose=True, header=header)
+    
+    captured = capsys.readouterr()
+    assert f'{header}: Successfully saved to "{output_path}".' in captured.out
+
+
 if __name__ == '__main__':
     pytest.main(['-v', __file__])
