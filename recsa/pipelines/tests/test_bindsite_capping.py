@@ -35,7 +35,7 @@ def test_add_X_on_M(
     CONFIG_DATA = {'capping_config': {
         'target_component_kind': 'M',
         'capping_component_kind': 'X',
-        'capping_bindsite': 'a'
+        'capping_binding_site': 'a'
     }}
 
     EXPECTED_CAPPED_ASSEMBLIES = {
@@ -89,7 +89,7 @@ def test_add_L_on_M(
         'capping_config': {
         'target_component_kind': 'M',
         'capping_component_kind': 'L',
-        'capping_bindsite': 'a'
+        'capping_binding_site': 'a'
     }}
 
     EXPECTED_CAPPED_ASSEMBLIES = {
