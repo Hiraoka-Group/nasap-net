@@ -13,12 +13,12 @@ def test_enum_bond_subsets(tmp_path):
 
     INPUT_DATA = {
         'bonds': [1, 2, 3, 4],
-        'adj_bonds': {
+        'bond_adjacency': {
             1: {2},
             2: {1, 3},
             3: {2, 4},
             4: {3}},
-        'sym_maps': {
+        'sym_ops_by_bond_maps': {
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         }
     }
