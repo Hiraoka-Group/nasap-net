@@ -18,11 +18,11 @@ def assemblies_data():
 
 @pytest.fixture
 def components_data():
-    return {
+    return {'component_kinds': {
         'L': Component(['a', 'b']),
         'M': Component(['a', 'b']),
         'X': Component(['a']),
-    }
+    }}
 
 
 def test_add_X_on_M(
@@ -32,8 +32,7 @@ def test_add_X_on_M(
     config_path = tmp_path / 'config.yaml'
     output_path = tmp_path / 'output.yaml'
 
-    CONFIG_DATA = {
-        'capping_config': {
+    CONFIG_DATA = {'capping_config': {
         'target_component_kind': 'M',
         'capping_component_kind': 'X',
         'capping_bindsite': 'a'
@@ -76,7 +75,7 @@ def test_add_X_on_M(
     for assembly_id, expected_assembly in EXPECTED_CAPPED_ASSEMBLIES.items():
         assert is_isomorphic(
             output_data[assembly_id], expected_assembly,
-            components_data)
+            components_data['component_kinds'])
 
 
 def test_add_L_on_M(
@@ -130,7 +129,7 @@ def test_add_L_on_M(
     for assembly_id, expected_assembly in EXPECTED_CAPPED_ASSEMBLIES.items():
         assert is_isomorphic(
             output_data[assembly_id], expected_assembly,
-            components_data)
+            components_data['component_kinds'])
         
 
 if __name__ == '__main__':

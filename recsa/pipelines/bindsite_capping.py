@@ -29,7 +29,7 @@ def cap_bindsites_pipeline(
     id_to_assembly: Mapping[Hashable, Assembly] = read_file(
         assemblies_path, verbose=verbose)
     components: Mapping[str, Component] = read_file(
-        components_path, verbose=verbose)
+        components_path, verbose=verbose)['component_kinds']
     config: CappingConfig = read_file(
         config_path, verbose=verbose)['capping_config']
     

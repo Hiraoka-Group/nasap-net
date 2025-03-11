@@ -30,9 +30,10 @@ def assemblies_data():
 @pytest.fixture
 def components_data():
     return {
-        'L': Component(['a', 'b']),
-        'M': Component(['a', 'b'])
-    }
+        'component_kinds': {
+            'L': Component(['a', 'b']),
+            'M': Component(['a', 'b'])
+            }}
 
 @pytest.fixture
 def expected_unique_assemblies(assemblies_data):
