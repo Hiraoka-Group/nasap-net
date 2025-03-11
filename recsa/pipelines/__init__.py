@@ -1,3 +1,4 @@
+from .assembly_enumeration import enumerate_assemblies_pipeline
 from .assembly_list_concatenation import concatenate_assemblies_pipeline
 from .bindsite_capping import cap_bindsites_pipeline
 from .bondset_enumeration import enum_bond_subsets_pipeline
