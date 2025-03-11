@@ -23,7 +23,9 @@ def test_cli_command_a(tmp_path):
         }
     }
     
-    EXPECTED = [[1], [2], [1, 2], [2, 3], [1, 2, 3], [1, 2, 3, 4]]
+    EXPECTED = {
+        0: [1], 1: [2], 2: [1, 2], 3: [2, 3], 4: [1, 2, 3], 5: [1, 2, 3, 4]
+    }
 
 
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
