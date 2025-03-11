@@ -18,12 +18,12 @@ def test_without_sym_ops(tmp_path):
             4: {3},
         }
     }
-    EXPECTED = [
-        [1], [2], [3], [4],
-        [1, 2], [2, 3], [3, 4],
-        [1, 2, 3], [2, 3, 4],
-        [1, 2, 3, 4]
-    ]
+    EXPECTED = {
+        0: [1], 1: [2], 2: [3], 3: [4],
+        4: [1, 2], 5: [2, 3], 6: [3, 4],
+        7: [1, 2, 3], 8: [2, 3, 4],
+        9: [1, 2, 3, 4]
+    }
     input_path = tmp_path / "input.yaml"
     with open(input_path, 'w') as f:
         yaml.safe_dump(INPUT_DATA, f)
@@ -52,9 +52,9 @@ def test_with_sym_ops(tmp_path):
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         }
     }
-    EXPECTED = [
-        [1], [2], [1, 2], [2, 3], [1, 2, 3], [1, 2, 3, 4]
-    ]
+    EXPECTED = {
+        0: [1], 1: [2], 2: [1, 2], 3: [2, 3], 4: [1, 2, 3], 5: [1, 2, 3, 4]
+    }
     input_path = tmp_path / "input.yaml"
     with open(input_path, 'w') as f:
         yaml.safe_dump(INPUT_DATA, f)

@@ -108,19 +108,20 @@ def enum_bond_subsets_pipeline(
             C2: [[1, 4], [2, 3]]
 
     Style of Output File:
-        The output file will be a list of lists of bond IDs in YAML format.
-        Each list represents a connected subset of bonds. The subsets are
-        sorted in a consistent order based on the length of each subset
-        and the elements within each subset.
+        The output file will be a dictionary with integer keys 
+        starting from 0. Each key maps to a list of bond IDs representing 
+        a connected subset of bonds. The subsets are sorted in a consistent 
+        order based on the length of each subset and the elements within 
+        each subset.
     
     Example of Output File::
     
-        - [1]
-        - [2]
-        - [1, 2]
-        - [2, 3]
-        - [1, 2, 3]
-        - [1, 2, 3, 4]
+        0: [1]
+        1: [2]
+        2: [1, 2]
+        3: [2, 3]
+        4: [1, 2, 3]
+        5: [1, 2, 3, 4]
     """
     # Input
     input_data = read_file(input_path, verbose=verbose)
@@ -143,8 +144,13 @@ def enum_bond_subsets_pipeline(
     
     # Output
     formatted_result = sort_bond_subsets(result)
+
+    id_to_bondset = {
+        id_: bondset for id_, bondset in enumerate(formatted_result)
+        }
+    
     write_output(
-        output_path, formatted_result, overwrite=overwrite, verbose=verbose,
+        output_path, id_to_bondset, overwrite=overwrite, verbose=verbose,
         header='Enumerated bond subsets')
 
 
