@@ -7,8 +7,8 @@ from recsa import AuxEdge
 
 def test_LocalAuxEdge_initialization():
     edge = AuxEdge('site1', 'site2', 'cis')
-    assert edge.local_bindsite1 == 'site1'
-    assert edge.local_bindsite2 == 'site2'
+    assert edge.local_binding_site1 == 'site1'
+    assert edge.local_binding_site2 == 'site2'
     assert edge.aux_kind == 'cis'
 
 

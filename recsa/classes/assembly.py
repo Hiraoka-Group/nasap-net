@@ -332,7 +332,7 @@ class Assembly(yaml.YAMLObject):
         all_bindsites = set()
         for comp_id, comp_kind in self.comp_id_to_kind.items():
             comp_struct = component_structures[comp_kind]
-            for bindsite in comp_struct.bindsites:
+            for bindsite in comp_struct.binding_sites:
                 all_bindsites.add(id_converter.local_to_global(comp_id, bindsite))
         return all_bindsites
 
@@ -345,9 +345,9 @@ class Assembly(yaml.YAMLObject):
             for rel_aux_edge in comp_struct.aux_edges:
                 yield AbsAuxEdge(
                     id_converter.local_to_global(
-                        comp_id, rel_aux_edge.local_bindsite1),
+                        comp_id, rel_aux_edge.local_binding_site1),
                     id_converter.local_to_global(
-                        comp_id, rel_aux_edge.local_bindsite2),
+                        comp_id, rel_aux_edge.local_binding_site2),
                     rel_aux_edge.aux_kind)
 
     def get_bindsites_of_component(
@@ -360,7 +360,7 @@ class Assembly(yaml.YAMLObject):
         comp_struct = component_structures[comp_kind]
         return {
             id_converter.local_to_global(component_id, bindsite)
-            for bindsite in comp_struct.bindsites}
+            for bindsite in comp_struct.binding_sites}
     
     def get_all_bindsites_of_kind(
             self, component_kind: str,
@@ -379,7 +379,7 @@ class Assembly(yaml.YAMLObject):
         all_bindsites = {
             id_converter.local_to_global(comp_id, bindsite)
             for comp_id, comp_kind in self.comp_id_to_kind.items()
-            for bindsite in component_structures[comp_kind].bindsites
+            for bindsite in component_structures[comp_kind].binding_sites
         }
         connected_bindsites = chain(*self.bonds)
         free_bindsites = all_bindsites - set(connected_bindsites)
@@ -467,13 +467,13 @@ def add_component_to_graph(
         core_abs, core_or_bindsite='core', component_kind=component_kind)
     
     # Add the binding sites
-    for bindsite in component_structure.bindsites:
+    for bindsite in component_structure.binding_sites:
         bindsite_abs = id_converter.local_to_global(component_id, bindsite)
         g.add_node(bindsite_abs, core_or_bindsite='bindsite')
         g.add_edge(core_abs, bindsite_abs)
     
     # Add the auxiliary edges
     for aux_edge in component_structure.aux_edges:
-        bs1_abs = id_converter.local_to_global(component_id, aux_edge.local_bindsite1)
-        bs2_abs = id_converter.local_to_global(component_id, aux_edge.local_bindsite2)
+        bs1_abs = id_converter.local_to_global(component_id, aux_edge.local_binding_site1)
+        bs2_abs = id_converter.local_to_global(component_id, aux_edge.local_binding_site2)
         g.add_edge(bs1_abs, bs2_abs, aux_type=aux_edge.aux_kind)
