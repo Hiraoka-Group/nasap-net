@@ -19,7 +19,8 @@ class AuxEdge(yaml.YAMLObject):
     yaml_flow_style = None
 
     def __init__(
-            self, local_bindsite1: str, local_bindsite2: str, aux_kind: str):
+            self, local_binding_site1: str, local_binding_site2: str, 
+            aux_kind: str):
         """Initialize an auxiliary edge.
 
         Note that the order of the binding sites does not matter,
@@ -27,11 +28,11 @@ class AuxEdge(yaml.YAMLObject):
 
         Parameters
         ----------
-        bindsite1 : str
+        local_binding_site1 : str
             The local id of the first binding site.
-        bindsite2 : str
+        local_binding_site2 : str
             The local id of the second binding site.
-        aux_type : str
+        aux_kind : str
             The auxiliary type.
 
         Note
@@ -43,60 +44,60 @@ class AuxEdge(yaml.YAMLObject):
         rx.RecsaValueError
             If the two binding sites are the same.
         """
-        validate_name_of_binding_site(local_bindsite1)
-        validate_name_of_binding_site(local_bindsite2)
-        if local_bindsite1 == local_bindsite2:
+        validate_name_of_binding_site(local_binding_site1)
+        validate_name_of_binding_site(local_binding_site2)
+        if local_binding_site1 == local_binding_site2:
             raise rx.RecsaValueError(
                 'The two binding sites should be different.')
-        self._bindsites = FrozenUnorderedPair[str](
-            local_bindsite1, local_bindsite2)
+        self._binding_sites = FrozenUnorderedPair[str](
+            local_binding_site1, local_binding_site2)
 
         validate_name_of_aux_type(aux_kind)
         self._aux_kind = aux_kind
     
     @property
-    def local_bindsite1(self) -> str:
-        return self._bindsites.first
+    def local_binding_site1(self) -> str:
+        return self._binding_sites.first
     
     @property
-    def local_bindsite2(self) -> str:
-        return self._bindsites.second
+    def local_binding_site2(self) -> str:
+        return self._binding_sites.second
     
     @property
-    def bindsites(self) -> FrozenUnorderedPair[str]:
-        return self._bindsites
+    def binding_sites(self) -> FrozenUnorderedPair[str]:
+        return self._binding_sites
 
     @property
     def aux_kind(self) -> str:
         return self._aux_kind
 
     def __hash__(self) -> int:
-        return hash((self.bindsites, self.aux_kind))
+        return hash((self.binding_sites, self.aux_kind))
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, AuxEdge):
             return False
         return (
-            self.bindsites == other.bindsites and
+            self.binding_sites == other.binding_sites and
             self.aux_kind == other.aux_kind)
     
     def __lt__(self, other: 'AuxEdge') -> bool:
-        return (sorted(self.bindsites), self.aux_kind) < (
-            sorted(other.bindsites), other.aux_kind)
+        return (sorted(self.binding_sites), self.aux_kind) < (
+            sorted(other.binding_sites), other.aux_kind)
     
     def __repr__(self) -> str:
-        return f'AuxEdge({self.local_bindsite1!r}, {self.local_bindsite2!r}, {self.aux_kind!r})'
+        return f'AuxEdge({self.local_binding_site1!r}, {self.local_binding_site2!r}, {self.aux_kind!r})'
     
     @classmethod
     def from_yaml(cls, loader, node):
         data = loader.construct_mapping(node, deep=True)
         return AuxEdge(
-            data['bindsites'][0], data['bindsites'][1], data['aux_kind'])
+            data['binding_sites'][0], data['binding_sites'][1], data['aux_kind'])
 
     @classmethod
     def to_yaml(cls, dumper, data):
         return dumper.represent_mapping(
             cls.yaml_tag, {
-            'bindsites': sorted(data.bindsites),
+            'binding_sites': sorted(data.binding_sites),
             'aux_kind': data.aux_kind},
             flow_style=cls.yaml_flow_style)

@@ -14,7 +14,7 @@ def check_bindsites_of_aux_edges_exists(
     binding sites of the component.
     """
     for aux_edge in aux_edges:
-        for bindsite in aux_edge.bindsites:
+        for bindsite in aux_edge.binding_sites:
             if bindsite not in bindsites:
                 raise RecsaValueError(
                     f'The binding site "{bindsite}" is not in '
