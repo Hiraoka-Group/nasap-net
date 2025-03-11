@@ -33,10 +33,11 @@ def test_add_X_on_M(
     output_path = tmp_path / 'output.yaml'
 
     CONFIG_DATA = {
+        'capping_config': {
         'target_component_kind': 'M',
         'capping_component_kind': 'X',
         'capping_bindsite': 'a'
-    }
+    }}
 
     EXPECTED_CAPPED_ASSEMBLIES = {
         0: Assembly(  # X1--M1--X2
@@ -86,10 +87,11 @@ def test_add_L_on_M(
     output_path = tmp_path / 'output.yaml'
 
     CONFIG_DATA = {
+        'capping_config': {
         'target_component_kind': 'M',
         'capping_component_kind': 'L',
         'capping_bindsite': 'a'
-    }
+    }}
 
     EXPECTED_CAPPED_ASSEMBLIES = {
         0: Assembly(  # L1--M1--L2

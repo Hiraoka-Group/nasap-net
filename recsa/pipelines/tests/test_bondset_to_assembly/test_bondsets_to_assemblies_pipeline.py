@@ -21,14 +21,14 @@ def bondsets_data():
 @pytest.fixture
 def structure_data():
     return {
-        'comp_id_to_kind': {
+        'components_and_their_kinds': {
             'M1': 'M',
             'M2': 'M',
             'L1': 'L',
             'L2': 'L',
             'L3': 'L'
         },
-        'bond_id_to_bindsites': {
+        'bonds_and_their_binding_sites': {
             1: ['L1.b', 'M1.a'],
             2: ['M1.b', 'L2.a'],
             3: ['L2.b', 'M2.a'],

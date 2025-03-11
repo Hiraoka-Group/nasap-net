@@ -31,7 +31,7 @@ def cap_bindsites_pipeline(
     components: Mapping[str, Component] = read_file(
         components_path, verbose=verbose)
     config: CappingConfig = read_file(
-        config_path, verbose=verbose)
+        config_path, verbose=verbose)['capping_config']
     
     # Main process
     if verbose:

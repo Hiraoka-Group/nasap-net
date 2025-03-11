@@ -22,7 +22,8 @@ def test_validate_bond_id_to_bindsites_invalid_string():
     comp_ids = ['M1', 'M2', 'L1', 'L2', 'L3']
     with pytest.raises(
             ValueError, 
-            match='Values in "bond_id_to_bindsites" must be strings.'):
+            match='Values in "bonds_and_their_binding_sites" must be '
+            'strings.'):
         validate_bond_id_to_bindsites(bond_id_to_bindsites, comp_ids)
 
 
@@ -33,7 +34,8 @@ def test_validate_bond_id_to_bindsites_same_values():
     comp_ids = ['M1', 'M2', 'L1', 'L2', 'L3']
     with pytest.raises(
             ValueError, 
-            match='Values in "bond_id_to_bindsites" must be different.'):
+            match='Values in "bonds_and_their_binding_sites" must be '
+            'different.'):
         validate_bond_id_to_bindsites(bond_id_to_bindsites, comp_ids)
 
 
@@ -55,7 +57,8 @@ def test_validate_bond_id_to_bindsites_unknown_component():
     comp_ids = ['M1', 'M2', 'L1', 'L2', 'L3']
     with pytest.raises(
             ValueError, 
-            match='Unknown component ID "X1" in "bond_id_to_bindsites".'):
+            match='Unknown component ID "X1" in '
+            '"bonds_and_their_binding_sites".'):
         validate_bond_id_to_bindsites(bond_id_to_bindsites, comp_ids)
 
 

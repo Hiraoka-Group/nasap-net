@@ -85,26 +85,26 @@ def enum_bond_subsets_pipeline(
         The input file should be in YAML format.
         The required keys are as follows:
         - "bonds": A list of bond IDs.
-        - "adj_bonds": A dictionary mapping a bond to its adjacent bonds.
-        - "sym_maps" or "sym_perms": A dictionary of symmetry operations 
+        - "bond_adjacency": A dictionary mapping a bond to its adjacent bonds.
+        - "sym_ops_by_bond_maps" or "sym_ops_by_bond_perms": A dictionary of symmetry operations 
         (Optional). Keys are the names of the symmetry operations. If 
-        "sym_maps" is provided, the values are dictionaries mapping bond
-        IDs to their images under the symmetry operation. If "sym_perms"
+        "sym_ops_by_bond_maps" is provided, the values are dictionaries mapping bond
+        IDs to their images under the symmetry operation. If "sym_ops_by_bond_perms"
         is provided, the values are lists of cyclic permutations of bond
-        IDs. If both are provided, "sym_maps" is used. If neither is
+        IDs. If both are provided, "sym_ops_by_bond_maps" is used. If neither is
         provided, no symmetry-equivalence check is performed.
     
     Example of Input File::
 
         bonds: [1, 2, 3, 4]
-        adj_bonds:
+        bond_adjacency:
             1: [2]
             2: [1, 3]
             3: [2, 4]
             4: [3]
-        sym_maps:
+        sym_ops_by_bond_maps:
             C2: {1: 4, 2: 3, 3: 2, 4: 1}
-        sym_perms:
+        sym_ops_by_bond_perms:
             C2: [[1, 4], [2, 3]]
 
     Style of Output File:
@@ -125,7 +125,7 @@ def enum_bond_subsets_pipeline(
     # Input
     input_data = read_file(input_path, verbose=verbose)
     validate_bonds(input_data['bonds'])
-    validate_adj_bonds(input_data['adj_bonds'], input_data['bonds'])
+    validate_bond_adjacency(input_data['bond_adjacency'], input_data['bonds'])
     sym_ops = parse_sym_ops(input_data)
     if sym_ops is not None:
         validate_sym_ops(sym_ops, input_data['bonds'])
@@ -135,7 +135,7 @@ def enum_bond_subsets_pipeline(
         print('Enumerating bond subsets...')
     result = enum_bond_subsets(
         input_data['bonds'],
-        input_data['adj_bonds'],
+        input_data['bond_adjacency'],
         sym_ops)
     if verbose:
         print('Finished enumeration.')
@@ -157,25 +157,25 @@ def validate_bonds(bonds: list) -> None:
         raise ValueError('"bonds" must not contain duplicates.')
 
 
-def validate_adj_bonds(bond_to_adj_bonds: Mapping, bonds: list) -> None:
+def validate_bond_adjacency(bond_to_adj_bonds: Mapping, bonds: list) -> None:
     if set(bond_to_adj_bonds.keys()) != set(bonds):
-        raise ValueError('Keys in "adj_bonds" must be the same as "bonds".')
+        raise ValueError('Keys in "bond_adjacency" must be the same as "bonds".')
     
     bonds_set = set(bonds)
     for bond, adj_bonds in bond_to_adj_bonds.items():
         if not all(bond in bonds_set for bond in adj_bonds):
             raise ValueError(
-                f'All elements in "adj_bonds" must be in "bonds". '
+                f'All elements in "bond_adjacency" must be in "bonds". '
                 f'Error at bond: {bond}.')
 
 
 def parse_sym_ops(input_data: Mapping) -> Mapping | None:
-    if 'sym_maps' in input_data:
-        return input_data['sym_maps']
-    if 'sym_perms' in input_data:
+    if 'sym_ops_by_bond_maps' in input_data:
+        return input_data['sym_ops_by_bond_maps']
+    if 'sym_ops_by_bond_perms' in input_data:
         return {
             op_name: cyclic_perms_to_map(op_perm)
-            for op_name, op_perm in input_data['sym_perms'].items()
+            for op_name, op_perm in input_data['sym_ops_by_bond_perms'].items()
         }
     return None
 
