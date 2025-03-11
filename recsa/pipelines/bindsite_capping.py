@@ -9,7 +9,7 @@ from recsa.pipelines.lib import read_file, write_output
 class CappingConfig(TypedDict):
     target_component_kind: str
     capping_component_kind: str
-    capping_bindsite: str
+    capping_binding_site: str
 
 
 # ============================================================
@@ -29,9 +29,9 @@ def cap_bindsites_pipeline(
     id_to_assembly: Mapping[Hashable, Assembly] = read_file(
         assemblies_path, verbose=verbose)
     components: Mapping[str, Component] = read_file(
-        components_path, verbose=verbose)
+        components_path, verbose=verbose)['component_kinds']
     config: CappingConfig = read_file(
-        config_path, verbose=verbose)
+        config_path, verbose=verbose)['capping_config']
     
     # Main process
     if verbose:
@@ -43,7 +43,7 @@ def cap_bindsites_pipeline(
             assembly, components, 
             config['target_component_kind'],
             config['capping_component_kind'],
-            config['capping_bindsite'],
+            config['capping_binding_site'],
             copy=True)
         
     if verbose:

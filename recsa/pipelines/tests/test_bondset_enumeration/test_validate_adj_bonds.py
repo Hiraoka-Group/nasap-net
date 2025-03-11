@@ -1,6 +1,6 @@
 import pytest
 
-from recsa.pipelines.bondset_enumeration import validate_adj_bonds
+from recsa.pipelines.bondset_enumeration import validate_bond_adjacency
 
 
 def test_valid():
@@ -12,7 +12,7 @@ def test_valid():
         4: {3},
     }
     # Should not raise any exception
-    validate_adj_bonds(bond_to_adj_bonds, bonds)
+    validate_bond_adjacency(bond_to_adj_bonds, bonds)
 
 
 def test_invalid_keys():
@@ -25,8 +25,8 @@ def test_invalid_keys():
     }
     with pytest.raises(
             ValueError, 
-            match='Keys in "adj_bonds" must be the same as "bonds".'):
-        validate_adj_bonds(bond_to_adj_bonds, bonds)
+            match='Keys in "bond_adjacency" must be the same as "bonds".'):
+        validate_bond_adjacency(bond_to_adj_bonds, bonds)
 
 
 def test_invalid_values():
@@ -39,8 +39,8 @@ def test_invalid_values():
     }
     with pytest.raises(
             ValueError, 
-            match='All elements in "adj_bonds" must be in "bonds".'):
-        validate_adj_bonds(bond_to_adj_bonds, bonds)
+            match='All elements in "bond_adjacency" must be in "bonds".'):
+        validate_bond_adjacency(bond_to_adj_bonds, bonds)
 
 
 if __name__ == '__main__':

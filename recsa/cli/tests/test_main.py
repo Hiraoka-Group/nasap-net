@@ -13,17 +13,19 @@ def test_enum_bond_subsets(tmp_path):
 
     INPUT_DATA = {
         'bonds': [1, 2, 3, 4],
-        'adj_bonds': {
+        'bond_adjacency': {
             1: {2},
             2: {1, 3},
             3: {2, 4},
             4: {3}},
-        'sym_maps': {
+        'sym_ops_by_bond_maps': {
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         }
     }
 
-    EXPECTED = [[1], [2], [1, 2], [2, 3], [1, 2, 3], [1, 2, 3, 4]]
+    EXPECTED = {
+        0: [1], 1: [2], 2: [1, 2], 3: [2, 3], 4: [1, 2, 3], 5: [1, 2, 3, 4]
+    }
 
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
         input_path = os.path.join(td, 'input.yaml')
@@ -58,14 +60,14 @@ def test_bondsets_to_assemblies(tmp_path):
     }
 
     STRUCTURE_DATA = {
-        'comp_id_to_kind': {
+        'components_and_their_kinds': {
             'M1': 'M',
             'M2': 'M',
             'L1': 'L',
             'L2': 'L',
             'L3': 'L'
         },
-        'bond_id_to_bindsites': {
+        'bonds_and_their_binding_sites': {
             1: ['L1.b', 'M1.a'],
             2: ['M1.b', 'L2.a'],
             3: ['L2.b', 'M2.a'],

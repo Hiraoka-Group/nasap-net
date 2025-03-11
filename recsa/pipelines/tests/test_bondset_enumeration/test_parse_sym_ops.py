@@ -5,7 +5,7 @@ from recsa.pipelines.bondset_enumeration import parse_sym_ops
 
 def test_with_sym_maps():
     input_data = {
-        'sym_maps': {
+        'sym_ops_by_bond_maps': {
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         }
     }
@@ -17,7 +17,7 @@ def test_with_sym_maps():
 
 def test_with_sym_perms():
     input_data = {
-        'sym_perms': {
+        'sym_ops_by_bond_perms': {
             'C3': [[1, 2, 3]]
         }
     }
@@ -29,10 +29,10 @@ def test_with_sym_perms():
 
 def test_with_both_sym_maps_and_sym_perms():
     input_data = {
-        'sym_maps': {
+        'sym_ops_by_bond_maps': {
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         },
-        'sym_perms': {
+        'sym_ops_by_bond_perms': {
             'C3': [[1, 2, 3]]
         }
     }
