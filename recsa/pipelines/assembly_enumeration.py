@@ -19,7 +19,7 @@ def enumerate_assemblies_pipeline(
         verbose: bool = False,
         wip_dir: os.PathLike | str | None = None
         ) -> None:
-    with tempfile.TemporaryDirectory(dir=wip_dir) as temp_dir:
+    with tempfile.TemporaryDirectory() as temp_dir:
         if wip_dir is None:
             wip_dir = temp_dir
         wip_dir = Path(wip_dir)
