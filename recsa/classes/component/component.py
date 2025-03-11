@@ -19,7 +19,7 @@ class Component(yaml.YAMLObject):
 
     def __init__(
             self,
-            bindsites: Iterable[str],
+            binding_sites: Iterable[str],
             aux_edges: (
                 Iterable[AuxEdge] 
                 | Iterable[tuple[str, str, str]] | None
@@ -38,9 +38,9 @@ class Component(yaml.YAMLObject):
             Duplicate pairs of binding sites raise an error regardless of the
             order of the binding sites.
         """
-        for bindsite in bindsites:
-            validate_name_of_binding_site(bindsite)
-        self._bindsites = frozenset(bindsites)
+        for binding_site in binding_sites:
+            validate_name_of_binding_site(binding_site)
+        self._binding_sites = frozenset(binding_sites)
 
         if aux_edges is None:
             self._aux_edges = frozenset[AuxEdge]()
@@ -53,26 +53,26 @@ class Component(yaml.YAMLObject):
                 {AuxEdge(*edge) for edge in aux_edges})
 
         check_bindsites_of_aux_edges_exists(
-            self._aux_edges, self._bindsites)
+            self._aux_edges, self._binding_sites)
     
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, Component):
             return False
         return (
-            self.bindsites == value.bindsites
+            self.binding_sites == value.binding_sites
             and self.aux_edges == value.aux_edges)
     
     def __repr__(self) -> str:
         if not self.aux_edges:
-            return f'Component({sorted(self.bindsites)!r})'
+            return f'Component({sorted(self.binding_sites)!r})'
         return (
-            f'Component({sorted(self.bindsites)!r}, '
+            f'Component({sorted(self.binding_sites)!r}, '
             f'{sorted(self.aux_edges)!r})'
             )
     
     @property
-    def bindsites(self) -> set[str]:
-        return set(self._bindsites)
+    def binding_sites(self) -> set[str]:
+        return set(self._binding_sites)
 
     @property
     def aux_edges(self) -> set[AuxEdge]:
@@ -81,17 +81,17 @@ class Component(yaml.YAMLObject):
     @classmethod
     def from_yaml(cls, loader, node):
         data = loader.construct_mapping(node, deep=True)
-        bindsites = data['bindsites']
+        binding_sites = data['binding_sites']
         aux_edges = data.get('aux_edges', None)
-        return cls(bindsites, aux_edges)
+        return cls(binding_sites, aux_edges)
 
     @classmethod
     def to_yaml(cls, dumper, data):
-        data_dict = {'bindsites': sorted(data.bindsites)}
+        data_dict = {'binding_sites': sorted(data.binding_sites)}
         if data.aux_edges:
             data_dict['aux_edges'] = sorted(
                 data.aux_edges,
-                key=lambda edge: sorted(edge.bindsites))
+                key=lambda edge: sorted(edge.binding_sites))
         return dumper.represent_mapping(
             cls.yaml_tag, data_dict,
             flow_style=cls.yaml_flow_style)
