@@ -18,11 +18,8 @@ def input_data():
             3: [2, 4],
             4: [3],
         },
-        'sym_ops_by_bond_maps': {
+        'sym_ops': {
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
-        },
-        'sym_ops_by_bond_perms': {
-            'C2': [[1, 4], [2, 3]]
         },
         'component_kinds': {
             'L': Component(['a', 'b']),

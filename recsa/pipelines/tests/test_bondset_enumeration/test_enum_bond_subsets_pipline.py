@@ -48,7 +48,7 @@ def test_with_sym_ops(tmp_path):
             3: {2, 4},
             4: {3},
         },
-        'sym_ops_by_bond_maps': {
+        'sym_ops': {
             'C2': {1: 4, 2: 3, 3: 2, 4: 1}
         }
     }
