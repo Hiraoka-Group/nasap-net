@@ -1,3 +1,4 @@
+from .chain_map import *
 from .circular_perm_comparison import *
 from .cyclic_perm import *
 from .frozen_unordered_pair import *
