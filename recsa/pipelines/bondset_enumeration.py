@@ -1,10 +1,10 @@
 import os
-from collections.abc import Hashable, Iterable, Mapping
-from typing import TypeVar
+from collections.abc import Hashable, Iterable, Mapping, Sequence
+from typing import Literal, TypeVar
 
 from recsa import enum_bond_subsets
 from recsa.pipelines.lib import read_file, write_output
-from recsa.utils import cyclic_perms_to_map
+from recsa.utils import cyclic_perms_to_map, resolve_chain_map
 
 _T = TypeVar('_T', bound=Hashable)
 
@@ -86,13 +86,15 @@ def enum_bond_subsets_pipeline(
         The required keys are as follows:
         - "bonds": A list of bond IDs.
         - "bond_adjacency": A dictionary mapping a bond to its adjacent bonds.
-        - "sym_ops_by_bond_maps" or "sym_ops_by_bond_perms": A dictionary of symmetry operations 
-        (Optional). Keys are the names of the symmetry operations. If 
-        "sym_ops_by_bond_maps" is provided, the values are dictionaries mapping bond
-        IDs to their images under the symmetry operation. If "sym_ops_by_bond_perms"
-        is provided, the values are lists of cyclic permutations of bond
-        IDs. If both are provided, "sym_ops_by_bond_maps" is used. If neither is
-        provided, no symmetry-equivalence check is performed.
+        - "sym_ops": A dictionary mapping a symmetry operation name to
+          a definition. The definition can be a mapping, a list of cyclic
+          permutations, or a list of operation names forming a chain.
+          Example::
+
+            sym_ops:
+                op1: {1: 2, 2: 3, 3: 1}
+                op2: [[1, 2], [3]]  # equivalent to {1: 2, 2: 1, 3: 3}
+                op3: ['op2', 'op1']  # op3(x) = op2(op1(x)) i.e., {1: 1, 2: 3, 3: 2}
     
     Example of Input File::
 
@@ -102,10 +104,8 @@ def enum_bond_subsets_pipeline(
             2: [1, 3]
             3: [2, 4]
             4: [3]
-        sym_ops_by_bond_maps:
+        sym_ops:
             C2: {1: 4, 2: 3, 3: 2, 4: 1}
-        sym_ops_by_bond_perms:
-            C2: [[1, 4], [2, 3]]
 
     Style of Output File:
         The output file will be a dictionary with integer keys 
@@ -127,7 +127,10 @@ def enum_bond_subsets_pipeline(
     input_data = read_file(input_path, verbose=verbose)
     validate_bonds(input_data['bonds'])
     validate_bond_adjacency(input_data['bond_adjacency'], input_data['bonds'])
-    sym_ops = parse_sym_ops(input_data)
+    if 'sym_ops' in input_data:
+        sym_ops = parse_sym_ops(input_data['sym_ops'])
+    else:
+        sym_ops = None
     if sym_ops is not None:
         validate_sym_ops(sym_ops, input_data['bonds'])
     
@@ -175,15 +178,61 @@ def validate_bond_adjacency(bond_to_adj_bonds: Mapping, bonds: list) -> None:
                 f'Error at bond: {bond}.')
 
 
-def parse_sym_ops(input_data: Mapping) -> Mapping | None:
-    if 'sym_ops_by_bond_maps' in input_data:
-        return input_data['sym_ops_by_bond_maps']
-    if 'sym_ops_by_bond_perms' in input_data:
-        return {
-            op_name: cyclic_perms_to_map(op_perm)
-            for op_name, op_perm in input_data['sym_ops_by_bond_perms'].items()
-        }
-    return None
+def parse_sym_ops(op_data: Mapping) -> Mapping:
+    if not op_data:
+        return {}
+    
+    resolved_ops = {}
+    chain_ops = {}
+    for op_name, op_def in op_data.items():
+        def_type = op_def_type(op_def)
+        if def_type == 'map':
+            resolved_ops[op_name] = op_def
+        elif def_type == 'perms':
+            resolved_ops[op_name] = cyclic_perms_to_map(op_def)
+        elif def_type == 'chain':
+            chain_ops[op_name] = op_def
+
+    # Resolve chain operations
+    while chain_ops:
+        for op_name, op_def in chain_ops.items():
+            try:
+                resolved_ops[op_name] = resolve_sym_op_chain(
+                    op_def, resolved_ops)
+            except ChainOpResolveError:
+                continue
+            del chain_ops[op_name]
+            break
+        else:  # No progress
+            raise ValueError('Cannot resolve chain operations.')
+
+    assert set(resolved_ops.keys()) == set(op_data.keys())
+    assert chain_ops == {}
+    return resolved_ops
+
+
+def op_def_type(
+        op_def: Mapping[_T, _T] | list[list[_T]] | list[str]) -> Literal['map', 'perms', 'chain']:
+    if isinstance(op_def, Mapping):  # e.g. {1: 1, 2: 3, 3: 2}
+        return 'map'
+    elif isinstance(op_def, list):  # e.g. [[1], [2, 3]] or ['op2', 'op1']
+        if isinstance(op_def[0], list):  # e.g. [[1], [2, 3]]
+            return 'perms'
+        else:  # e.g. ['op2', 'op1']
+            return 'chain'
+
+
+class ChainOpResolveError(Exception):
+    pass
+
+
+def resolve_sym_op_chain(
+        op_chain: list[str], resolved_ops: Mapping[str, Mapping[_T, _T]]
+        ) -> Mapping[_T, _T]:
+    if set(op_chain) <= set(resolved_ops.keys()):  # Can resolve
+        return resolve_chain_map(
+            *[resolved_ops[op] for op in reversed(op_chain)])
+    raise ChainOpResolveError
 
 
 def validate_sym_ops(
