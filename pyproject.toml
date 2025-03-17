@@ -4,7 +4,7 @@ dynamic = ["version"]
 
 [tool.poetry]
 name = "recsa"
-version = "0.12.0"
+version = "0.13.0"
 description = "Reaction Explorer for Coordination Self-Assembly"
 authors = ["neji-craftsman <142223934+neji-craftsman@users.noreply.github.com>"]
 license = "MIT"
