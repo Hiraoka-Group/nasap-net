@@ -19,7 +19,8 @@ def enum_bond_subsets_pipeline(
         output_path: os.PathLike | str,
         *,
         overwrite: bool = False,
-        verbose: bool = False
+        verbose: bool = False,
+        resolved_sym_ops: os.PathLike | str | None = None
         ) -> None:
     """Enumerate bond subsets and save the result to a file.
 
@@ -42,6 +43,9 @@ def enum_bond_subsets_pipeline(
         If True, overwrite the output file if it exists. Default is False.
     verbose : bool, optional
         If True, print detailed execution messages. Default is False.
+    resolved_sym_ops : os.PathLike or str or None, optional
+        If provided, save resolved symmetry operation mappings to the
+        specified file in YAML format. Default is None.
 
     See Also
     --------
@@ -133,6 +137,12 @@ def enum_bond_subsets_pipeline(
         sym_ops = None
     if sym_ops is not None:
         validate_sym_ops(sym_ops, input_data['bonds'])
+    
+    # Save sym_ops to WIP
+    if resolved_sym_ops:
+        write_output(
+            resolved_sym_ops, sym_ops, overwrite=overwrite,
+            verbose=verbose, header='Resolved symmetry operations')
     
     # Main process
     if verbose:

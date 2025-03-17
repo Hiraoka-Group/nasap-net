@@ -134,5 +134,38 @@ def test_verbose_true(tmp_path, capsys):
         f'Successfully saved to "{output_path}"' in captured.out)
 
 
+def test_wip(tmp_path):
+    INPUT_DATA = {
+        'bonds': [1, 2, 3, 4],
+        'bond_adjacency': {
+            1: {2},
+            2: {1, 3},
+            3: {2, 4},
+            4: {3},
+        },
+        'sym_ops': {
+            'C2': [[1, 4], [2, 3]]
+        }
+    }
+    input_path = tmp_path / "input.yaml"
+    with open(input_path, 'w') as f:
+        yaml.safe_dump(INPUT_DATA, f)
+
+    output_path = tmp_path / "output.yaml"
+    wip_dir = tmp_path / "resolved_sym_ops.yaml"
+    enum_bond_subsets_pipeline(input_path, output_path, resolved_sym_ops=wip_dir)
+
+    assert os.path.exists(wip_dir)
+    assert os.path.isfile(wip_dir)
+
+    EXPECTED = {
+        'C2': {1: 4, 2: 3, 3: 2, 4: 1}
+    }
+    with open(wip_dir, 'r') as f:
+        actual_output = yaml.safe_load(f)
+    
+    assert actual_output == EXPECTED
+
+
 if __name__ == "__main__":
     pytest.main(['-v', __file__])
