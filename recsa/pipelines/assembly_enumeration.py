@@ -24,6 +24,7 @@ def enumerate_assemblies_pipeline(
             wip_dir = temp_dir
         wip_dir = Path(wip_dir)
 
+        resolved_sym_ops_path = wip_dir / 'resolved_sym_ops.yaml'
         wip1_bondsets_path = wip_dir / 'wip1_bondsets.yaml'
         wip2_assemblies_path = wip_dir / 'wip2_assemblies.yaml'
         wip3_unique_assemblies_path = wip_dir / 'wip3_unique_assemblies.yaml'
@@ -33,7 +34,8 @@ def enumerate_assemblies_pipeline(
             print('Enumerating assemblies...')
             
         enum_bond_subsets_pipeline(
-            input_path, wip1_bondsets_path, overwrite=overwrite)
+            input_path, wip1_bondsets_path, overwrite=overwrite,
+            path_to_output_resolved_sym_ops=resolved_sym_ops_path)
         bondsets_to_assemblies_pipeline(
             wip1_bondsets_path, input_path, wip2_assemblies_path,
             overwrite=overwrite)
