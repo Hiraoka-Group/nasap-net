@@ -2,7 +2,7 @@ import pytest
 import yaml
 
 from recsa import Assembly
-from recsa.pipelines import concatenate_assemblies_pipeline
+from recsa.pipelines import concatenate_assemblies_without_isom_checks
 
 
 def test_basic(tmp_path):
@@ -20,7 +20,7 @@ def test_basic(tmp_path):
 
     OUTPUT_PATH = tmp_path / 'concatenated.yaml'
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=assemblies_paths,
         resulting_assems_path=str(OUTPUT_PATH),
         start=0, overwrite=True, verbose=False)
@@ -47,7 +47,7 @@ def test_paths_order_preservation(tmp_path):
     
     output_path = tmp_path / 'concatenated.yaml'
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=assemblies_paths,
         resulting_assems_path=str(output_path),
         start=0, overwrite=True, verbose=False)
@@ -79,7 +79,7 @@ def test_assembly_order_preservation(tmp_path):
 
     OUTPUT_PATH = tmp_path / 'concatenated.yaml'
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=assemblies_paths,
         resulting_assems_path=str(OUTPUT_PATH),
         start=0, overwrite=True, verbose=False)
@@ -104,7 +104,7 @@ def test_start(tmp_path):
 
     OUTPUT_PATH = tmp_path / 'concatenated.yaml'
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=[filepath],
         resulting_assems_path=str(OUTPUT_PATH),
         start=10, overwrite=True, verbose=False)
@@ -127,7 +127,7 @@ def test_overwrite_true(tmp_path):
     with open(OUTPUT_PATH, 'w') as f:
         yaml.dump('previous data', f)
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=[filepath],
         resulting_assems_path=str(OUTPUT_PATH),
         start=0, overwrite=True, verbose=False)
@@ -149,7 +149,7 @@ def test_overwrite_false(tmp_path):
         yaml.dump('previous data', f)
 
     with pytest.raises(FileExistsError):
-         concatenate_assemblies_pipeline(
+         concatenate_assemblies_without_isom_checks(
             assemblies_path_list=[filepath],
             resulting_assems_path=str(OUTPUT_PATH),
             start=0, overwrite=False, verbose=False)
@@ -163,7 +163,7 @@ def test_verbose_true(tmp_path, capsys):
     
     OUTPUT_PATH = tmp_path / 'concatenated.yaml'
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=[filepath],
         resulting_assems_path=str(OUTPUT_PATH),
         start=0, overwrite=True, verbose=True)
@@ -183,7 +183,7 @@ def test_verbose_false(tmp_path, capsys):
     
     OUTPUT_PATH = tmp_path / 'concatenated.yaml'
 
-    concatenate_assemblies_pipeline(
+    concatenate_assemblies_without_isom_checks(
         assemblies_path_list=[filepath],
         resulting_assems_path=str(OUTPUT_PATH),
         start=0, overwrite=True, verbose=False)
