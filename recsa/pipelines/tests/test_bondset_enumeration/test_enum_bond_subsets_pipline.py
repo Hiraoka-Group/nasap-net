@@ -153,7 +153,7 @@ def test_wip(tmp_path):
 
     output_path = tmp_path / "output.yaml"
     wip_dir = tmp_path / "resolved_sym_ops.yaml"
-    enum_bond_subsets_pipeline(input_path, output_path, resolved_sym_ops=wip_dir)
+    enum_bond_subsets_pipeline(input_path, output_path, path_to_output_resolved_sym_ops=wip_dir)
 
     assert os.path.exists(wip_dir)
     assert os.path.isfile(wip_dir)
