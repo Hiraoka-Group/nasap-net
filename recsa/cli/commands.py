@@ -1,9 +1,9 @@
 import click
 
-from recsa.pipelines import (
-    bondsets_to_assemblies_pipeline,
-    concatenate_assemblies_excluding_duplicates_pipeline,
-    enum_bond_subsets_pipeline, enumerate_assemblies_pipeline)
+from recsa.pipelines import (bondsets_to_assemblies_pipeline,
+                             concatenate_assemblies_pipeline,
+                             enum_bond_subsets_pipeline,
+                             enumerate_assemblies_pipeline)
 
 
 @click.command('enumerate-assemblies')
@@ -45,7 +45,13 @@ def run_enum_assemblies_pipeline(input, output, wip_dir, overwrite, verbose):
 @click.argument('output', type=click.Path())
 @click.option(
     '--already-unique-within-files', '-u', is_flag=True,
-    help='Whether the assemblies in each file are already unique. If used, the isomorphism checks are skipped for the assemblies within each file.')
+    help='Whether the assemblies in each file are already unique. If used, '
+    'the isomorphism checks are skipped for the assemblies within each file.')
+@click.option(
+    '--skip-isomorphism-checks', '-i', is_flag=True,
+    help='Whether to skip all isomorphism checks. If True, the assemblies '
+    'are concatenated without checking for isomorphism. The resulting list '
+    'may contain duplicate assemblies.')
 @click.option(
     '--start', '-s', type=int, default=0,
     help='Starting index for the reindexing of the assemblies.')
@@ -57,7 +63,7 @@ def run_enum_assemblies_pipeline(input, output, wip_dir, overwrite, verbose):
     help='Print verbose output.')
 def run_concat_assembly_lists_pipeline(
         assemblies, component_kinds, output, already_unique_within_files, 
-        start, overwrite, verbose):
+        skip_isomorphism_checks, start, overwrite, verbose):
     """Concatenates assembly lists.
 
     \b
@@ -71,13 +77,17 @@ def run_concat_assembly_lists_pipeline(
     Options
     -------
     --already-unique-within-files, -u: Whether the assemblies in each file are already unique. If used, the isomorphism checks are skipped for the assemblies within each file.
+    --skip-isomorphism-checks, -i: Whether to skip all isomorphism checks. 
+    If True, the assemblies are concatenated without checking for 
+    isomorphism. The resulting list may contain duplicate assemblies.
     --start, -s: Starting index for the reindexing of the assemblies.
     --overwrite, -o: Overwrite output file if it exists.
     --verbose, -v: Print verbose output.
     """
-    concatenate_assemblies_excluding_duplicates_pipeline(
+    concatenate_assemblies_pipeline(
         assemblies, component_kinds, output,
         already_unique_within_files=already_unique_within_files,
+        skip_isomorphism_checks=skip_isomorphism_checks,
         start=start, overwrite=overwrite, verbose=verbose)
 
 

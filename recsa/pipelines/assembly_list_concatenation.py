@@ -1,17 +1,41 @@
 import os
 from collections.abc import Mapping, Sequence
-from typing import Any
+from typing import Any, Literal, overload
 
 from recsa import Assembly, Component, group_assemblies_by_isomorphism
 from recsa.pipelines.lib import read_file, write_output
 
 
-def concatenate_assemblies_excluding_duplicates_pipeline(
+@overload
+def concatenate_assemblies_pipeline(
+        assemblies_path_list: Sequence[os.PathLike | str],
+        components_path: None,
+        resulting_assems_path: os.PathLike | str,
+        *,
+        skip_isomorphism_checks: Literal[True] = True,
+        start: int = 0,
+        overwrite: bool = False,
+        verbose: bool = False,
+        ) -> None: ...
+@overload
+def concatenate_assemblies_pipeline(
         assemblies_path_list: Sequence[os.PathLike | str],
         components_path: os.PathLike | str,
         resulting_assems_path: os.PathLike | str,
         *,
         already_unique_within_files: bool = False,
+        skip_isomorphism_checks: Literal[False] = False,
+        start: int = 0,
+        overwrite: bool = False,
+        verbose: bool = False,
+        ) -> None: ...
+def concatenate_assemblies_pipeline(
+        assemblies_path_list: Sequence[os.PathLike | str],
+        components_path: os.PathLike | str | None,
+        resulting_assems_path: os.PathLike | str,
+        *,
+        already_unique_within_files: bool = False,
+        skip_isomorphism_checks: bool = False,
         start: int = 0,
         overwrite: bool = False,
         verbose: bool = False,
@@ -28,6 +52,9 @@ def concatenate_assemblies_excluding_duplicates_pipeline(
         List of paths to the files containing the assemblies.
         Each file should contain a dictionary with the assembly IDs as keys
         and the Assembly objects as values.
+    components_path : os.PathLike | str | None
+        Path to the file containing the component kinds. 
+        None is allowed only if `skip_isomorphism_checks` is True.
     resulting_assems_path : os.PathLike | str
         Path to the file to save the concatenated list of assemblies.
     already_unique_within_files : bool, optional
@@ -35,6 +62,10 @@ def concatenate_assemblies_excluding_duplicates_pipeline(
         by default False. If True, the isomorphism checks are skipped 
         for the assemblies within each file. The parameter will be 
         ignored if `exclude_duplicates` is False.
+    skip_isomorphism_checks : bool, optional
+        Whether to skip all isomorphism checks, by default False.
+        If True, the assemblies are concatenated without checking for
+        isomorphism. The resulting list may contain duplicate assemblies.
     start : int, optional
         Starting index for the reindexing of the assemblies, by default 0.
     overwrite : bool, optional
@@ -51,10 +82,21 @@ def concatenate_assemblies_excluding_duplicates_pipeline(
     Output file contains a dictionary with the reindexed IDs as keys and the
     Assembly objects as values.
     """
+    if skip_isomorphism_checks:
+        concatenate_assemblies_without_isom_checks(
+            assemblies_path_list, resulting_assems_path,
+            start=start, overwrite=overwrite, verbose=verbose)
+        return
+    if components_path is None:
+        raise ValueError(
+            'The parameter `components_path` is required if '
+            '`skip_isomorphism_checks` is False.')
+    
     # Input
     list_of_id_to_assembly: Sequence[Mapping[Any, Assembly]] = [
         read_file(path, verbose=verbose)
         for path in assemblies_path_list]
+    
     components: Mapping[str, Component] = read_file(
         components_path, verbose=verbose)['component_kinds']
     
@@ -101,7 +143,7 @@ def concatenate_assemblies_excluding_duplicates_pipeline(
         header='Concatenated list of assemblies')
 
 
-def concatenate_assemblies_pipeline(
+def concatenate_assemblies_without_isom_checks(
         assemblies_path_list: Sequence[os.PathLike | str],
         resulting_assems_path: os.PathLike | str,
         *,

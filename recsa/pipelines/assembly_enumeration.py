@@ -4,7 +4,8 @@ from collections.abc import Hashable
 from pathlib import Path
 from typing import TypeVar
 
-from .assembly_list_concatenation import concatenate_assemblies_pipeline
+from .assembly_list_concatenation import \
+    concatenate_assemblies_without_isom_checks
 from .bindsite_capping import cap_bindsites_pipeline
 from .bondset_enumeration import enum_bond_subsets_pipeline
 from .bondset_to_assembly import bondsets_to_assemblies_pipeline
@@ -45,7 +46,7 @@ def enumerate_assemblies_pipeline(
         cap_bindsites_pipeline(
             wip3_unique_assemblies_path, input_path, input_path, wip4_capped_assemblies_path,
             overwrite=overwrite)
-        concatenate_assemblies_pipeline(
+        concatenate_assemblies_without_isom_checks(
             [wip4_capped_assemblies_path], output_path, overwrite=overwrite)
         
 
