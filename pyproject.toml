@@ -4,7 +4,7 @@ dynamic = ["version"]
 
 [tool.poetry]
 name = "recsa"
-version = "0.14.1"
+version = "0.14.2"
 description = "Reaction Explorer for Coordination Self-Assembly"
 authors = ["neji-craftsman <142223934+neji-craftsman@users.noreply.github.com>"]
 license = "MIT"
@@ -36,7 +36,7 @@ twine = "^6.1.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[project.scripts]
+[tool.poetry.scripts]
 recsa = "recsa.cli.main:main"
 
 [tool.setuptools.package-data]
