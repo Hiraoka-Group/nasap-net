@@ -8,6 +8,13 @@ from recsa import Assembly, Component, is_isomorphic
 from recsa.cli.main import main
 
 
+def test_version():
+    runner = CliRunner()
+    result = runner.invoke(main, ['--version'])
+    assert result.exit_code == 0
+    assert 'recsa' in result.output
+
+
 def test_enumerate_assemblies(tmp_path):
     runner = CliRunner()
 
