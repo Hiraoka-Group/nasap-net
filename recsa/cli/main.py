@@ -7,6 +7,7 @@ from recsa.cli.commands import (run_bondsets_to_assemblies_pipeline,
 
 
 @click.group()
+@click.version_option(prog_name='recsa')
 def main():
     """RECSA CLI"""
     pass
