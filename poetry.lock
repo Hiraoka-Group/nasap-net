@@ -44,6 +44,17 @@ files = [
 extras = ["regex"]
 
 [[package]]
+name = "bracex"
+version = "2.5.post1"
+description = "Bash style brace expander."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "bracex-2.5.post1-py3-none-any.whl", hash = "sha256:13e5732fec27828d6af308628285ad358047cec36801598368cb28bc631dbaf6"},
+    {file = "bracex-2.5.post1.tar.gz", hash = "sha256:12c50952415bfa773d2d9ccb8e79651b8cdb1f31a42f6091b804f6ba2b4a66b6"},
+]
+
+[[package]]
 name = "build"
 version = "1.2.2.post1"
 description = "A simple, correct Python build frontend"
@@ -1094,6 +1105,26 @@ markupsafe = ">=2.0.1"
 mkdocs = ">=1.1"
 
 [[package]]
+name = "mkdocs-awesome-nav"
+version = "3.0.0"
+description = "A plugin for customizing the navigation structure of your MkDocs site."
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "mkdocs_awesome_nav-3.0.0-py3-none-any.whl", hash = "sha256:eda804face3aeb641d9eb1d7e5b024532e201235af9bbe21fccee0147a3b257d"},
+    {file = "mkdocs_awesome_nav-3.0.0.tar.gz", hash = "sha256:17023bd8067728cc7bff880bb4843dc97018108fd8d8e0d62f938bb0b6156569"},
+]
+
+[package.dependencies]
+mkdocs = ">=1.6.0"
+natsort = ">=8.1.0"
+pydantic = [
+    {version = ">=2.0.2", markers = "python_version < \"3.13\""},
+    {version = ">=2.8.1", markers = "python_version >= \"3.13\""},
+]
+wcmatch = ">=8.4"
+
+[[package]]
 name = "mkdocs-click"
 version = "0.8.1"
 description = "An MkDocs extension to generate documentation for Click command line applications"
@@ -1295,6 +1326,21 @@ files = [
     {file = "mypy_extensions-1.0.0-py3-none-any.whl", hash = "sha256:4392f6c0eb8a5668a69e23d168ffa70f0be9ccfd32b5cc2d26a34ae5b844552d"},
     {file = "mypy_extensions-1.0.0.tar.gz", hash = "sha256:75dbf8955dc00442a438fc4d0666508a9a97b6bd41aa2f0ffe9d2f2725af0782"},
 ]
+
+[[package]]
+name = "natsort"
+version = "8.4.0"
+description = "Simple yet flexible natural sorting in Python."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "natsort-8.4.0-py3-none-any.whl", hash = "sha256:4732914fb471f56b5cce04d7bae6f164a592c7712e1c85f9ef585e197299521c"},
+    {file = "natsort-8.4.0.tar.gz", hash = "sha256:45312c4a0e5507593da193dedd04abb1469253b601ecaf63445ad80f0a1ea581"},
+]
+
+[package.extras]
+fast = ["fastnumbers (>=2.0.0)"]
+icu = ["PyICU (>=1.0.0)"]
 
 [[package]]
 name = "networkx"
@@ -1712,8 +1758,8 @@ files = [
 annotated-types = ">=0.6.0"
 pydantic-core = "2.23.4"
 typing-extensions = [
-    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
     {version = ">=4.6.1", markers = "python_version < \"3.13\""},
+    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
 ]
 
 [package.extras]
@@ -2311,7 +2357,21 @@ files = [
 [package.extras]
 watchmedo = ["PyYAML (>=3.10)"]
 
+[[package]]
+name = "wcmatch"
+version = "10.0"
+description = "Wildcard/glob file name matcher."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "wcmatch-10.0-py3-none-any.whl", hash = "sha256:0dd927072d03c0a6527a20d2e6ad5ba8d0380e60870c383bc533b71744df7b7a"},
+    {file = "wcmatch-10.0.tar.gz", hash = "sha256:e72f0de09bba6a04e0de70937b0cf06e55f36f37b3deb422dfaf854b867b840a"},
+]
+
+[package.dependencies]
+bracex = ">=2.1.1"
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "d36f766ab4c866458384d31839d52c730de4d0681d120029c891027ade91ef81"
+content-hash = "45010f2238eb7c6751aa5ae86774d765668ff28f379b9594c64106dae2b3171b"
