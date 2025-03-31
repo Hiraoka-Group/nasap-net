@@ -28,8 +28,10 @@ theme:
     - navigation.tabs
     - navigation.sections
     - content.code.copy
+    - content.code.annotate
 
 plugins:
+  - awesome-nav
   - search
   - mkdocstrings
 
@@ -49,6 +51,7 @@ markdown_extensions:
   - pymdownx.blocks.caption
   - pymdownx.details
   - attr_list
+  - mkdocs-click
 
 extra:
   version:

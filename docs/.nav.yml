@@ -1,0 +1,7 @@
+ignore: 
+  - "*.h.md"
+  - "*.h/"
+nav:
+  - Home:
+    - Getting Started: index.md
+  - "*"
