@@ -1,8 +1,6 @@
 import click
 
-from recsa.pipelines import (bondsets_to_assemblies_pipeline,
-                             concatenate_assemblies_pipeline,
-                             enum_bond_subsets_pipeline,
+from recsa.pipelines import (concatenate_assemblies_pipeline,
                              enumerate_assemblies_pipeline)
 
 
@@ -89,35 +87,3 @@ def run_concat_assembly_lists_pipeline(
         already_unique_within_files=already_unique_within_files,
         skip_isomorphism_checks=skip_isomorphism_checks,
         start=start, overwrite=overwrite, verbose=verbose)
-
-
-@click.command('enumerate-bond-subsets')
-@click.argument('input', type=click.Path(exists=True))
-@click.argument('output', type=click.Path())
-def run_enum_bond_subsets_pipeline(input, output):
-    """Enumerates bond subsets.
-    
-    \b
-    Parameters
-    ----------
-    - INPUT: Path to input file.
-    - OUTPUT: Path to output file.
-    """
-    enum_bond_subsets_pipeline(input, output)
-
-
-@click.command('bondsets-to-assemblies')
-@click.argument('bondsets', type=click.Path(exists=True))
-@click.argument('structure', type=click.Path(exists=True))
-@click.argument('output', type=click.Path())
-def run_bondsets_to_assemblies_pipeline(bondsets, structure, output):
-    """Converts bondsets to assemblies.
-    
-    \b
-    Parameters
-    ----------
-    - BONDSETS: Path to input file of bond subsets.
-    - STRUCTURE: Path to input file of structure.
-    - OUTPUT: Path to output file.
-    """
-    bondsets_to_assemblies_pipeline(bondsets, structure, output)
