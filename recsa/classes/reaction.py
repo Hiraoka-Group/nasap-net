@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
 from functools import cached_property
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 from .assembly import Assembly
 
@@ -20,6 +20,18 @@ class IntraReaction:
         d = asdict(self)
         d['entering_assem_id'] = self.entering_assem_id
         return d
+    
+    @property
+    def num_of_reactants(self) -> Literal[1]:
+        """Number of reactants in the reaction."""
+        return 1
+    
+    @property
+    def num_of_products(self) -> Literal[1, 2]:
+        """Number of products in the reaction."""
+        if self.leaving_assem_id is None:
+            return 1
+        return 2
 
 
 @dataclass
@@ -35,6 +47,18 @@ class InterReaction:
 
     def to_dict(self):
         return asdict(self)
+    
+    @property
+    def num_of_reactants(self) -> Literal[2]:
+        """Number of reactants in the reaction."""
+        return 2
+    
+    @property
+    def num_of_products(self) -> Literal[1, 2]:
+        """Number of products in the reaction."""
+        if self.leaving_assem_id is None:
+            return 1
+        return 2
 
 
 @dataclass(frozen=True)
