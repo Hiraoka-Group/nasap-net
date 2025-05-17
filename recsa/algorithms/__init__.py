@@ -19,6 +19,7 @@ from .assembly_connectivity import extract_connected_assemblies
 from .assembly_equality import assemblies_equal
 from .assembly_separation import separate_product_if_possible
 from .aux_edge_existence import has_aux_edges
+from .bindsite_equivalence import are_equivalent_binding_site_lists
 from .bondset_sorting import sort_bondsets
 from .bondset_sorting import sort_bondsets_and_bonds
 from .hashing import calc_graph_hash_of_assembly
