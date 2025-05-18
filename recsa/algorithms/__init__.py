@@ -29,6 +29,7 @@ from .isomorphism import isomorphisms_iter
 from .ligand_exchange import perform_inter_exchange
 from .ligand_exchange import perform_intra_exchange
 from .reaction_embedding import embed_assemblies_into_reaction
+from .reaction_comparison import are_equivalent_reactions
 from .subassembly import bond_induced_sub_assembly
 from .subassembly import component_induced_sub_assembly
 from .union import union_assemblies
