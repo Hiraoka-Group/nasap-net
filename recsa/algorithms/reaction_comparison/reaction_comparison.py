@@ -2,7 +2,7 @@ from collections.abc import Mapping
 
 from recsa import Assembly, Component, InterReaction, IntraReaction
 
-from .bindsite_equivalence import are_equivalent_binding_site_lists
+from ..bindsite_equivalence import are_equivalent_binding_site_lists
 
 
 def are_equivalent_reactions(
