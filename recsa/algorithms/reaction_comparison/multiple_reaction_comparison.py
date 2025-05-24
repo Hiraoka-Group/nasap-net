@@ -57,7 +57,7 @@ def are_equivalent_reaction_sets(
 
         # Cached function
         # This prevents recomputing the equivalence for the same pair.
-        cached_eq = make_cached_eq(
+        cached_eq = _make_cached_eq(
             cur_key_reactions1, cur_key_reactions2,
             id_to_assembly, component_structures)
 
@@ -77,7 +77,7 @@ def are_equivalent_reaction_sets(
     return True
 
 
-def make_cached_eq(
+def _make_cached_eq(
         reactions1: Sequence[Reaction], reactions2: Sequence[Reaction],
         id_to_assembly: Mapping[int, Assembly],
         component_structures: Mapping[str, Component]
