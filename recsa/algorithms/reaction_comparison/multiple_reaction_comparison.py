@@ -23,10 +23,10 @@ def are_equivalent_reaction_sets(
     if len(reactions1) != len(reactions2):
         return False
 
-    grouped1 = group_reactions(reactions1)  
+    grouped1 = _group_reactions(reactions1)  
     # e.g. {key1: [r1-0, r1-1], key2: [r1-2]}
 
-    grouped2 = group_reactions(reactions2)
+    grouped2 = _group_reactions(reactions2)
     # e.g. {key1: [r2-1, r2-0], key2: [r2-2]}
 
     if grouped1.keys() != grouped2.keys():
@@ -98,7 +98,7 @@ def _make_cached_eq(
     return cached_eq
 
 
-def group_reactions(reactions: Iterable[Reaction]) -> Mapping[tuple, list]:
+def _group_reactions(reactions: Iterable[Reaction]) -> Mapping[tuple, list]:
     grouped = defaultdict(list)
 
     grouping_key = lambda r: (
