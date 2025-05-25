@@ -23,9 +23,6 @@ from .classes import *
 from .algorithms import *
 
 # isort: split
-from .saving import reactions_to_df
-
-# isort: split
 from .assembly_drawing import draw_2d
 from .assembly_drawing import draw_3d
 
