@@ -1,7 +1,8 @@
 import pandas as pd
 import pytest
 
-from recsa import InterReaction, IntraReaction, reactions_to_df
+from recsa import InterReaction, IntraReaction
+from recsa.pipelines.lib import reactions_to_df
 
 
 def test_basic():
@@ -34,4 +35,4 @@ def test_basic():
 
 
 if __name__ == '__main__':
-    pytest.main(['-vv', __file__])
+    pytest.main(['-v', __file__])
