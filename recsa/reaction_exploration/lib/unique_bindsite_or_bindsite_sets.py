@@ -10,7 +10,11 @@ from recsa.utils import group_equivalent_nodes_or_nodesets
 from .cached_self_isomorphism_iteration import \
     iter_self_isomorphisms_with_cache
 
-__all__ = ['compute_unique_bindsites_or_bindsite_sets']
+_cache = {}  # type: ignore
+
+def clear_cache_for_compute_unique_bindsites_or_bindsite_sets():
+    """Clear the cache used by `compute_unique_bindsites_or_bindsite_sets`."""
+    _cache.clear()
 
 
 def _cache_key(
@@ -46,7 +50,7 @@ def compute_unique_bindsites_or_bindsite_sets(
         bindsites_or_bindsite_sets: Iterable[tuple[str, ...]],
         component_structures: Mapping[str, Component],
         ) -> list[tuple[tuple[str, ...], int]]: ...
-@cached(cache={}, key=_cache_key)
+@cached(cache=_cache, key=_cache_key)
 def compute_unique_bindsites_or_bindsite_sets(
         assembly_id,  # only used for caching
         assembly, bindsites_or_bindsite_sets, 
