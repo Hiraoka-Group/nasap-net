@@ -5,22 +5,34 @@ import pytest
 from recsa import (Assembly, Component, InterReaction, IntraReaction,
                    explore_reactions)
 from recsa.algorithms import are_equivalent_reaction_sets
+from recsa.reaction_exploration import (
+    clear_cache_for_compute_unique_bindsites_or_bindsite_sets,
+    clear_cache_for_enum_valid_entering_bindsites,
+    clear_cache_for_enum_valid_ml_pairs,
+    clear_cache_for_enum_valid_mles_for_intra,
+    clear_cache_for_iter_self_isomorphisms)
 
 Reaction: TypeAlias = IntraReaction | InterReaction
 
 
-@pytest.fixture
-def component_structures():
-    return {
-        'L': Component(['a', 'b']),
+@pytest.fixture(autouse=True)
+def clear_caches():
+    """Clear caches before each test to ensure independence."""
+    clear_cache_for_compute_unique_bindsites_or_bindsite_sets()
+    clear_cache_for_iter_self_isomorphisms()
+    clear_cache_for_enum_valid_entering_bindsites()
+    clear_cache_for_enum_valid_ml_pairs()
+    clear_cache_for_enum_valid_mles_for_intra()
+
+
+def test_comprehensive_reaction_sets():
+    component_structures = {
         'M': Component(['a', 'b']),
+        'L': Component(['a', 'b']),
         'X': Component(['a']),
     }
 
-
-@pytest.fixture
-def id_to_assembly():
-    return {
+    id_to_assembly = {
         # MX2: X0(a)-(a)M0(b)-(a)X1
         0: Assembly(
             {'M0': 'M', 'X0': 'X', 'X1': 'X'},
@@ -57,14 +69,6 @@ def id_to_assembly():
              ('L1.b', 'M0.a')]
         ),
     }
-
-
-def test_comprehensive_reaction_sets(component_structures, id_to_assembly):
-    result = explore_reactions(
-        id_to_assembly,
-        metal_kind='M', leaving_kind='X', entering_kind='L',
-        component_structures=component_structures
-    )
 
     # All "X to L" reactions among the assemblies in id_to_assembly
     # including intra- and inter-molecular reactions:
@@ -115,11 +119,88 @@ def test_comprehensive_reaction_sets(component_structures, id_to_assembly):
         ),
     }
 
+    result = explore_reactions(
+        id_to_assembly,
+        metal_kind='M', leaving_kind='X', entering_kind='L',
+        component_structures=component_structures
+    )
+
     assert are_equivalent_reaction_sets(
         result, list(expected.values()),
         id_to_assembly=id_to_assembly,
         component_structures=component_structures
     ), "The reaction sets are not equivalent."
+
+
+def test_aux_edges():
+    component_structures = {
+        'M': Component(  # component with auxiliary edges
+            ['a', 'b', 'c', 'd'], 
+            [('a', 'b', 'cis'), ('b', 'c', 'cis'), 
+             ('c', 'd', 'cis'), ('d', 'a', 'cis')]),
+        'L': Component(['a', 'b']),
+        'X': Component(['a']),
+    }
+
+    id_to_assembly = {
+        0: Assembly(  # MX4
+            {'M0': 'M', 'X0': 'X', 'X1': 'X', 'X2': 'X', 'X3': 'X'},
+            [('M0.a', 'X0.a'), ('M0.b', 'X1.a'), 
+             ('M0.c', 'X2.a'), ('M0.d', 'X3.a')]
+        ),
+        1: Assembly({'L0': 'L'}),  # L
+        2: Assembly({'X0': 'X'}),  # X
+        3: Assembly(  # MLX3
+            {'M0': 'M', 'L0': 'L', 
+             'X0': 'X', 'X1': 'X', 'X2': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'X0.a'), 
+             ('M0.c', 'X1.a'), ('M0.d', 'X2.a')]
+        ),
+        4: Assembly(  # cis-ML2X2
+            {'M0': 'M', 'L0': 'L', 'L1': 'L', 
+             'X0': 'X', 'X1': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'L1.a'), 
+             ('M0.c', 'X0.a'), ('M0.d', 'X1.a')]
+        ),
+        5: Assembly(  # trans-ML2X2
+            {'M0': 'M', 'L0': 'L', 'L1': 'L', 
+             'X0': 'X', 'X1': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'X0.a'), 
+             ('M0.c', 'L1.a'), ('M0.d', 'X1.a')]
+        ),
+    }
+
+    expected: dict[str, Reaction] = {
+        'MX4 + L -> MLX3 + X': InterReaction(
+            init_assem_id=0, entering_assem_id=1,
+            product_assem_id=3, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=8,
+        ),
+        'MLX3 + L -> cis-ML2X2 + X': InterReaction(
+            init_assem_id=3, entering_assem_id=1,
+            product_assem_id=4, leaving_assem_id=2,
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+        'MLX3 + L -> trans-ML2X2 + X': InterReaction(
+            init_assem_id=3, entering_assem_id=1,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.c', leaving_bs='X1.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+    }
+
+    result = explore_reactions(
+        id_to_assembly,
+        metal_kind='M', leaving_kind='X', entering_kind='L',
+        component_structures=component_structures
+    )
+    assert are_equivalent_reaction_sets(
+        result, list(expected.values()),
+        id_to_assembly=id_to_assembly,
+        component_structures=component_structures
+    ), "The reaction sets with auxiliary edges are not equivalent."
 
 
 if __name__ == "__main__":
