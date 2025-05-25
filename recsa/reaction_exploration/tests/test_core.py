@@ -278,5 +278,127 @@ def test_intra_reactions():
     ), "The reaction sets with auxiliary edges are not equivalent."
 
 
+def test_verbose(capsys):
+    component_structures = {
+        'M': Component(['a', 'b']),
+        'L': Component(['a', 'b']),
+        'X': Component(['a']),
+    }
+
+    id_to_assembly = {
+        # MX2: X0(a)-(a)M0(b)-(a)X1
+        0: Assembly(
+            {'M0': 'M', 'X0': 'X', 'X1': 'X'},
+            [('X0.a', 'M0.a'), ('M0.b', 'X1.a')]
+        ),
+        1: Assembly({'L0': 'L'}),  # L: (a)L0(b)
+        2: Assembly({'X0': 'X'}),  # X: (a)X0
+        # MLX: (a)L0(b)-(a)M0(b)-(a)X0
+        3: Assembly(
+            {'M0': 'M', 'L0': 'L', 'X0': 'X'},
+            [('L0.b', 'M0.a'), ('M0.b', 'X0.a')]
+        ),
+        # ML2: (a)L0(b)-(a)M0(b)-(a)L1(b)
+        4: Assembly(
+            {'M0': 'M', 'L0': 'L', 'L1': 'L'},
+            [('L0.b', 'M0.a'), ('M0.b', 'L1.a')]
+        ),
+        # M2L2X: X0(a)-(a)M0(b)-(a)L0(b)-(a)M1(b)-(a)L1(b)
+        5: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'L1': 'L', 'X0': 'X'},
+            [('X0.a', 'M0.a'), ('M0.b', 'L0.a'), ('L0.b', 'M1.a'),
+             ('M1.b', 'L1.a')]
+        ),
+        # M2LX2: X0(a)-(a)M0(b)-(a)L0(b)-(a)M1(b)-(a)X1
+        6: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'X0': 'X', 'X1': 'X'},
+            [('X0.a', 'M0.a'), ('M0.b', 'L0.a'), ('L0.b', 'M1.a'),
+             ('M1.b', 'X1.a')]
+        ),
+        # M2L2-ring: //-(a)M0(b)-(a)L0(b)-(a)M1(b)-(a)L1(b)-//
+        7: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'L1': 'L'},
+            [('M0.b', 'L0.a'), ('L0.b', 'M1.a'), ('M1.b', 'L1.a'),
+             ('L1.b', 'M0.a')]
+        ),
+    }
+
+    # All "X to L" reactions among the assemblies in id_to_assembly
+    # including intra- and inter-molecular reactions:
+    expected: dict[str, Reaction] = {
+        # Intra-molecular reactions
+        'M2L2X -> M2L2-ring + X': IntraReaction(
+            init_assem_id=5, 
+            product_assem_id=7, leaving_assem_id=2, 
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L1.b',
+            duplicate_count=1,
+        ),
+        # Inter-molecular reactions
+        'MX2 + L -> MLX + X': InterReaction(
+            init_assem_id=0, entering_assem_id=1,
+            product_assem_id=3, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+        'MX2 + MLX -> M2LX2 + X': InterReaction(
+            init_assem_id=0, entering_assem_id=3,
+            product_assem_id=6, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+        'MX2 + ML2 -> M2L2X + X': InterReaction(
+            init_assem_id=0, entering_assem_id=4,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+        'MLX + L -> ML2 + X': InterReaction(
+            init_assem_id=3, entering_assem_id=1,
+            product_assem_id=4, leaving_assem_id=2,
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+        'MLX + MLX -> M2L2X + X': InterReaction(
+            init_assem_id=3, entering_assem_id=3,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+        'M2LX2 + L -> M2L2X + X': InterReaction(
+            init_assem_id=6, entering_assem_id=1,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+    }
+    
+    expected_logs = [
+        'Reaction Found (0): 5 -> 7 + 2 (metal=M0.a, leaving=X0.a, entering=L1.b) (x1)',
+        'Reaction Found (1): 0 + 1 -> 3 + 2 (metal=M0.a, leaving=X0.a, entering=L0.a) (x4)',
+        'Reaction Found (2): 0 + 3 -> 6 + 2 (metal=M0.a, leaving=X0.a, entering=L0.a) (x2)',
+        'Reaction Found (3): 0 + 4 -> 5 + 2 (metal=M0.a, leaving=X0.a, entering=L0.a) (x4)',
+        'Reaction Found (4): 3 + 1 -> 4 + 2 (metal=M0.b, leaving=X0.a, entering=L0.a) (x2)',
+        'Reaction Found (5): 3 + 3 -> 5 + 2 (metal=M0.b, leaving=X0.a, entering=L0.a) (x2)',
+        'Reaction Found (6): 6 + 1 -> 5 + 2 (metal=M0.a, leaving=X0.a, entering=L0.a) (x4)',
+    ]
+
+    result = explore_reactions(
+        id_to_assembly,
+        metal_kind='M', leaving_kind='X', entering_kind='L',
+        component_structures=component_structures,
+        verbose=True
+    )
+
+    assert are_equivalent_reaction_sets(
+        result, list(expected.values()),
+        id_to_assembly=id_to_assembly,
+        component_structures=component_structures
+    ), "The reaction sets with verbose output are not equivalent."
+
+    captured = capsys.readouterr()
+    output_lines = captured.out.strip().split('\n')
+    assert output_lines == expected_logs, "Verbose output does not match expected logs."
+
+
 if __name__ == "__main__":
     pytest.main([__file__, '-v'])
