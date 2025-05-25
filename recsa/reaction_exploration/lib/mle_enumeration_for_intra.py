@@ -6,7 +6,11 @@ from cachetools.keys import hashkey
 
 from recsa import Assembly, Component
 
-__all__ = ['enum_valid_mles_for_intra']
+_cache = {}  # type: ignore
+
+def clear_cache_for_enum_valid_mles_for_intra():
+    """Clear the cache used by `enum_valid_mles_for_intra`."""
+    _cache.clear()
 
 
 def _cache_key(
@@ -18,7 +22,7 @@ def _cache_key(
     return hashkey(assembly_id, metal_kind, leaving_kind, entering_kind)
 
 
-@cached(cache={}, key=_cache_key)
+@cached(cache=_cache, key=_cache_key)
 def enum_valid_mles_for_intra(
         assembly_id: str | int,  # only used for caching
         assembly: Assembly,
