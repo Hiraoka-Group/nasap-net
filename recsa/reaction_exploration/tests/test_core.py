@@ -203,5 +203,80 @@ def test_aux_edges():
     ), "The reaction sets with auxiliary edges are not equivalent."
 
 
+def test_intra_reactions():
+    component_structures = {
+        'M': Component(  # component with auxiliary edges
+            ['a', 'b', 'c', 'd'], 
+            [('a', 'b', 'cis'), ('b', 'c', 'cis'), 
+             ('c', 'd', 'cis'), ('d', 'a', 'cis')]),
+        'L': Component(['a', 'b']),
+        'X': Component(['a']),
+    }
+
+    id_to_assembly = {
+        0: Assembly({'X0': 'X'}),  # X
+        # trans-M2L2X5
+        1: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'L1': 'L', 
+             'X0': 'X', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'X0.a'), 
+             ('M0.c', 'L1.a'), ('M0.d', 'X1.a'),
+             ('M1.a', 'L0.b'), ('M1.b', 'X2.a'),
+             ('M1.c', 'X3.a'), ('M1.d', 'X4.a')]
+        ),
+        # cis-M2L2X5
+        2: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'L1': 'L', 
+             'X0': 'X', 'X1': 'X', 'X2': 'X', 'X3': 'X', 'X4': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'L1.a'), 
+             ('M0.c', 'X0.a'), ('M0.d', 'X1.a'),
+             ('M1.a', 'L0.b'), ('M1.b', 'X2.a'),
+             ('M1.c', 'X3.a'), ('M1.d', 'X4.a')]
+            ),
+        # trans-trans-M2L2X4-ring
+        3: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'L1': 'L', 
+             'X0': 'X', 'X1': 'X', 'X2': 'X', 'X3': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'X0.a'), 
+             ('M0.c', 'L1.a'), ('M0.d', 'X1.a'),
+             ('M1.a', 'L0.b'), ('M1.b', 'X2.a'),
+             ('M1.c', 'L1.b'), ('M1.d', 'X3.a')]
+            ),
+        # cis-cis-M2L2X4-ring
+        4: Assembly(
+            {'M0': 'M', 'M1': 'M', 'L0': 'L', 'L1': 'L', 
+             'X0': 'X', 'X1': 'X', 'X2': 'X', 'X3': 'X'},
+            [('M0.a', 'L0.a'), ('M0.b', 'L1.a'), 
+             ('M0.c', 'X0.a'), ('M0.d', 'X1.a'),
+             ('M1.a', 'L0.b'), ('M1.b', 'L1.b'),
+             ('M1.c', 'X2.a'), ('M1.d', 'X3.a')]
+            ),
+    }
+
+    expected: dict[str, Reaction] = {
+        'trans-M2L2X5 -> trans-trans-M2L2X4-ring + X': IntraReaction(
+            init_assem_id=1, product_assem_id=3, leaving_assem_id=0,
+            metal_bs='M1.c', leaving_bs='X3.a', entering_bs='L1.b',
+            duplicate_count=1,
+        ),
+        'cis-M2L2X5 -> cis-cis-M2L2X4-ring + X': IntraReaction(
+            init_assem_id=2, product_assem_id=4, leaving_assem_id=0,
+            metal_bs='M1.b', leaving_bs='X2.a', entering_bs='L1.b',
+            duplicate_count=2,
+        ),
+    }
+
+    result = explore_reactions(
+        id_to_assembly,
+        metal_kind='M', leaving_kind='X', entering_kind='L',
+        component_structures=component_structures
+    )
+    assert are_equivalent_reaction_sets(
+        result, list(expected.values()),
+        id_to_assembly=id_to_assembly,
+        component_structures=component_structures
+    ), "The reaction sets with auxiliary edges are not equivalent."
+
+
 if __name__ == "__main__":
     pytest.main([__file__, '-v'])
