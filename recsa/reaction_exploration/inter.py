@@ -41,6 +41,8 @@ def explore_inter_reactions(
         entering_bs, entering_bs_dup_cnt = entering_bs_and_dup_cnt
 
         duplicate_count = ml_pair_dup_cnt * entering_bs_dup_cnt
+        if init_assem_id == entering_assem_id:
+            duplicate_count *= 2
 
         product, leaving = perform_inter_exchange(
             init_assem, entering_assem, metal_bs, leaving_bs, entering_bs)
