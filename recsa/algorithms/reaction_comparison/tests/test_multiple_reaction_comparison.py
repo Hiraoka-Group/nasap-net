@@ -1,9 +1,15 @@
+import random
+from copy import deepcopy
+from typing import TypeAlias
+
 import pytest
 
 from recsa import Assembly, Component, InterReaction, IntraReaction
 from recsa.algorithms import are_equivalent_reaction_sets
-from recsa.algorithms.reaction_comparison.multiple_reaction_comparison import (
-    _group_reactions, _make_cached_eq)
+from recsa.algorithms.reaction_comparison.multiple_reaction_comparison import \
+    _group_reactions
+
+Reaction: TypeAlias = IntraReaction | InterReaction
 
 
 @pytest.fixture
@@ -125,6 +131,94 @@ def test_list_with_multiple_reactions(component_structures, id_to_assembly):
     assert are_equivalent_reaction_sets(
         [reaction1, reaction3], [reaction2, reaction4], id_to_assembly,
         component_structures)
+
+
+def test_comprehensive_reaction_sets(component_structures, id_to_assembly):
+
+    # All "X to L" reactions among the assemblies in id_to_assembly
+    # including intra- and inter-molecular reactions:
+    reactions1: dict[str, Reaction] = {
+        # Intra-molecular reactions
+        'M2L2X -> M2L2-ring + X': IntraReaction(
+            init_assem_id=5, 
+            product_assem_id=7, leaving_assem_id=2, 
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L1.b',
+            duplicate_count=1,
+        ),
+        # Inter-molecular reactions
+        'MX2 + L -> MLX + X': InterReaction(
+            init_assem_id=0, entering_assem_id=1,
+            product_assem_id=3, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+        'MX2 + MLX -> M2LX2 + X': InterReaction(
+            init_assem_id=0, entering_assem_id=3,
+            product_assem_id=6, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+        'MX2 + ML2 -> M2L2X + X': InterReaction(
+            init_assem_id=0, entering_assem_id=4,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+        'MLX + L -> ML2 + X': InterReaction(
+            init_assem_id=3, entering_assem_id=1,
+            product_assem_id=4, leaving_assem_id=2,
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+        'MLX + MLX -> M2L2X + X': InterReaction(
+            init_assem_id=3, entering_assem_id=3,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=2,
+        ),
+        'M2LX2 + L -> M2L2X + X': InterReaction(
+            init_assem_id=6, entering_assem_id=1,
+            product_assem_id=5, leaving_assem_id=2,
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
+            duplicate_count=4,
+        ),
+    }
+    
+    reactions2 = deepcopy(reactions1)
+
+    # Use different binding sites for some reactions
+    reactions2['MX2 + L -> MLX + X'] = InterReaction(
+            init_assem_id=0, entering_assem_id=1,
+            product_assem_id=3, leaving_assem_id=2,
+            # Different metal and leaving binding sites
+            metal_bs='M0.b', leaving_bs='X1.a', entering_bs='L0.a',
+            duplicate_count=4,
+        )
+    reactions2['MLX + L -> ML2 + X'] = InterReaction(
+            init_assem_id=3, entering_assem_id=1,
+            product_assem_id=4, leaving_assem_id=2,
+            # Different entering binding site
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.b',
+            duplicate_count=2,
+        )
+    reactions2['M2LX2 + L -> M2L2X + X'] = InterReaction(
+            init_assem_id=6, entering_assem_id=1,
+            product_assem_id=5, leaving_assem_id=2,
+            # Different metal, leaving, and entering binding sites
+            metal_bs='M1.b', leaving_bs='X1.a', entering_bs='L0.b',
+            duplicate_count=4,
+        )
+    
+    reaction_list1 = list(reactions1.values())
+    reaction_list2 = list(reactions2.values())
+
+    # Randomly shuffle the reaction_list2
+    random.shuffle(reaction_list2)
+
+    assert are_equivalent_reaction_sets(
+        reaction_list1, reaction_list2, id_to_assembly,
+        component_structures
+    ), "The two sets of reactions should be equivalent."
 
 
 def test_group_reactions_basic():
