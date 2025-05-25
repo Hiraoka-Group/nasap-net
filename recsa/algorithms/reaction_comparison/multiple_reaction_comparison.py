@@ -99,6 +99,9 @@ def _make_cached_eq(
 
 
 def _group_reactions(reactions: Iterable[Reaction]) -> Mapping[tuple, list]:
+    """Group reactions by their initial, entering, product, 
+    and leaving assemblies.
+    """
     grouped = defaultdict(list)
 
     grouping_key = lambda r: (
