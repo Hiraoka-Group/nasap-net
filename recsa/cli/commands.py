@@ -1,7 +1,8 @@
 import click
 
 from recsa.pipelines import (concatenate_assemblies_pipeline,
-                             enumerate_assemblies_pipeline)
+                             enumerate_assemblies_pipeline,
+                             explore_reactions_pipeline)
 
 
 @click.command('enumerate-assemblies')
@@ -87,3 +88,35 @@ def run_concat_assembly_lists_pipeline(
         already_unique_within_files=already_unique_within_files,
         skip_isomorphism_checks=skip_isomorphism_checks,
         start=start, overwrite=overwrite, verbose=verbose)
+
+
+@click.command('explore-reactions')
+@click.argument('assemblies', type=click.Path(exists=True))
+@click.argument('component_kinds', type=click.Path(exists=True))
+@click.argument('config', type=click.Path(exists=True))
+@click.argument('output', type=click.Path())
+@click.option(
+    '--overwrite', '-o', is_flag=True,
+    help='Overwrite output file if it exists.')
+@click.option(
+    '--verbose', '-v', is_flag=True,
+    help='Print verbose output.')
+def run_explore_reactions_pipeline(
+        assemblies, component_kinds, config, output, overwrite, verbose):
+    """Explores reactions in assemblies.
+    \b
+    Parameters
+    ----------
+    - ASSEMBLIES: Path to input file of assemblies.
+    - COMPONENT_KINDS: Path to input file of component kinds.
+    - CONFIG: Path to input file of configuration.
+    - OUTPUT: Path to output file.
+    \b
+    Options
+    -------
+    --overwrite, -o: Overwrite output file if it exists.
+    --verbose, -v: Print verbose output.
+    """
+    explore_reactions_pipeline(
+        assemblies, component_kinds, config, output,
+        overwrite=overwrite, verbose=verbose)

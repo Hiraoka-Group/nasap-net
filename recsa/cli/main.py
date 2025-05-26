@@ -1,7 +1,8 @@
 import click
 
 from recsa.cli.commands import (run_concat_assembly_lists_pipeline,
-                                run_enum_assemblies_pipeline)
+                                run_enum_assemblies_pipeline,
+                                run_explore_reactions_pipeline)
 
 
 @click.group()
@@ -12,3 +13,4 @@ def main():
 
 main.add_command(run_concat_assembly_lists_pipeline)
 main.add_command(run_enum_assemblies_pipeline)
+main.add_command(run_explore_reactions_pipeline)
