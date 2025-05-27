@@ -77,53 +77,6 @@ def test_comprehensive_reaction_sets(tmpdir):
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
 
-    expected_reactions: dict[str, Reaction] = {
-        # Intra-molecular reactions
-        'M2L2X -> M2L2-ring + X': IntraReaction(
-            init_assem_id=5, 
-            product_assem_id=7, leaving_assem_id=2, 
-            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L1.b',
-            duplicate_count=1,
-        ),
-        # Inter-molecular reactions
-        'MX2 + L -> MLX + X': InterReaction(
-            init_assem_id=0, entering_assem_id=1,
-            product_assem_id=3, leaving_assem_id=2,
-            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
-            duplicate_count=4,
-        ),
-        'MX2 + MLX -> M2LX2 + X': InterReaction(
-            init_assem_id=0, entering_assem_id=3,
-            product_assem_id=6, leaving_assem_id=2,
-            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
-            duplicate_count=2,
-        ),
-        'MX2 + ML2 -> M2L2X + X': InterReaction(
-            init_assem_id=0, entering_assem_id=4,
-            product_assem_id=5, leaving_assem_id=2,
-            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
-            duplicate_count=4,
-        ),
-        'MLX + L -> ML2 + X': InterReaction(
-            init_assem_id=3, entering_assem_id=1,
-            product_assem_id=4, leaving_assem_id=2,
-            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
-            duplicate_count=2,
-        ),
-        'MLX + MLX -> M2L2X + X': InterReaction(
-            init_assem_id=3, entering_assem_id=3,
-            product_assem_id=5, leaving_assem_id=2,
-            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a',
-            duplicate_count=2,
-        ),
-        'M2LX2 + L -> M2L2X + X': InterReaction(
-            init_assem_id=6, entering_assem_id=1,
-            product_assem_id=5, leaving_assem_id=2,
-            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a',
-            duplicate_count=4,
-        ),
-    }
-
     expected_csv = """\
 init_assem_id,entering_assem_id,product_assem_id,leaving_assem_id,metal_bs,leaving_bs,entering_bs,duplicate_count
 5,,7,2,M0.a,X0.a,L1.b,1
