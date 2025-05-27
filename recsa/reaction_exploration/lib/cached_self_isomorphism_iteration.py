@@ -5,7 +5,11 @@ from cachetools import cached
 from recsa import Assembly, Component
 from recsa.algorithms import isomorphisms_iter
 
-__all__ = ['iter_self_isomorphisms_with_cache']
+_cache = {}  # type: ignore
+
+def clear_cache_for_iter_self_isomorphisms():
+    """Clear the cache used by `iter_self_isomorphisms_with_cache`."""
+    _cache.clear()
 
 
 def _cache_key(
@@ -16,7 +20,7 @@ def _cache_key(
     return assembly_id
 
 
-@cached(cache={}, key=_cache_key)
+@cached(cache=_cache, key=_cache_key)
 def iter_self_isomorphisms_with_cache(
         assembly_id: str, assembly: Assembly,
         component_structures: Mapping[str, Component]

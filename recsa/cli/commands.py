@@ -1,9 +1,8 @@
 import click
 
-from recsa.pipelines import (bondsets_to_assemblies_pipeline,
-                             concatenate_assemblies_pipeline,
-                             enum_bond_subsets_pipeline,
-                             enumerate_assemblies_pipeline)
+from recsa.pipelines import (concatenate_assemblies_pipeline,
+                             enumerate_assemblies_pipeline,
+                             explore_reactions_pipeline)
 
 
 @click.command('enumerate-assemblies')
@@ -91,33 +90,33 @@ def run_concat_assembly_lists_pipeline(
         start=start, overwrite=overwrite, verbose=verbose)
 
 
-@click.command('enumerate-bond-subsets')
-@click.argument('input', type=click.Path(exists=True))
+@click.command('explore-reactions')
+@click.argument('assemblies', type=click.Path(exists=True))
+@click.argument('component_kinds', type=click.Path(exists=True))
+@click.argument('config', type=click.Path(exists=True))
 @click.argument('output', type=click.Path())
-def run_enum_bond_subsets_pipeline(input, output):
-    """Enumerates bond subsets.
-    
+@click.option(
+    '--overwrite', '-o', is_flag=True,
+    help='Overwrite output file if it exists.')
+@click.option(
+    '--verbose', '-v', is_flag=True,
+    help='Print verbose output.')
+def run_explore_reactions_pipeline(
+        assemblies, component_kinds, config, output, overwrite, verbose):
+    """Explores reactions in assemblies.
     \b
     Parameters
     ----------
-    - INPUT: Path to input file.
+    - ASSEMBLIES: Path to input file of assemblies.
+    - COMPONENT_KINDS: Path to input file of component kinds.
+    - CONFIG: Path to input file of configuration.
     - OUTPUT: Path to output file.
-    """
-    enum_bond_subsets_pipeline(input, output)
-
-
-@click.command('bondsets-to-assemblies')
-@click.argument('bondsets', type=click.Path(exists=True))
-@click.argument('structure', type=click.Path(exists=True))
-@click.argument('output', type=click.Path())
-def run_bondsets_to_assemblies_pipeline(bondsets, structure, output):
-    """Converts bondsets to assemblies.
-    
     \b
-    Parameters
-    ----------
-    - BONDSETS: Path to input file of bond subsets.
-    - STRUCTURE: Path to input file of structure.
-    - OUTPUT: Path to output file.
+    Options
+    -------
+    --overwrite, -o: Overwrite output file if it exists.
+    --verbose, -v: Print verbose output.
     """
-    bondsets_to_assemblies_pipeline(bondsets, structure, output)
+    explore_reactions_pipeline(
+        assemblies, component_kinds, config, output,
+        overwrite=overwrite, verbose=verbose)

@@ -9,6 +9,7 @@ Reaction: TypeAlias = IntraReaction | InterReaction
 
 
 def reactions_to_df(reactions: Iterable[Reaction]) -> pd.DataFrame:
+    reactions = list(reactions)
     df = pd.DataFrame(
         [reaction.to_dict() for reaction in reactions],
         columns=[

@@ -5,10 +5,14 @@ from cachetools.keys import hashkey
 
 from recsa import Assembly, Component
 
-__all__ = ['enum_valid_entering_bindsites']
+_cache = {}  # type: ignore
+
+def clear_cache_for_enum_valid_entering_bindsites():
+    """Clear the cache used by `enum_valid_entering_bindsites`."""
+    _cache.clear()
 
 
-def _cache_key2(
+def _cache_key(
         assembly_id: str | int,
         assembly: Assembly,
         entering_kind: str,
@@ -17,7 +21,7 @@ def _cache_key2(
     return hashkey(assembly_id, entering_kind)
 
 
-@cached(cache={}, key=_cache_key2)
+@cached(cache=_cache, key=_cache_key)
 def enum_valid_entering_bindsites(
         assembly_id: str | int,  # only used for caching
         assembly: Assembly,

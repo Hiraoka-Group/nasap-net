@@ -5,7 +5,11 @@ from cachetools.keys import hashkey
 
 from recsa import Assembly, Component
 
-__all__ = ['enum_valid_ml_pairs']
+_cache = {}  # type: ignore
+
+def clear_cache_for_enum_valid_ml_pairs():
+    """Clear the cache used by `enum_valid_ml_pairs`."""
+    _cache.clear()
 
 
 def _cache_key(
@@ -17,7 +21,7 @@ def _cache_key(
     return hashkey(assembly_id, metal_kind, leaving_kind)
 
 
-@cached(cache={}, key=_cache_key)
+@cached(cache=_cache, key=_cache_key)
 def enum_valid_ml_pairs(
         assembly_id: str | int,  # only used for caching
         assembly: Assembly,

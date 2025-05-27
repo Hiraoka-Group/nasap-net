@@ -19,6 +19,7 @@ from .assembly_connectivity import extract_connected_assemblies
 from .assembly_equality import assemblies_equal
 from .assembly_separation import separate_product_if_possible
 from .aux_edge_existence import has_aux_edges
+from .bindsite_equivalence import are_equivalent_binding_site_lists
 from .bondset_sorting import sort_bondsets
 from .bondset_sorting import sort_bondsets_and_bonds
 from .hashing import calc_graph_hash_of_assembly
@@ -28,6 +29,7 @@ from .isomorphism import isomorphisms_iter
 from .ligand_exchange import perform_inter_exchange
 from .ligand_exchange import perform_intra_exchange
 from .reaction_embedding import embed_assemblies_into_reaction
+from .reaction_comparison import are_equivalent_reactions, are_equivalent_reaction_sets
 from .subassembly import bond_induced_sub_assembly
 from .subassembly import component_induced_sub_assembly
 from .union import union_assemblies
