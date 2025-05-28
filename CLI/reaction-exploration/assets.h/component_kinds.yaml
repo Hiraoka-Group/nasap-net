@@ -1,0 +1,7 @@
+component_kinds:
+  M: !Component
+    binding_sites: [a, b]
+  L: !Component
+    binding_sites: [a, b]
+  X: !Component
+    binding_sites: [a]
