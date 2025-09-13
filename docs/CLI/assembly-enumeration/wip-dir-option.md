@@ -7,7 +7,7 @@ The `--wip-dir` option (alias `-w`) is used to specify the directory to store in
 If you want to store intermediate files in a directory named `wip`, run the following command:
 
 ```bash
-recsa enumerate-assemblies --wip-dir wip input.yaml output.yaml
+nasap_net enumerate-assemblies --wip-dir wip input.yaml output.yaml
 ```
 
 After running the command, the directory structure will be as follows:

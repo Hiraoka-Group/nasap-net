@@ -5,7 +5,7 @@ The `explore-reactions` subcommand is used to explore reactions between assembli
 ## Syntax
 
 ```bash
-recsa explore-reactions [OPTIONS] ASSEMBLIES COMPONENT_KINDS CONFIG OUTPUT
+nasap_net explore-reactions [OPTIONS] ASSEMBLIES COMPONENT_KINDS CONFIG OUTPUT
 ```
 
 !!! info
@@ -70,7 +70,7 @@ Directory structure before running the command:
 
 Command:
 ```bash
-recsa explore-reactions assemblies.yaml component_kinds.yaml config.yaml output.csv
+nasap_net explore-reactions assemblies.yaml component_kinds.yaml config.yaml output.csv
 ```
 
 Directory structure after running the command:

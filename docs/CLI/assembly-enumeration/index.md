@@ -5,7 +5,7 @@ The `enumerate-assemblies` subcommand is used to enumerate assemblies.
 ## Syntax
 
 ```bash
-recsa enumerate-assemblies [OPTIONS] INPUT OUTPUT
+nasap_net enumerate-assemblies [OPTIONS] INPUT OUTPUT
 ```
 
 !!! info
@@ -39,7 +39,7 @@ Directory structure before running the command:
 
 Command:
 ```bash
-recsa enumerate-assemblies input.yaml output.yaml
+nasap_net enumerate-assemblies input.yaml output.yaml
 ```
 
 Directory structure after running the command:

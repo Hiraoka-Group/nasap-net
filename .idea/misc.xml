@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.13 (recsa)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 (recsa)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (recsa)" project-jdk-type="Python SDK" />
 </project>
