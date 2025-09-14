@@ -1,7 +1,5 @@
 import re
 
-from nasap_net import RecsaValueError
-
 __all__ = ['validate_name_of_component_kind']
 
 
@@ -12,5 +10,5 @@ def validate_name_of_component_kind(component_type: str) -> None:
     '[A-Za-z_-]+'.
     """
     if not re.fullmatch(r'[A-Za-z_-]+', component_type):
-        raise RecsaValueError(
+        raise ValueError(
             'The component type should follow the pattern [A-Za-z_-]+.')

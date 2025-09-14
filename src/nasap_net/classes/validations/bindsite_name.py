@@ -1,7 +1,5 @@
 import re
 
-from nasap_net import RecsaValueError
-
 __all__ = ['validate_name_of_binding_site']
 
 
@@ -13,8 +11,8 @@ def validate_name_of_binding_site(binding_site: str) -> None:
     'core' is a reserved keyword for the core binding site.
     """
     if not re.fullmatch(r'[A-Za-z0-9_-]+', binding_site):
-        raise RecsaValueError(
+        raise ValueError(
             'The binding site should follow the pattern [A-Za-z0-9_-]+.')
     if binding_site == 'core':
-        raise RecsaValueError(
+        raise ValueError(
             '"core" is a reserved keyword for the core binding site.')

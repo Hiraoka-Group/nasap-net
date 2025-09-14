@@ -3,7 +3,7 @@ from typing import Literal, TypeAlias, overload
 
 import networkx as nx
 
-from nasap_net import Assembly, Component, RecsaValueError
+from nasap_net import Assembly, Component
 
 LAYOUT_NAME_TO_FUNC = {
     'spring': nx.spring_layout,
@@ -70,7 +70,7 @@ def calc_positions(
             g, pos=init_pos, fixed=fixed, dim=3, 
             **other_layout_kwargs)
     else:
-        raise RecsaValueError(
+        raise ValueError(
             f"Invalid value for 'dimensions': {dimensions}. "
             "It must be either '2d' or '3d'.")
 
@@ -115,6 +115,6 @@ def format_init_pos_and_fixed(init_pos, fixed):
         fixed = set(fixed) & init_pos.keys()
         return dict(init_pos), fixed
     
-    raise RecsaValueError(
+    raise ValueError(
         f"Invalid value for 'fixed': {fixed}. "
         "It must be either 'auto' or an iterable of node IDs.")

@@ -12,14 +12,6 @@ class RecsaException(Exception):
     pass
 
 
-class RecsaTypeError(RecsaException):
-    pass
-
-
-class RecsaValueError(RecsaException):
-    pass
-
-
 class RecsaParsingError(RecsaException):
 	"""Base class for parsing errors."""
 	pass
@@ -37,5 +29,5 @@ class RecsaRuntimeError(RecsaException):
     pass
 
 
-class RecsaFileExistsError(RecsaValueError):
+class RecsaFileExistsError(ValueError):
     pass

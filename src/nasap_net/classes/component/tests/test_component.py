@@ -1,7 +1,6 @@
 import pytest
 import yaml
 
-import nasap_net as rx
 from nasap_net import AuxEdge, Component
 
 
@@ -57,7 +56,7 @@ def test_init_with_empty_aux_edges():
 
 
 def test_init_with_invalid_aux_edge():
-    with pytest.raises(rx.RecsaValueError):
+    with pytest.raises(ValueError):
         # The binding site 'c' is not in the binding sites.
         Component({'a', 'b'}, {AuxEdge('a', 'c', 'cis')})
 
