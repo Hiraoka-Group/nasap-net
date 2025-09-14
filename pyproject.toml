@@ -4,7 +4,7 @@ dynamic = ["version"]
 
 [tool.poetry]
 name = "nasap_net"
-version = "0.15.0"
+version = "0.16.0"
 description = "Reaction Explorer for Coordination Self-Assembly"
 authors = ["neji-craftsman <142223934+neji-craftsman@users.noreply.github.com>"]
 license = "MIT"
