@@ -5,13 +5,13 @@ The `explore-reactions` subcommand is used to explore reactions between assembli
 ## Syntax
 
 ```bash
-nasap_net explore-reactions [OPTIONS] ASSEMBLIES COMPONENT_KINDS CONFIG OUTPUT
+nasapnet explore-reactions [OPTIONS] ASSEMBLIES COMPONENT_KINDS CONFIG OUTPUT
 ```
 
 !!! info
-    If this raises an error `command not found`, you may need to use `python -m recsa` or `python3 -m recsa` instead of `recsa`.
+    If this raises an error `command not found`, you may need to use `python -m nasap_net` or `python3 -m nasap_net` instead of `nasapnet`.
     ```bash
-    python -m recsa explore-reactions [OPTIONS] ASSEMBLIES COMPONENT_KINDS CONFIG OUTPUT
+    python -m nasap_net explore-reactions [OPTIONS] ASSEMBLIES COMPONENT_KINDS CONFIG OUTPUT
     ```
 
 ### Positional Arguments
@@ -25,9 +25,9 @@ Options with single hyphen (`-`) are aliases for the corresponding options with 
 
 Command | Alias | Description | Example
 --- | --- | --- | ---
-`--overwrite` | `-o` | Overwrite output file if it exists. | `recsa explore-reactions -o input.yaml output.yaml`
-`--verbose` | `-v` | Print feedback messages to the console. | `recsa explore-reactions -v input.yaml output.yaml`
-`--help` | | Show this message and exit. | `recsa explore-reactions --help`
+`--overwrite` | `-o` | Overwrite output file if it exists. | `nasapnet explore-reactions -o input.yaml output.yaml`
+`--verbose` | `-v` | Print feedback messages to the console. | `nasapnet explore-reactions -v input.yaml output.yaml`
+`--help` | | Show this message and exit. | `nasapnet explore-reactions --help`
 
 !!! warning "Reversible reactions not guaranteed"
     The `explore-reactions` command considers left-to-right and right-to-left reactions as separate reactions.
@@ -70,7 +70,7 @@ Directory structure before running the command:
 
 Command:
 ```bash
-nasap_net explore-reactions assemblies.yaml component_kinds.yaml config.yaml output.csv
+nasapnet explore-reactions assemblies.yaml component_kinds.yaml config.yaml output.csv
 ```
 
 Directory structure after running the command:

@@ -5,13 +5,13 @@ The `enumerate-assemblies` subcommand is used to enumerate assemblies.
 ## Syntax
 
 ```bash
-nasap_net enumerate-assemblies [OPTIONS] INPUT OUTPUT
+nasapnet enumerate-assemblies [OPTIONS] INPUT OUTPUT
 ```
 
 !!! info
-    If this raises an error `command not found`, you may need to use `python -m recsa` or `python3 -m recsa` instead of `recsa`.
+    If this raises an error `command not found`, you may need to use `python -m nasap_net` or `python3 -m nasap_net` instead of `nasapnet`.
     ```bash
-    python -m recsa enumerate-assemblies [OPTIONS] INPUT OUTPUT
+    python -m nasap_net enumerate-assemblies [OPTIONS] INPUT OUTPUT
     ```
 
 ### Positional Arguments
@@ -23,11 +23,11 @@ Options with single hyphen (`-`) are aliases for the corresponding options with 
 
 Command | Alias | Description | Example
 --- | --- | --- | ---
-`--wip-dir` | `-w` | Directory to store intermediate files. | `recsa enumerate-assemblies -w wip input.yaml output.yaml`, where `wip` is the directory to store intermediate files.
-`--start` | `-s` | Starting index for the reindexing of the assemblies. | `recsa enumerate-assemblies -s 10 input.yaml output.yaml`, where the starting index in the output file is 10.
-`--overwrite` | `-o` | Overwrite output file if it exists. | `recsa enumerate-assemblies -o input.yaml output.yaml`
-`--verbose` | `-v` | Print feedback messages to the console. | `recsa enumerate-assemblies -v input.yaml output.yaml`
-`--help` | | Show this message and exit. | `recsa enumerate-assemblies --help`
+`--wip-dir` | `-w` | Directory to store intermediate files. | `nasapnet enumerate-assemblies -w wip input.yaml output.yaml`, where `wip` is the directory to store intermediate files.
+`--start` | `-s` | Starting index for the reindexing of the assemblies. | `nasapnet enumerate-assemblies -s 10 input.yaml output.yaml`, where the starting index in the output file is 10.
+`--overwrite` | `-o` | Overwrite output file if it exists. | `nasapnet enumerate-assemblies -o input.yaml output.yaml`
+`--verbose` | `-v` | Print feedback messages to the console. | `nasapnet enumerate-assemblies -v input.yaml output.yaml`
+`--help` | | Show this message and exit. | `nasapnet enumerate-assemblies --help`
 
 ## Example
 
@@ -39,7 +39,7 @@ Directory structure before running the command:
 
 Command:
 ```bash
-nasap_net enumerate-assemblies input.yaml output.yaml
+nasapnet enumerate-assemblies input.yaml output.yaml
 ```
 
 Directory structure after running the command:

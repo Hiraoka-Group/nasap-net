@@ -1,6 +1,6 @@
 # Python Package
 
-RECSA can also be used as a Python package, e.g., `#!python import recsa`.
+nasap_net can also be used as a Python package, e.g., `#!python import nasap_net`.
 
 !!! warning "Work in progress"
     The documentation for the Python package is not yet available.

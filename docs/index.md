@@ -2,7 +2,8 @@
 This is the documentation for the RECSA package.
 
 ## Introduction
-RECSA (Reaction Explorer for Coordination Self-Assembly) is a Python package for generating reaction networks.
+NASAPNet is a Python package that automates the construction of reaction networks as part of the NASAP (Numerical Analysis for Self-Assembly Process) methodology, originally developed by the Hiraoka Group. NASAPNet is designed to streamline and accelerate the process of generating reaction networks for self-assembly systems, and is one of several tools in the NASAP series.
+
 Some features can be accessed through the command line interface (CLI), while others are available through the Python API.
 
 ## Installation
