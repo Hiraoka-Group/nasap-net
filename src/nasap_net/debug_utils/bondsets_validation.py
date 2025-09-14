@@ -16,7 +16,7 @@ def validate_bondsets(
 
     Raises
     ------
-    RecsaValueError
+    ValueError
         If bondsets contain duplicate bonds or duplicates among them.
     """
     for bondset in bondsets:
