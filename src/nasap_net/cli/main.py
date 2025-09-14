@@ -8,7 +8,7 @@ from nasap_net.cli.commands import (run_concat_assembly_lists_pipeline,
 @click.group()
 @click.version_option(prog_name='nasap_net')
 def main():
-    """RECSA CLI"""
+    """NASAPNet CLI"""
     pass
 
 main.add_command(run_concat_assembly_lists_pipeline)

@@ -8,13 +8,13 @@ The command will check for isomorphism between assemblies, and isomorphic assemb
 ## Syntax
 
 ```bash
-nasap_net concat-assembly-lists [OPTIONS] [ASSEMBLIES]... COMPONENT_KINDS OUTPUT
+nasapnet concat-assembly-lists [OPTIONS] [ASSEMBLIES]... COMPONENT_KINDS OUTPUT
 ```
 
 !!! info
-    If this raises an error `command not found`, you may need to use `python -m recsa` or `python3 -m recsa` instead of `recsa`.
+    If this raises an error `command not found`, you may need to use `python -m nasap_net` or `python3 -m nasap_net` instead of `nasapnet`.
     ```bash
-    python -m recsa concat-assembly-lists [OPTIONS] [ASSEMBLIES]... COMPONENT_KINDS OUTPUT
+    python -m nasap_net concat-assembly-lists [OPTIONS] [ASSEMBLIES]... COMPONENT_KINDS OUTPUT
     ```
 
 ### Positional Arguments
@@ -42,7 +42,7 @@ Directory structure before running the command:
 
 Command:
 ```bash
-nasap_net concat-assembly-lists assemblies1.yaml assemblies2.yaml component_kinds.yaml output.yaml
+nasapnet concat-assembly-lists assemblies1.yaml assemblies2.yaml component_kinds.yaml output.yaml
 ```
 
 Directory structure after running the command:

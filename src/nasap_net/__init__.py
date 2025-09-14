@@ -1,10 +1,10 @@
 """
-RECSA
+NASAPNet
 ========
 
-RECSA: Reaction Explorer for Coordination Self-Assembly
+NASAPNet: Automates the construction of reaction networks as part of the NASAP (Numerical Analysis for Self-Assembly Process) methodology, originally developed by the Hiraoka Group.
 
-See ... for complete documentation.
+See the documentation for details.
 """
 # isort: skip_file
 

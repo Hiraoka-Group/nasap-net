@@ -71,7 +71,7 @@ def test_add_component() -> None:
 
 def test_rough_g_snapshot():
     # Test for Issue #31: 
-    # https://github.com/Hiraoka-Group/recsa/issues/31#issue-2617886112
+    # https://github.com/Hiraoka-Group/nasap-net/issues/31#issue-2617886112
     
     # In cases where the assembly has parallel bonds, i.e., multiple bonds
     # between the same pair of components, the rough_g_snapshot method 
