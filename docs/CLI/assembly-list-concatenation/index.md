@@ -8,7 +8,7 @@ The command will check for isomorphism between assemblies, and isomorphic assemb
 ## Syntax
 
 ```bash
-recsa concat-assembly-lists [OPTIONS] [ASSEMBLIES]... COMPONENT_KINDS OUTPUT
+nasap_net concat-assembly-lists [OPTIONS] [ASSEMBLIES]... COMPONENT_KINDS OUTPUT
 ```
 
 !!! info
@@ -42,7 +42,7 @@ Directory structure before running the command:
 
 Command:
 ```bash
-recsa concat-assembly-lists assemblies1.yaml assemblies2.yaml component_kinds.yaml output.yaml
+nasap_net concat-assembly-lists assemblies1.yaml assemblies2.yaml component_kinds.yaml output.yaml
 ```
 
 Directory structure after running the command:

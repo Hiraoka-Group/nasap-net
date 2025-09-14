@@ -1,9 +1,9 @@
 [project]
-name = "recsa"
+name = "nasap_net"
 dynamic = ["version"]
 
 [tool.poetry]
-name = "recsa"
+name = "nasap_net"
 version = "0.15.0"
 description = "Reaction Explorer for Coordination Self-Assembly"
 authors = ["neji-craftsman <142223934+neji-craftsman@users.noreply.github.com>"]
@@ -47,7 +47,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-recsa = "recsa.cli.main:main"
+nasapnet = "nasap_net.cli.main:main"
 
 [tool.setuptools.package-data]
-"recsa" = ["py.typed"]
+"nasap_net" = ["py.typed"]

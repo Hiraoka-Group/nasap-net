@@ -1,4 +1,4 @@
-from recsa import Assembly, Component, is_isomorphic
+from nasap_net import Assembly, Component, is_isomorphic
 
 MX2 = Assembly(# (1)!
     {'M1': 'M', 'X1': 'X', 'X2': 'X'},
