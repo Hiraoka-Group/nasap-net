@@ -1,2 +1,3 @@
-# recsa
-Reaction Explorer for Coordination Self-Assembly
+# NASAPNet
+Automated Reaction Network Generator for NASAP (Numerical Analysis of Self-Assembly Process)
+
