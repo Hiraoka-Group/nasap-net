@@ -1,7 +1,7 @@
-site_name: RECSA
-site_url: https://hiraoka-group.github.io/recsa/
-repo_url: https://github.com/Hiraoka-Group/recsa
-site_description: Documentation for RECSA
+site_name: NASAPNet
+site_url: https://hiraoka-group.github.io/nasap-net/
+repo_url: https://github.com/Hiraoka-Group/nasap-net
+site_description: Documentation for NASAPNet
 theme:
   name: material
   palette:
