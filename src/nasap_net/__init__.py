@@ -14,9 +14,6 @@ See ... for complete documentation.
 
 __version__ = "0.1.0"
 
-from .exceptions import *
-# isort: split
-
 from .classes import *
 
 # isort: split

@@ -12,8 +12,6 @@ from typing import (Concatenate, Literal, ParamSpec, TypeAlias, TypedDict,
 import networkx as nx
 import yaml
 
-from nasap_net import RecsaValueError
-
 from .aux_edge import AuxEdge
 from .bindsite_id_converter import BindsiteIdConverter
 from .component import Component
@@ -174,7 +172,7 @@ class Assembly(yaml.YAMLObject):
         comp2, rel2 = id_converter.global_to_local(bindsite2)
         for comp in [comp1, comp2]:
             if comp not in self._comp_id_to_kind:
-                raise RecsaValueError(
+                raise ValueError(
                     f'The component "{comp}" does not exist in the assembly.')
         self._bonds.add(frozenset([bindsite1, bindsite2]))
 
@@ -291,7 +289,7 @@ class Assembly(yaml.YAMLObject):
         """
         connected = self.bindsite_to_connected.get(bindsite)
         if connected is None and error_if_free:
-            raise RecsaValueError(
+            raise ValueError(
                 f'The binding site "{bindsite}" is free.')
         return connected
     

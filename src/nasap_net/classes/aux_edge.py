@@ -41,13 +41,13 @@ class AuxEdge(yaml.YAMLObject):
 
         Raises
         ------
-        rx.RecsaValueError
+        ValueError
             If the two binding sites are the same.
         """
         validate_name_of_binding_site(local_binding_site1)
         validate_name_of_binding_site(local_binding_site2)
         if local_binding_site1 == local_binding_site2:
-            raise rx.RecsaValueError(
+            raise ValueError(
                 'The two binding sites should be different.')
         self._binding_sites = FrozenUnorderedPair[str](
             local_binding_site1, local_binding_site2)
@@ -84,7 +84,7 @@ class AuxEdge(yaml.YAMLObject):
     def __lt__(self, other: 'AuxEdge') -> bool:
         return (sorted(self.binding_sites), self.aux_kind) < (
             sorted(other.binding_sites), other.aux_kind)
-    
+
     def __repr__(self) -> str:
         return f'AuxEdge({self.local_binding_site1!r}, {self.local_binding_site2!r}, {self.aux_kind!r})'
     

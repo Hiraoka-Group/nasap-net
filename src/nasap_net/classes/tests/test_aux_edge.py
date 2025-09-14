@@ -13,7 +13,7 @@ def test_LocalAuxEdge_initialization():
 
 
 def test_LocalAuxEdge_same_binding_sites():
-    with pytest.raises(rx.RecsaValueError):
+    with pytest.raises(ValueError):
         AuxEdge('site1', 'site1', 'cis')
 
 

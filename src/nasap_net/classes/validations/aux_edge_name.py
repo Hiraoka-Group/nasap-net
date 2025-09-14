@@ -1,7 +1,5 @@
 import re
 
-from nasap_net import RecsaValueError
-
 __all__ = ['validate_name_of_aux_type']
 
 
@@ -12,5 +10,5 @@ def validate_name_of_aux_type(aux_type: str) -> None:
     '[A-Za-z0-9_-]+'.
     """
     if not re.fullmatch(r'[A-Za-z0-9_-]+', aux_type):
-        raise RecsaValueError(
+        raise ValueError(
             'The auxiliary type should follow the pattern [A-Za-z0-9_-]+.')

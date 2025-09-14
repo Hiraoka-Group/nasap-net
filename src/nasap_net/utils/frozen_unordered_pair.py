@@ -27,13 +27,13 @@ class FrozenUnorderedPair(Generic[T], yaml.YAMLObject):
         if len(args) == 1:
             pair = tuple(args[0])
             if len(pair) != 2:
-                raise rx.RecsaValueError('The pair should have two elements.')
+                raise ValueError('The pair should have two elements.')
             self.__pair = pair
         elif len(args) == 2:
             self.__pair = tuple(args)
         else:
-            raise rx.RecsaValueError('The pair should have two elements.')
-    
+            raise ValueError('The pair should have two elements.')
+
     # TODO: Remove this property.
     @property
     def first(self) -> T:
