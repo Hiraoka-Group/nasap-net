@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "nasap-net"
-version = "0.16.1"
-description = "Reaction Explorer for Coordination Self-Assembly"
-authors = ["neji-craftsman <142223934+neji-craftsman@users.noreply.github.com>"]
+version = "0.16.2"
+description = "Automated Reaction Network Generator for NASAP (Numerical Analysis of Self-Assembly Process)"
+authors = ["takeuchi-sci <142223934+takeuchi-sci@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 
