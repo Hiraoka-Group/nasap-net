@@ -1,7 +1,7 @@
 from collections.abc import Mapping
 
-from nasap_net import Assembly, Component, InterReaction, IntraReaction
-
+from nasap_net import Assembly, Component, InterOrIntra, InterReaction, \
+    IntraReaction
 from ..bindsite_equivalence import are_equivalent_binding_site_lists
 
 
@@ -58,9 +58,9 @@ def are_equivalent_reactions(
     assemblies in `id_to_assembly` are not duplicates.
     """
     # Condition 1: Same number of reactants and products
-    if reaction1.num_of_reactants != reaction2.num_of_reactants:
+    if len(reaction1.reactants) != len(reaction2.reactants):
         return False
-    if reaction1.num_of_products != reaction2.num_of_products:
+    if len(reaction1.products) != len(reaction2.products):
         return False
     
     # Condition 2: Same assemblies
@@ -76,7 +76,7 @@ def are_equivalent_reactions(
             return False
 
     # Condition 3: Equivalent pair/trio of binding sites
-    if reaction1.num_of_reactants == 1:  # intra-reaction
+    if reaction1.inter_or_intra == InterOrIntra.INTRA:
         if not are_equivalent_binding_site_lists(
                 id_to_assembly[reaction1.init_assem_id],
                 (reaction1.metal_bs, reaction1.leaving_bs,
@@ -86,7 +86,7 @@ def are_equivalent_reactions(
                 component_structures
                 ):
             return False
-    elif reaction1.num_of_reactants == 2:  # inter-reaction
+    elif reaction1.inter_or_intra == InterOrIntra.INTER:
         # Check for initial assembly
         if not are_equivalent_binding_site_lists(
                 id_to_assembly[reaction1.init_assem_id],

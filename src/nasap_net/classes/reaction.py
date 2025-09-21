@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import ClassVar, Literal, Mapping, Protocol, TypeVar
+from typing import ClassVar, Generic, Mapping, TypeVar
 
 from .assembly import Assembly
 from .rich_reaction import InterReactionRich, IntraReactionRich, \
@@ -16,14 +16,7 @@ class InterOrIntra(Enum):
 R_co = TypeVar("R_co", bound=RichReactionBase, covariant=True)
 
 
-class SupportsRichReaction(Protocol[R_co]):
-    """Protocol for reactions that can be converted to a rich reaction."""
-    def to_rich_reaction(
-        self, id_to_assembly: Mapping[int, Assembly]
-        ) -> R_co: ...
-
-
-class ReactionBase(ABC):
+class ReactionBase(ABC, Generic[R_co]):
     @property
     @abstractmethod
     def inter_or_intra(self) -> InterOrIntra:
@@ -32,24 +25,24 @@ class ReactionBase(ABC):
 
     @property
     @abstractmethod
-    def num_of_reactants(self) -> int:
-        """Number of reactants in the reaction."""
+    def reactants(self) -> list[int]:
+        """List of reactant assembly IDs."""
         pass
 
     @property
     @abstractmethod
-    def num_of_products(self) -> int:
-        """Number of products in the reaction."""
+    def products(self) -> list[int]:
+        """List of product assembly IDs."""
         pass
 
     @abstractmethod
-    def to_rich_reaction(self, id_to_assembly: dict[int, Assembly]) -> RichReactionBase:
+    def to_rich_reaction(self, id_to_assembly: Mapping[int, Assembly]) -> R_co:
         """Convert to a rich reaction by embedding assemblies."""
         pass
 
 
 @dataclass
-class InterReaction(ReactionBase):
+class InterReaction(ReactionBase[InterReactionRich]):
     init_assem_id: int
     entering_assem_id: int
     product_assem_id: int
@@ -64,16 +57,14 @@ class InterReaction(ReactionBase):
         return InterOrIntra.INTER
 
     @property
-    def num_of_reactants(self) -> Literal[2]:
-        """Number of reactants in the reaction."""
-        return 2
+    def reactants(self) -> list[int]:
+        return [self.init_assem_id, self.entering_assem_id]
 
     @property
-    def num_of_products(self) -> Literal[1, 2]:
-        """Number of products in the reaction."""
+    def products(self) -> list[int]:
         if self.leaving_assem_id is None:
-            return 1
-        return 2
+            return [self.product_assem_id]
+        return [self.product_assem_id, self.leaving_assem_id]
 
     def to_rich_reaction(
             self, id_to_assembly: Mapping[int, Assembly]
@@ -82,7 +73,7 @@ class InterReaction(ReactionBase):
 
 
 @dataclass
-class IntraReaction(ReactionBase):
+class IntraReaction(ReactionBase[IntraReactionRich]):
     init_assem_id: int
     entering_assem_id: ClassVar[None] = None
     product_assem_id: int
@@ -95,18 +86,16 @@ class IntraReaction(ReactionBase):
     @property
     def inter_or_intra(self) -> InterOrIntra:
         return InterOrIntra.INTRA
-    
+
     @property
-    def num_of_reactants(self) -> Literal[1]:
-        """Number of reactants in the reaction."""
-        return 1
-    
+    def reactants(self) -> list[int]:
+        return [self.init_assem_id]
+
     @property
-    def num_of_products(self) -> Literal[1, 2]:
-        """Number of products in the reaction."""
+    def products(self) -> list[int]:
         if self.leaving_assem_id is None:
-            return 1
-        return 2
+            return [self.product_assem_id]
+        return [self.product_assem_id, self.leaving_assem_id]
 
     def to_rich_reaction(
             self, id_to_assembly: Mapping[int, Assembly]
