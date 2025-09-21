@@ -97,7 +97,7 @@ class InterReaction:
 
 
 @dataclass(frozen=True)
-class IntraReactionEmbedded:
+class IntraReactionRich:
     init_assem: Assembly
     entering_assem: ClassVar[None] = None
     product_assem: Assembly
@@ -124,7 +124,7 @@ class IntraReactionEmbedded:
 
 
 @dataclass(frozen=True)
-class InterReactionEmbedded:
+class InterReactionRich:
     init_assem: Assembly
     entering_assem: Assembly
     product_assem: Assembly

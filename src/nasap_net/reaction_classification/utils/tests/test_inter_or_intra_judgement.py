@@ -1,12 +1,12 @@
 import pytest
 
-from nasap_net import Assembly, InterReactionEmbedded, IntraReactionEmbedded
+from nasap_net import Assembly, InterReactionRich, IntraReactionRich
 from nasap_net.reaction_classification.utils.inter_or_intra_judgement import \
     inter_or_intra
 
 
 def test_with_intra_reaction():
-    reaction = IntraReactionEmbedded(
+    reaction = IntraReactionRich(
         Assembly(), Assembly(), Assembly(), 
         '', '', '', 1
     )
@@ -15,7 +15,7 @@ def test_with_intra_reaction():
 
 
 def test_with_inter_reaction():
-    reaction = InterReactionEmbedded(
+    reaction = InterReactionRich(
         Assembly(), Assembly(), Assembly(), Assembly(),
         '', '', '', 1
     )

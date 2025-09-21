@@ -1,13 +1,13 @@
 from typing import Literal, TypeAlias
 
-from nasap_net import InterReactionEmbedded, IntraReactionEmbedded
+from nasap_net import InterReactionRich, IntraReactionRich
 
 ReactionEmbedded: TypeAlias = (
-    IntraReactionEmbedded | InterReactionEmbedded)
+        IntraReactionRich | InterReactionRich)
 
 
 def inter_or_intra(
         reaction: ReactionEmbedded) -> Literal["inter", "intra"]:
-    if isinstance(reaction, IntraReactionEmbedded):
+    if isinstance(reaction, IntraReactionRich):
         return "intra"
     return "inter"

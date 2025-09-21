@@ -1,19 +1,19 @@
 from typing import overload
 
-from nasap_net import (Assembly, InterReaction, InterReactionEmbedded,
-                       IntraReaction, IntraReactionEmbedded)
+from nasap_net import (Assembly, InterReaction, InterReactionRich,
+                       IntraReaction, IntraReactionRich)
 
 
 @overload
 def embed_assemblies_into_reaction(
     reaction: IntraReaction,
     id_to_assembly: dict[int, Assembly]
-    ) -> IntraReactionEmbedded: ...
+    ) -> IntraReactionRich: ...
 @overload
 def embed_assemblies_into_reaction(
     reaction: InterReaction,
     id_to_assembly: dict[int, Assembly]
-    ) -> InterReactionEmbedded: ...
+    ) -> InterReactionRich: ...
 def embed_assemblies_into_reaction(
         reaction: IntraReaction | InterReaction,
         id_to_assembly: dict[int, Assembly]):
@@ -27,14 +27,14 @@ def embed_assemblies_into_reaction(
         leaving_assem = id_to_assembly[reaction.leaving_assem_id]
 
     if isinstance(reaction, IntraReaction):
-        return IntraReactionEmbedded(
+        return IntraReactionRich(
             init_assem, product_assem, leaving_assem,
             reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
             reaction.duplicate_count
         )
     elif isinstance(reaction, InterReaction):
         entering_assem = id_to_assembly[reaction.entering_assem_id]
-        return InterReactionEmbedded(
+        return InterReactionRich(
             init_assem, entering_assem, product_assem, leaving_assem,
             reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
             reaction.duplicate_count

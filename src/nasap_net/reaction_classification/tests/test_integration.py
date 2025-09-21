@@ -7,11 +7,11 @@ create a ReactionClassifier object, which is used to classify reactions.
 
 import pytest
 
-from nasap_net import (Assembly, Component, InterReactionEmbedded,
-                       IntraReactionEmbedded, ReactionClassifier)
+from nasap_net import (Assembly, Component, InterReactionRich,
+                       IntraReactionRich, ReactionClassifier)
 from nasap_net.reaction_classification.utils import inter_or_intra
 
-ReactionEmbedded = IntraReactionEmbedded | InterReactionEmbedded
+ReactionEmbedded = IntraReactionRich | InterReactionRich
 
 
 def test_classification_by_inter_or_intra():
@@ -22,7 +22,7 @@ def test_classification_by_inter_or_intra():
     
     classifier = ReactionClassifier(rule)
 
-    intra = IntraReactionEmbedded(
+    intra = IntraReactionRich(
         init_assem=Assembly(), product_assem=Assembly(),
         leaving_assem=Assembly(), 
         metal_bs='', leaving_bs='', entering_bs='',
@@ -31,7 +31,7 @@ def test_classification_by_inter_or_intra():
     result = classifier.classify(intra)
     assert result == "intra"
 
-    inter = InterReactionEmbedded(
+    inter = InterReactionRich(
         init_assem=Assembly(), entering_assem=Assembly(),
         product_assem=Assembly(), leaving_assem=Assembly(),
         metal_bs='', leaving_bs='', entering_bs='',
@@ -62,7 +62,7 @@ def X():
 @pytest.fixture
 def X_to_L(MLX, L, ML2, X):
     """MLX + L -> ML2 + X (L-X exchange)"""
-    return InterReactionEmbedded(
+    return InterReactionRich(
         init_assem=MLX, entering_assem=L,
         product_assem=ML2, leaving_assem=X,
         metal_bs='M1.a', leaving_bs='X1.a', entering_bs='L1.a',
@@ -72,7 +72,7 @@ def X_to_L(MLX, L, ML2, X):
 @pytest.fixture
 def L_to_L(MLX, L):
     """MLX + L -> MLX + L (L-L exchange)"""
-    return InterReactionEmbedded(
+    return InterReactionRich(
         init_assem=MLX, entering_assem=L,
         product_assem=MLX, leaving_assem=L,
         metal_bs='M1.a', leaving_bs='L1.a', entering_bs='L1.a',
