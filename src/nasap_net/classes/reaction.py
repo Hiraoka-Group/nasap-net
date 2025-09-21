@@ -3,6 +3,10 @@ from dataclasses import asdict, dataclass
 from enum import Enum, auto
 from typing import ClassVar, Literal
 
+from .assembly import Assembly
+from .rich_reaction import RichReactionBase, IntraReactionRich, \
+    InterReactionRich
+
 
 class InterOrIntra(Enum):
     INTER = auto()
@@ -27,6 +31,46 @@ class ReactionBase(ABC):
     def num_of_products(self) -> int:
         """Number of products in the reaction."""
         pass
+
+    @abstractmethod
+    def to_rich_reaction(self, id_to_assembly: dict[int, Assembly]) -> RichReactionBase:
+        """Convert to a rich reaction by embedding assemblies."""
+        pass
+
+
+@dataclass
+class InterReaction(ReactionBase):
+    init_assem_id: int
+    entering_assem_id: int
+    product_assem_id: int
+    leaving_assem_id: int | None
+    metal_bs: str
+    leaving_bs: str
+    entering_bs: str
+    duplicate_count: int
+
+    @property
+    def inter_or_intra(self) -> InterOrIntra:
+        return InterOrIntra.INTER
+
+    def to_dict(self):
+        return asdict(self)
+
+    @property
+    def num_of_reactants(self) -> Literal[2]:
+        """Number of reactants in the reaction."""
+        return 2
+
+    @property
+    def num_of_products(self) -> Literal[1, 2]:
+        """Number of products in the reaction."""
+        if self.leaving_assem_id is None:
+            return 1
+        return 2
+
+    def to_rich_reaction(self, id_to_assembly: dict[
+        int, Assembly]) -> RichReactionBase:
+        return InterReactionRich.from_reaction(self, id_to_assembly)
 
 
 @dataclass
@@ -61,35 +105,5 @@ class IntraReaction(ReactionBase):
             return 1
         return 2
 
-
-@dataclass
-class InterReaction:
-    init_assem_id: int
-    entering_assem_id: int
-    product_assem_id: int
-    leaving_assem_id: int | None
-    metal_bs: str
-    leaving_bs: str
-    entering_bs: str
-    duplicate_count: int
-
-    @property
-    def inter_or_intra(self) -> InterOrIntra:
-        return InterOrIntra.INTER
-
-    def to_dict(self):
-        return asdict(self)
-    
-    @property
-    def num_of_reactants(self) -> Literal[2]:
-        """Number of reactants in the reaction."""
-        return 2
-    
-    @property
-    def num_of_products(self) -> Literal[1, 2]:
-        """Number of products in the reaction."""
-        if self.leaving_assem_id is None:
-            return 1
-        return 2
-
-
+    def to_rich_reaction(self, id_to_assembly: dict[int, Assembly]) -> IntraReactionRich:
+        return IntraReactionRich.from_reaction(self, id_to_assembly)
