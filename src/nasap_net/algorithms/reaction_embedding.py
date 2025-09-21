@@ -1,43 +1,17 @@
-from typing import overload
-
 from nasap_net import (Assembly, InterReaction, InterReactionRich,
-                       IntraReaction, IntraReactionRich)
+                       IntraReaction, IntraReactionRich, InterOrIntra)
 
 
-@overload
-def embed_assemblies_into_reaction(
-    reaction: IntraReaction,
-    id_to_assembly: dict[int, Assembly]
-    ) -> IntraReactionRich: ...
-@overload
-def embed_assemblies_into_reaction(
-    reaction: InterReaction,
-    id_to_assembly: dict[int, Assembly]
-    ) -> InterReactionRich: ...
 def embed_assemblies_into_reaction(
         reaction: IntraReaction | InterReaction,
-        id_to_assembly: dict[int, Assembly]):
+        id_to_assembly: dict[int, Assembly]
+        ) -> IntraReactionRich | InterReactionRich:
     """Embed the assemblies into the reaction."""
-    init_assem = id_to_assembly[reaction.init_assem_id]
-    product_assem = id_to_assembly[reaction.product_assem_id]
-    
-    if reaction.leaving_assem_id is None:
-        leaving_assem = None
+    if reaction.inter_or_intra == InterOrIntra.INTRA:
+        assert isinstance(reaction, IntraReaction)
+        return IntraReactionRich.from_reaction(
+            reaction, id_to_assembly)
     else:
-        leaving_assem = id_to_assembly[reaction.leaving_assem_id]
-
-    if isinstance(reaction, IntraReaction):
-        return IntraReactionRich(
-            init_assem, product_assem, leaving_assem,
-            reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
-            reaction.duplicate_count
-        )
-    elif isinstance(reaction, InterReaction):
-        entering_assem = id_to_assembly[reaction.entering_assem_id]
-        return InterReactionRich(
-            init_assem, entering_assem, product_assem, leaving_assem,
-            reaction.metal_bs, reaction.leaving_bs, reaction.entering_bs,
-            reaction.duplicate_count
-        )
-    else:
-        raise ValueError("Invalid reaction type")
+        assert isinstance(reaction, InterReaction)
+        return InterReactionRich.from_reaction(
+            reaction, id_to_assembly)
