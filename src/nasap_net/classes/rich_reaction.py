@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
@@ -5,8 +6,28 @@ from typing import ClassVar
 from .assembly import Assembly
 
 
+class RichReactionBase(ABC):
+    @property
+    @abstractmethod
+    def metal_kind(self) -> str:
+        """Kind of the metal component."""
+        pass
+
+    @property
+    @abstractmethod
+    def leaving_kind(self) -> str:
+        """Kind of the leaving component."""
+        pass
+
+    @property
+    @abstractmethod
+    def entering_kind(self) -> str:
+        """Kind of the entering component."""
+        pass
+
+
 @dataclass(frozen=True)
-class IntraReactionRich:
+class IntraReactionRich(RichReactionBase):
     init_assem: Assembly
     entering_assem: ClassVar[None] = None
     product_assem: Assembly
@@ -33,7 +54,7 @@ class IntraReactionRich:
 
 
 @dataclass(frozen=True)
-class InterReactionRich:
+class InterReactionRich(RichReactionBase):
     init_assem: Assembly
     entering_assem: Assembly
     product_assem: Assembly
