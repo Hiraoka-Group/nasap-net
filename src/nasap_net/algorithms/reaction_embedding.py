@@ -1,17 +1,9 @@
-from nasap_net import (Assembly, InterReaction, InterReactionRich,
-                       IntraReaction, IntraReactionRich, InterOrIntra)
+from nasap_net import (Assembly, ReactionBase, RichReactionBase)
 
 
 def embed_assemblies_into_reaction(
-        reaction: IntraReaction | InterReaction,
+        reaction: ReactionBase,
         id_to_assembly: dict[int, Assembly]
-        ) -> IntraReactionRich | InterReactionRich:
+        ) -> RichReactionBase:
     """Embed the assemblies into the reaction."""
-    if reaction.inter_or_intra == InterOrIntra.INTRA:
-        assert isinstance(reaction, IntraReaction)
-        return IntraReactionRich.from_reaction(
-            reaction, id_to_assembly)
-    else:
-        assert isinstance(reaction, InterReaction)
-        return InterReactionRich.from_reaction(
-            reaction, id_to_assembly)
+    return reaction.to_rich_reaction(id_to_assembly)
