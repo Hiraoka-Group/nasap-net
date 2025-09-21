@@ -16,6 +16,8 @@ __version__ = "0.1.0"
 
 from .classes import *
 
+from .types import *
+
 # isort: split
 from .algorithms import *
 
