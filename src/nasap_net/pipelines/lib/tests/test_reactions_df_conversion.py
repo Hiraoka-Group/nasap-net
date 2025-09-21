@@ -3,6 +3,43 @@ import pytest
 
 from nasap_net import InterReaction, IntraReaction
 from nasap_net.pipelines.lib import reactions_to_df
+from nasap_net.pipelines.lib.reactions_df_conversion import reaction_to_dict
+
+
+def test_reaction_to_dict_inter():
+    inter = InterReaction(
+        0, 1, 2, 3,
+        'metal_bs', 'leave_bs', 'enter_bs',
+        2)
+    d = reaction_to_dict(inter)
+    assert d == {
+        'init_assem_id': 0,
+        'entering_assem_id': 1,
+        'product_assem_id': 2,
+        'leaving_assem_id': 3,
+        'metal_bs': 'metal_bs',
+        'leaving_bs': 'leave_bs',
+        'entering_bs': 'enter_bs',
+        'duplicate_count': 2
+    }
+
+
+def test_reaction_to_dict_intra():
+    intra = IntraReaction(
+        0, 1, 2,
+        'metal_bs', 'leave_bs', 'enter_bs',
+        1)
+    d = reaction_to_dict(intra)
+    assert d == {
+        'init_assem_id': 0,
+        'entering_assem_id': None,
+        'product_assem_id': 1,
+        'leaving_assem_id': 2,
+        'metal_bs': 'metal_bs',
+        'leaving_bs': 'leave_bs',
+        'entering_bs': 'enter_bs',
+        'duplicate_count': 1
+    }
 
 
 def test_basic():

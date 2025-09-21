@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import ClassVar, Literal, Mapping, Protocol, TypeVar
 
@@ -63,9 +63,6 @@ class InterReaction(ReactionBase):
     def inter_or_intra(self) -> InterOrIntra:
         return InterOrIntra.INTER
 
-    def to_dict(self):
-        return asdict(self)
-
     @property
     def num_of_reactants(self) -> Literal[2]:
         """Number of reactants in the reaction."""
@@ -98,11 +95,6 @@ class IntraReaction(ReactionBase):
     @property
     def inter_or_intra(self) -> InterOrIntra:
         return InterOrIntra.INTRA
-
-    def to_dict(self):
-        d = asdict(self)
-        d['entering_assem_id'] = self.entering_assem_id
-        return d
     
     @property
     def num_of_reactants(self) -> Literal[1]:
