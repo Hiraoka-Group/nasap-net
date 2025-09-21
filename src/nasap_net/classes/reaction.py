@@ -1,12 +1,39 @@
+from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
+from enum import Enum, auto
 from functools import cached_property
 from typing import ClassVar, Literal
 
 from .assembly import Assembly
 
 
+class InterOrIntra(Enum):
+    INTER = auto()
+    INTRA = auto()
+
+
+class ReactionBase(ABC):
+    @property
+    @abstractmethod
+    def inter_or_intra(self) -> InterOrIntra:
+        """Whether the reaction is intra- or inter-molecular."""
+        pass
+
+    @property
+    @abstractmethod
+    def num_of_reactants(self) -> int:
+        """Number of reactants in the reaction."""
+        pass
+
+    @property
+    @abstractmethod
+    def num_of_products(self) -> int:
+        """Number of products in the reaction."""
+        pass
+
+
 @dataclass
-class IntraReaction:
+class IntraReaction(ReactionBase):
     init_assem_id: int
     entering_assem_id: ClassVar[None] = None
     product_assem_id: int
@@ -15,6 +42,10 @@ class IntraReaction:
     leaving_bs: str
     entering_bs: str
     duplicate_count: int
+
+    @property
+    def inter_or_intra(self) -> InterOrIntra:
+        return InterOrIntra.INTRA
 
     def to_dict(self):
         d = asdict(self)
@@ -44,6 +75,10 @@ class InterReaction:
     leaving_bs: str
     entering_bs: str
     duplicate_count: int
+
+    @property
+    def inter_or_intra(self) -> InterOrIntra:
+        return InterOrIntra.INTER
 
     def to_dict(self):
         return asdict(self)
