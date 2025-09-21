@@ -1,16 +1,26 @@
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from enum import Enum, auto
-from typing import ClassVar, Literal
+from typing import ClassVar, Literal, Mapping, Protocol, TypeVar
 
 from .assembly import Assembly
-from .rich_reaction import RichReactionBase, IntraReactionRich, \
-    InterReactionRich
+from .rich_reaction import InterReactionRich, IntraReactionRich, \
+    RichReactionBase
 
 
 class InterOrIntra(Enum):
     INTER = auto()
     INTRA = auto()
+
+
+R_co = TypeVar("R_co", bound=RichReactionBase, covariant=True)
+
+
+class SupportsRichReaction(Protocol[R_co]):
+    """Protocol for reactions that can be converted to a rich reaction."""
+    def to_rich_reaction(
+        self, id_to_assembly: Mapping[int, Assembly]
+        ) -> R_co: ...
 
 
 class ReactionBase(ABC):
@@ -68,8 +78,9 @@ class InterReaction(ReactionBase):
             return 1
         return 2
 
-    def to_rich_reaction(self, id_to_assembly: dict[
-        int, Assembly]) -> RichReactionBase:
+    def to_rich_reaction(
+            self, id_to_assembly: Mapping[int, Assembly]
+            ) -> InterReactionRich:
         return InterReactionRich.from_reaction(self, id_to_assembly)
 
 
@@ -105,5 +116,7 @@ class IntraReaction(ReactionBase):
             return 1
         return 2
 
-    def to_rich_reaction(self, id_to_assembly: dict[int, Assembly]) -> IntraReactionRich:
+    def to_rich_reaction(
+            self, id_to_assembly: Mapping[int, Assembly]
+            ) -> IntraReactionRich:
         return IntraReactionRich.from_reaction(self, id_to_assembly)
