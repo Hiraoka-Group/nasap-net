@@ -1,7 +1,7 @@
 import pytest
 
-from nasap_net import (Assembly, InterReaction, InterReactionEmbedded,
-                       IntraReaction, IntraReactionEmbedded,
+from nasap_net import (Assembly, InterReaction, InterReactionRich,
+                       IntraReaction, IntraReactionRich,
                        embed_assemblies_into_reaction)
 
 
@@ -22,7 +22,7 @@ def test_inter():
     embed_reaction = embed_assemblies_into_reaction(
         REACTION, ID_TO_ASSEMBLY)
     
-    assert embed_reaction == InterReactionEmbedded(
+    assert embed_reaction == InterReactionRich(
         ID_TO_ASSEMBLY[0], ID_TO_ASSEMBLY[1],
         ID_TO_ASSEMBLY[2], ID_TO_ASSEMBLY[3],
         'M1.a', 'X1.a', 'L1.a', 2)
@@ -44,7 +44,7 @@ def test_intra():
     embed_reaction = embed_assemblies_into_reaction(
         REACTION, ID_TO_ASSEMBLY)
     
-    assert embed_reaction == IntraReactionEmbedded(
+    assert embed_reaction == IntraReactionRich(
         ID_TO_ASSEMBLY[0], ID_TO_ASSEMBLY[1], ID_TO_ASSEMBLY[2],
         'M1.a', 'X1.a', 'L1.b', 1)
 

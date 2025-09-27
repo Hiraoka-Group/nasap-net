@@ -1,9 +1,9 @@
 from collections.abc import Callable
 from typing import TypeAlias
 
-from nasap_net import InterReactionEmbedded, IntraReactionEmbedded
+from nasap_net import InterReactionRich, IntraReactionRich
 
-ReactionDetailed: TypeAlias = IntraReactionEmbedded | InterReactionEmbedded
+ReactionDetailed: TypeAlias = IntraReactionRich | InterReactionRich
 
 
 class ReactionClassifier:
