@@ -87,6 +87,7 @@ def are_equivalent_reactions(
                 ):
             return False
     elif reaction1.inter_or_intra == InterOrIntra.INTER:
+        assert reaction1.entering_assem_id is not None
         # Check for initial assembly
         if not are_equivalent_binding_site_lists(
                 id_to_assembly[reaction1.init_assem_id],
