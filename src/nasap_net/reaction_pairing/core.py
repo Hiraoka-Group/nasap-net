@@ -48,7 +48,7 @@ def pair_reverse_reactions(
     reaction_to_reverse: dict[R, R | None] = {}
 
     for target_reaction_id, target_reaction in id_to_reaction.items():
-        if target_reaction_id in index_to_id:
+        if target_reaction_id in reaction_to_reverse:
             continue
 
         reversed_index = _ReactionIndex(
