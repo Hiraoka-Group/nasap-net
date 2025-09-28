@@ -1,15 +1,15 @@
 from collections import defaultdict
-from collections.abc import Hashable, Mapping
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 
 from nasap_net import Assembly, Component
-from .lib import _are_equivalent_reactions, _generate_reverse_reaction
+from .lib import _MLE, _are_equivalent_mles, \
+    _determine_right_hand_side_mle
 
 _A = TypeVar("_A", int, str)  # Assembly ID
 _C = TypeVar('_C', int, str)  # Component ID
 _R = TypeVar('_R', int, str)  # Reaction ID
-_GK = TypeVar('_GK', bound=Hashable)  # Group Key
 
 
 @dataclass(frozen=True)
@@ -33,18 +33,13 @@ class ReactionIndex(Generic[_A]):
 
 
 def pair_reverse_reactions(
-        id_to_reactions: Mapping[_R, Reaction],
+        id_to_reactions: Mapping[_R, Reaction[_A]],
         assemblies: Mapping[_A, Assembly],
         components: Mapping[_C, Component]
         ) -> dict[_R, _R | None]:
     """Pair reactions with their reverse reactions."""
     # TODO: 事前条件を docstring に記載（例：重複する反応なし）
-
-    # ID 付与
-    # ある反応の逆反応を生成
-    # 生成した逆反応と等価な反応をグループ内で探索
-    #   見つかったら双方向に記録
-    #   見つからなかったら None を記録
+    # TODO: 戻り値には全ての反応 ID を含めることを docstring に明記
 
     index_to_id = defaultdict(set)
     for rid, reaction in id_to_reactions.items():
@@ -65,23 +60,36 @@ def pair_reverse_reactions(
             product_assem_id=reaction.init_assem_id,
             leaving_assem_id=reaction.entering_assem_id
             )
+
+        # Necessary condition: existence of reaction with reversed index
         candidate_ids = index_to_id.get(reversed_index)
         if not candidate_ids:
             continue
 
-        sample_reverse_reaction = _generate_reverse_reaction(
+        right_hand_side_mle = _determine_right_hand_side_mle(
             reaction, assemblies, components)
 
         for candidate_id in candidate_ids:
-            if _are_equivalent_reactions(
-                    sample_reverse_reaction, id_to_reactions[candidate_id],
-                    assemblies, components
+            candidate = id_to_reactions[candidate_id]
+            candidate_mle = _MLE(
+                candidate.metal_bs, candidate.leaving_bs, candidate.entering_bs)
+
+            init_assembly = assemblies[reaction.init_assem_id]
+            entering_assembly = None
+            if reaction.entering_assem_id is not None:
+                entering_assembly = assemblies[reaction.entering_assem_id]
+
+            if _are_equivalent_mles(
+                    init_assembly, entering_assembly,
+                    right_hand_side_mle, candidate_mle,
+                    components
                     ):
+                # Found the reverse reaction
                 reaction_to_reverse[rid] = candidate_id
                 reaction_to_reverse[candidate_id] = rid
-                break
                 # Multiple matches are impossible since there are no
                 # duplicate reactions.
+                break
         else:
             reaction_to_reverse[rid] = None
 

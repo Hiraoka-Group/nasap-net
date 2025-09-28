@@ -1,27 +1,20 @@
 from collections.abc import Mapping
-from dataclasses import dataclass
 from typing import TypeVar
 
 from nasap_net import Component
 from nasap_net.algorithms import are_equivalent_binding_site_lists
 from reverse_reaction_pairing.core import Assembly
+from .mle import _MLE
 
 _A = TypeVar("_A", int, str)  # Assembly ID
 _C = TypeVar('_C', int, str)  # Component ID
 
 
-@dataclass(frozen=True)
-class BindingSiteTrio:
-    metal: str
-    leaving: str
-    entering: str
-
-
-def _are_equivalent_reactions(
+def _are_equivalent_mles(
         init_assembly: Assembly,
         entering_assembly: Assembly | None,
-        binding_site_trio1: BindingSiteTrio,
-        binding_site_trio2: BindingSiteTrio,
+        binding_site_trio1: _MLE,
+        binding_site_trio2: _MLE,
         components: Mapping[_C, Component]
         ) -> bool:
     """Check if two reactions of the same assemblies are equivalent."""
