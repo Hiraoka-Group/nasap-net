@@ -68,6 +68,12 @@ def test_basic(components, assemblies):
         '2b': Reaction(
             'ML2', 'X', 'MLX', 'L',
             metal_bs='M0.a', leaving_bs='L0.b', entering_bs='X0.a'),
+        '3f': Reaction(
+            'M2L2X', None, 'M2L2-ring', 'X',
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L1.b'),
+        '3b': Reaction(
+            'M2L2-ring', 'X', 'M2L2X', None,
+            metal_bs='M0.b', leaving_bs='L0.a', entering_bs='X0.a'),
         }
     result = pair_reverse_reactions(reactions, assemblies, components)
     expected = {
@@ -75,5 +81,7 @@ def test_basic(components, assemblies):
         '1b': '1f',
         '2f': '2b',
         '2b': '2f',
+        '3f': '3b',
+        '3b': '3f',
         }
     assert result == expected

@@ -47,9 +47,9 @@ def _generate_sample_rev_mle(
     rev_metal_bs = product_isom[reaction_result.metal_bs]
     rev_leaving_bs = product_isom[reaction_result.entering_bs]
 
-    if reaction_result.leaving_assembly is None:  # intra
-        rev_entering_bs = product_isom[reaction_result.entering_bs]
-    else:  # inter
+    if reaction_result.leaving_assembly is None:
+        rev_entering_bs = product_isom[reaction_result.leaving_bs]
+    else:
         assert reaction.leaving_assem_id is not None
         try:
             leaving_isom = next(isomorphisms_iter(
