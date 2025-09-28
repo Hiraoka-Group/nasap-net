@@ -7,9 +7,9 @@ def perform_inter_exchange(
         init_assem: Assembly, entering_assem: Assembly,
         metal_bs: str, leaving_bs: str, entering_bs: str,
         ) -> tuple[Assembly, Assembly | None]:
-    """Perform an inter ligand exchange reaction.
+    """Perform an inter-molecular ligand exchange reaction.
 
-    This function returns the resulting assemblies after performing
+    This function returns the resulting assembly(ies) after performing
     a ligand exchange reaction between two assemblies.
 
     The ligand exchange process can be summarized as follows:
@@ -37,9 +37,11 @@ def perform_inter_exchange(
 
     Returns
     -------
-    main_assem : Assembly
-        The main assembly after ligand exchange.
-    leaving_assem : Assembly or None
+    main_assembly : Assembly
+        The assembly containing the metal center and the entering ligand.
+        The leaving ligand may be part of this assembly or may be
+        contained in a separated assembly (leaving_assembly).
+    leaving_assembly : Assembly or None
         The separated leaving assembly, if it exists; otherwise None.
 
     Notes
