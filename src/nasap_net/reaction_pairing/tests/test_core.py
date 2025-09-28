@@ -85,3 +85,34 @@ def test_basic(components, assemblies):
         '3b': '3f',
         }
     assert result == expected
+
+
+def test_missing_pair(components, assemblies):
+    """Test when one of the reverse reactions is missing."""
+    reactions = {
+        '1f': Reaction(
+            'MX2', 'L', 'MLX', 'X',
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L0.a'),
+        '1b': Reaction(
+            'MLX', 'X', 'MX2', 'L',
+            metal_bs='M0.a', leaving_bs='L0.b', entering_bs='X0.a'),
+        '2f': Reaction(
+            'MLX', 'L', 'ML2', 'X',
+            metal_bs='M0.b', leaving_bs='X0.a', entering_bs='L0.a'),
+        '2b': Reaction(
+            'ML2', 'X', 'MLX', 'L',
+            metal_bs='M0.a', leaving_bs='L0.b', entering_bs='X0.a'),
+        # 3b is missing
+        '3f': Reaction(
+            'M2L2X', None, 'M2L2-ring', 'X',
+            metal_bs='M0.a', leaving_bs='X0.a', entering_bs='L1.b'),
+        }
+    result = pair_reverse_reactions(reactions, assemblies, components)
+    expected = {
+        '1f': '1b',
+        '1b': '1f',
+        '2f': '2b',
+        '2b': '2f',
+        '3f': None,
+        }
+    assert result == expected

@@ -25,16 +25,38 @@ class IncorrectReactionResultError(ValueError):
     """
 
 
+class DuplicateReactionError(ValueError):
+    """
+    Exception raised when there are duplicate reactions in the input.
+    """
+
+
 def pair_reverse_reactions(
         id_to_reaction: Mapping[R, Reaction[A]],
         assemblies: Mapping[A, Assembly],
         components: Mapping[C, Component]
         ) -> dict[R, R | None]:
-    """Pair reactions with their reverse reactions."""
-    # TODO: 事前条件を docstring に記載（例：重複する反応なし）
-    # TODO: 戻り値には全ての反応 ID を含めることを docstring に明記
-    # TODO: Raise も明記
+    """Pair reactions with their reverse reactions.
 
+    事前条件: 重複する反応なし。
+    戻り値: 全ての反応IDを含むdict。
+    例外: IncorrectReactionResultError
+    """
+    # TODO: docstring を記載
+    return _pair_reverse_reactions(
+        id_to_reaction, assemblies, components, skip_already_found=True)
+
+
+# skip_already_found option is for testing purpose.
+def _pair_reverse_reactions(
+        id_to_reaction: Mapping[R, Reaction[A]],
+        assemblies: Mapping[A, Assembly],
+        components: Mapping[C, Component],
+        skip_already_found: bool = True
+        ) -> dict[R, R | None]:
+    """Implementation of `pair_reverse_reactions` with an option to skip
+    already found reactions.
+    """
     index_to_id = defaultdict(set)
     for target_reaction_id, target_reaction in id_to_reaction.items():
         index = _ReactionIndex(
@@ -48,7 +70,7 @@ def pair_reverse_reactions(
     reaction_to_reverse: dict[R, R | None] = {}
 
     for target_reaction_id, target_reaction in id_to_reaction.items():
-        if target_reaction_id in reaction_to_reverse:
+        if skip_already_found and target_reaction_id in reaction_to_reverse:
             continue
 
         reversed_index = _ReactionIndex(
@@ -58,12 +80,11 @@ def pair_reverse_reactions(
             leaving_assem_id=target_reaction.entering_assem_id
             )
 
-        # Necessary condition: existence of reaction with reversed index
         candidate_ids = index_to_id.get(reversed_index)
         if not candidate_ids:
+            reaction_to_reverse[target_reaction_id] = None
             continue
 
-        # MLE of one of the reverse reactions.
         try:
             sample_rev_mle = _generate_sample_rev_mle(
                 target_reaction, assemblies, components)
@@ -89,7 +110,6 @@ def pair_reverse_reactions(
                     sample_rev_mle, candidate_mle,
                     components
                     ):
-                # Found the reverse reaction
                 reaction_to_reverse[target_reaction_id] = candidate_id
                 reaction_to_reverse[candidate_id] = target_reaction_id
                 # Multiple matches are impossible since there are no
