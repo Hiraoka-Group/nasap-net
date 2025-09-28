@@ -5,9 +5,9 @@ from typing import Generic
 
 from nasap_net import Assembly, Component
 from nasap_net.types import A, C, R
-from ._lib import _MLE, _are_equivalent_mles, \
+from ._lib import _are_equivalent_mles, \
     _determine_right_hand_side_mle
-from .models import Reaction
+from .models import Reaction, _MLE
 
 
 @dataclass(frozen=True)

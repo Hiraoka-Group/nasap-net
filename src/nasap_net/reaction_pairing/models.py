@@ -13,3 +13,10 @@ class Reaction(Generic[A]):
     metal_bs: str
     leaving_bs: str
     entering_bs: str
+
+
+@dataclass(frozen=True)
+class _MLE:
+    metal: str
+    leaving: str
+    entering: str

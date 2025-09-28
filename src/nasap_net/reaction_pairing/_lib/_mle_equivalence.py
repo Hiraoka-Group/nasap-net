@@ -4,7 +4,7 @@ from typing import TypeVar
 from nasap_net import Component
 from nasap_net.algorithms import are_equivalent_binding_site_lists
 from nasap_net.reaction_pairing.core import Assembly
-from ._models import _MLE
+from ..models import _MLE
 
 _A = TypeVar("_A", int, str)  # Assembly ID
 _C = TypeVar('_C', int, str)  # Component ID

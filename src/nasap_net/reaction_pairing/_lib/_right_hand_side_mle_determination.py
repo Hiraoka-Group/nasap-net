@@ -1,9 +1,8 @@
 from typing import Mapping
 
 from nasap_net import Assembly, Component
-from nasap_net.reaction_pairing import Reaction
-from nasap_net.reaction_pairing._lib._models import _MLE
 from nasap_net.types import A, C
+from ..models import Reaction, _MLE
 
 
 def _determine_right_hand_side_mle(

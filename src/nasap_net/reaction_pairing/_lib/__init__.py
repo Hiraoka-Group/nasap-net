@@ -1,3 +1,2 @@
-from ._models import _MLE
-from ._reaction_comparison import _are_equivalent_mles
+from ._mle_equivalence import _are_equivalent_mles
 from ._right_hand_side_mle_determination import _determine_right_hand_side_mle
