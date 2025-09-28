@@ -1,49 +1,35 @@
 from collections import defaultdict
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic
 
 from nasap_net import Assembly, Component
-from .lib import _MLE, _are_equivalent_mles, \
+from nasap_net.types import A, C, R
+from ._lib import _MLE, _are_equivalent_mles, \
     _determine_right_hand_side_mle
-
-_A = TypeVar("_A", int, str)  # Assembly ID
-_C = TypeVar('_C', int, str)  # Component ID
-_R = TypeVar('_R', int, str)  # Reaction ID
+from .models import Reaction
 
 
 @dataclass(frozen=True)
-class Reaction(Generic[_A]):
-    init_assem_id: _A
-    entering_assem_id: _A | None
-    product_assem_id: _A
-    leaving_assem_id: _A | None
-    metal_bs: str
-    leaving_bs: str
-    entering_bs: str
-    duplicate_count: int
-
-
-@dataclass(frozen=True)
-class ReactionIndex(Generic[_A]):
-    init_assem_id: _A
-    entering_assem_id: _A | None
-    product_assem_id: _A
-    leaving_assem_id: _A | None
+class _ReactionIndex(Generic[A]):
+    init_assem_id: A
+    entering_assem_id: A | None
+    product_assem_id: A
+    leaving_assem_id: A | None
 
 
 def pair_reverse_reactions(
-        id_to_reactions: Mapping[_R, Reaction[_A]],
-        assemblies: Mapping[_A, Assembly],
-        components: Mapping[_C, Component]
-        ) -> dict[_R, _R | None]:
+        id_to_reactions: Mapping[R, Reaction[A]],
+        assemblies: Mapping[A, Assembly],
+        components: Mapping[C, Component]
+        ) -> dict[R, R | None]:
     """Pair reactions with their reverse reactions."""
     # TODO: 事前条件を docstring に記載（例：重複する反応なし）
     # TODO: 戻り値には全ての反応 ID を含めることを docstring に明記
 
     index_to_id = defaultdict(set)
     for rid, reaction in id_to_reactions.items():
-        index = ReactionIndex(
+        index = _ReactionIndex(
             init_assem_id=reaction.init_assem_id,
             entering_assem_id=reaction.entering_assem_id,
             product_assem_id=reaction.product_assem_id,
@@ -51,10 +37,10 @@ def pair_reverse_reactions(
         )
         index_to_id[index].add(rid)
 
-    reaction_to_reverse: dict[_R, _R | None] = {}
+    reaction_to_reverse: dict[R, R | None] = {}
 
     for rid, reaction in id_to_reactions.items():
-        reversed_index = ReactionIndex(
+        reversed_index = _ReactionIndex(
             init_assem_id=reaction.product_assem_id,
             entering_assem_id=reaction.leaving_assem_id,
             product_assem_id=reaction.init_assem_id,

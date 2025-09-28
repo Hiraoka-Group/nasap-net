@@ -3,8 +3,8 @@ from typing import TypeVar
 
 from nasap_net import Component
 from nasap_net.algorithms import are_equivalent_binding_site_lists
-from reverse_reaction_pairing.core import Assembly
-from .mle import _MLE
+from nasap_net.reaction_pairing.core import Assembly
+from ._models import _MLE
 
 _A = TypeVar("_A", int, str)  # Assembly ID
 _C = TypeVar('_C', int, str)  # Component ID
@@ -20,7 +20,6 @@ def _are_equivalent_mles(
     """Check if two reactions of the same assemblies are equivalent."""
     # TODO: 事前条件を docstring に明示（例：Assembly ID の一致は確認済み）
 
-    # Condition 3: Equivalent pair/trio of binding sites
     if entering_assembly is None:  # intra
         if not are_equivalent_binding_site_lists(
                 init_assembly,
@@ -35,6 +34,7 @@ def _are_equivalent_mles(
                 components
                 ):
             return False
+        return True
     else:  # inter
         # Check for initial assembly
         if not are_equivalent_binding_site_lists(
@@ -52,5 +52,4 @@ def _are_equivalent_mles(
                 components
                 ):
             return False
-
-    return True
+        return True
