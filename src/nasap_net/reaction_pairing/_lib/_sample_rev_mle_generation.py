@@ -35,7 +35,7 @@ def _generate_sample_rev_mle(
     )
 
     try:
-        rev_init_isom = next(isomorphisms_iter(
+        product_isom = next(isomorphisms_iter(
             reaction_result.product_assembly,
             assemblies[reaction.product_assem_id],
             components))
@@ -44,16 +44,21 @@ def _generate_sample_rev_mle(
             "The product assembly cannot be mapped to the expected one."
             ) from None
 
-    rev_metal_bs = rev_init_isom[reaction_result.metal_bs]
-    rev_leaving_bs = rev_init_isom[reaction_result.leaving_bs]
+    rev_metal_bs = product_isom[reaction_result.metal_bs]
+    rev_leaving_bs = product_isom[reaction_result.entering_bs]
 
     if reaction_result.leaving_assembly is None:  # intra
-        rev_entering_bs = rev_init_isom[reaction_result.entering_bs]
+        rev_entering_bs = product_isom[reaction_result.entering_bs]
     else:  # inter
         assert reaction.leaving_assem_id is not None
-        rev_entering_isom = next(isomorphisms_iter(
-            reaction_result.leaving_assembly,
-            assemblies[reaction.leaving_assem_id],
-            components))
-        rev_entering_bs = rev_entering_isom[reaction_result.entering_bs]
+        try:
+            leaving_isom = next(isomorphisms_iter(
+                reaction_result.leaving_assembly,
+                assemblies[reaction.leaving_assem_id],
+                components))
+        except StopIteration:
+            raise _IncorrectReactionResultError(
+                "The leaving assembly cannot be mapped to the expected one."
+                ) from None
+        rev_entering_bs = leaving_isom[reaction_result.leaving_bs]
     return _MLE(rev_metal_bs, rev_leaving_bs, rev_entering_bs)
