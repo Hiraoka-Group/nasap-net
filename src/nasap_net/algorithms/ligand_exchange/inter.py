@@ -7,6 +7,47 @@ def perform_inter_exchange(
         init_assem: Assembly, entering_assem: Assembly,
         metal_bs: str, leaving_bs: str, entering_bs: str,
         ) -> tuple[Assembly, Assembly | None]:
+    """Perform an inter ligand exchange reaction.
+
+    This function returns the resulting assemblies after performing
+    a ligand exchange reaction between two assemblies.
+
+    The ligand exchange process can be summarized as follows:
+    - The bond between the metal center (metal_bs) and the leaving ligand
+        (leaving_bs) in init_assem is broken.
+    - A new bond is formed between the metal center (metal_bs) and the
+        entering ligand (entering_bs) before or after the bond breaking,
+        depending on the specific mechanism (dissociative or associative).
+
+    Parameters
+    ----------
+    init_assem : Assembly
+        The assembly containing the metal center and the leaving ligand.
+    entering_assem : Assembly
+        The assembly containing the entering ligand.
+    metal_bs : str
+        The binding site ID of the metal center (on init_assem).
+    leaving_bs : str
+        The binding site ID of the leaving ligand (on init_assem).
+        This binding site should be bonded to metal_bs in init_assem.
+    entering_bs : str
+        The binding site ID of the entering ligand (on entering_assem).
+        This binding site should not be bonded to any other binding site
+        in entering_assem.
+
+    Returns
+    -------
+    main_assem : Assembly
+        The main assembly after ligand exchange.
+    leaving_assem : Assembly or None
+        The separated leaving assembly, if it exists; otherwise None.
+
+    Notes
+    -----
+    - This function renames component IDs in the input assemblies to
+      avoid ID conflicts when merging them, by prefixing them with
+      'init_' and 'entering_' respectively.
+    """
     init_relabel = {
         comp_id: f'init_{comp_id}'
         for comp_id in init_assem.component_ids}
