@@ -1,5 +1,5 @@
-from collections import defaultdict
-from collections.abc import Mapping
+from collections import UserDict, defaultdict
+from collections.abc import Mapping, MutableMapping
 from dataclasses import dataclass
 from typing import Generic
 
@@ -47,6 +47,14 @@ def pair_reverse_reactions(
         id_to_reaction, assemblies, components, skip_already_found=True)
 
 
+class _NoOverwriteDict(UserDict):
+    """A dict that raises an error when overwriting an existing key."""
+    def __setitem__(self, key, value):
+        if key in self.data:
+            raise KeyError(f"Key '{key}' already exists.")
+        super().__setitem__(key, value)
+
+
 # skip_already_found option is for testing purpose.
 def _pair_reverse_reactions(
         id_to_reaction: Mapping[R, Reaction[A]],
@@ -67,7 +75,7 @@ def _pair_reverse_reactions(
         )
         index_to_id[index].add(target_reaction_id)
 
-    reaction_to_reverse: dict[R, R | None] = {}
+    reaction_to_reverse: MutableMapping[R, R | None] = _NoOverwriteDict()
 
     for target_reaction_id, target_reaction in id_to_reaction.items():
         if skip_already_found and target_reaction_id in reaction_to_reverse:
@@ -118,4 +126,4 @@ def _pair_reverse_reactions(
         else:
             reaction_to_reverse[target_reaction_id] = None
 
-    return reaction_to_reverse
+    return dict(reaction_to_reverse)
