@@ -6,7 +6,7 @@ from typing import Generic
 from nasap_net import Assembly, Component
 from nasap_net.types import A, C, R
 from ._lib import _are_equivalent_mles, \
-    _determine_right_hand_side_mle
+    _generate_sample_rev_mle
 from .models import Reaction, _MLE
 
 
@@ -28,23 +28,26 @@ def pair_reverse_reactions(
     # TODO: 戻り値には全ての反応 ID を含めることを docstring に明記
 
     index_to_id = defaultdict(set)
-    for rid, reaction in id_to_reactions.items():
+    for target_reaction_id, target_reaction in id_to_reactions.items():
         index = _ReactionIndex(
-            init_assem_id=reaction.init_assem_id,
-            entering_assem_id=reaction.entering_assem_id,
-            product_assem_id=reaction.product_assem_id,
-            leaving_assem_id=reaction.leaving_assem_id
+            init_assem_id=target_reaction.init_assem_id,
+            entering_assem_id=target_reaction.entering_assem_id,
+            product_assem_id=target_reaction.product_assem_id,
+            leaving_assem_id=target_reaction.leaving_assem_id
         )
-        index_to_id[index].add(rid)
+        index_to_id[index].add(target_reaction_id)
 
     reaction_to_reverse: dict[R, R | None] = {}
 
-    for rid, reaction in id_to_reactions.items():
+    for target_reaction_id, target_reaction in id_to_reactions.items():
+        if target_reaction_id in index_to_id:
+            continue
+
         reversed_index = _ReactionIndex(
-            init_assem_id=reaction.product_assem_id,
-            entering_assem_id=reaction.leaving_assem_id,
-            product_assem_id=reaction.init_assem_id,
-            leaving_assem_id=reaction.entering_assem_id
+            init_assem_id=target_reaction.product_assem_id,
+            entering_assem_id=target_reaction.leaving_assem_id,
+            product_assem_id=target_reaction.init_assem_id,
+            leaving_assem_id=target_reaction.entering_assem_id
             )
 
         # Necessary condition: existence of reaction with reversed index
@@ -52,31 +55,36 @@ def pair_reverse_reactions(
         if not candidate_ids:
             continue
 
-        right_hand_side_mle = _determine_right_hand_side_mle(
-            reaction, assemblies, components)
+        # MLE of one of the reverse reactions.
+        sample_rev_mle = _generate_sample_rev_mle(
+            target_reaction, assemblies, components)
 
+        # Any reaction with MLE equivalent to the sample_rev_mle
+        # is a reverse reaction.
         for candidate_id in candidate_ids:
             candidate = id_to_reactions[candidate_id]
             candidate_mle = _MLE(
-                candidate.metal_bs, candidate.leaving_bs, candidate.entering_bs)
+                candidate.metal_bs, candidate.leaving_bs,
+                candidate.entering_bs)
 
-            init_assembly = assemblies[reaction.init_assem_id]
-            entering_assembly = None
-            if reaction.entering_assem_id is not None:
-                entering_assembly = assemblies[reaction.entering_assem_id]
+            rev_init_assembly = assemblies[target_reaction.product_assem_id]
+            rev_entering_assembly = None
+            if target_reaction.leaving_assem_id is not None:
+                rev_entering_assembly = assemblies[
+                    target_reaction.leaving_assem_id]
 
             if _are_equivalent_mles(
-                    init_assembly, entering_assembly,
-                    right_hand_side_mle, candidate_mle,
+                    rev_init_assembly, rev_entering_assembly,
+                    sample_rev_mle, candidate_mle,
                     components
                     ):
                 # Found the reverse reaction
-                reaction_to_reverse[rid] = candidate_id
-                reaction_to_reverse[candidate_id] = rid
+                reaction_to_reverse[target_reaction_id] = candidate_id
+                reaction_to_reverse[candidate_id] = target_reaction_id
                 # Multiple matches are impossible since there are no
                 # duplicate reactions.
                 break
         else:
-            reaction_to_reverse[rid] = None
+            reaction_to_reverse[target_reaction_id] = None
 
     return reaction_to_reverse
