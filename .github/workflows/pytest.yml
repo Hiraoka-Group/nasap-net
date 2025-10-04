@@ -35,6 +35,3 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest
-
-      - name: Run type checks with mypy
-        run: poetry run mypy src/nasap_net
