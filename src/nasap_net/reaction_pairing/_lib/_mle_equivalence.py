@@ -17,8 +17,6 @@ def _are_equivalent_mles(
         components: Mapping[_C, Component]
         ) -> bool:
     """Check if two reactions of the same assemblies are equivalent."""
-    # TODO: 事前条件を docstring に明示（例：Assembly ID の一致は確認済み）
-
     if entering_assembly is None:  # intra
         if not are_equivalent_binding_site_lists(
                 init_assembly,
