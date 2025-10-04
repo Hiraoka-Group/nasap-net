@@ -6,13 +6,12 @@ from dataclasses import dataclass
 from functools import wraps
 from itertools import chain
 from types import MappingProxyType
-from typing import (Concatenate, Literal, ParamSpec, TypeAlias, TypedDict,
-                    TypeVar, overload)
+from typing import (Concatenate, Literal, ParamSpec, TypeVar, TypedDict,
+                    overload)
 
 import networkx as nx
 import yaml
 
-from .aux_edge import AuxEdge
 from .bindsite_id_converter import BindsiteIdConverter
 from .component import Component
 
