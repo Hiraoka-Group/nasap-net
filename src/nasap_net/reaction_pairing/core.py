@@ -10,14 +10,6 @@ from ._lib import _IncorrectReactionResultError, _are_equivalent_mles, \
 from .models import Reaction, _MLE
 
 
-@dataclass(frozen=True)
-class _ReactionIndex(Generic[A]):
-    init_assem_id: A
-    entering_assem_id: A | None
-    product_assem_id: A
-    leaving_assem_id: A | None
-
-
 class IncorrectReactionResultError(ValueError):
     """
     Exception raised when the reproduced reaction result is inconsistent with
@@ -38,13 +30,40 @@ def pair_reverse_reactions(
         ) -> dict[R, R | None]:
     """Pair reactions with their reverse reactions.
 
-    事前条件: 重複する反応なし。
-    戻り値: 全ての反応IDを含むdict。
-    例外: IncorrectReactionResultError
+    Parameters
+    ----------
+    id_to_reaction: dict mapping reaction IDs to Reaction objects.
+        All reactions must be unique. IDs can be all integers or all strings.
+    assemblies: dict mapping assembly IDs to Assembly objects.
+        IDs can be all integers or all strings.
+    components: dict mapping component IDs to Component objects.
+        IDs can be all integers or all strings.
+
+    Returns
+    -------
+    dict mapping each reaction ID to its reverse reaction ID, or None if no
+    reverse reaction exists.
+        If reaction A is the reverse of reaction B, then the mapping will
+        include both A -> B and B -> A.
+
+    Raises
+    ------
+    IncorrectReactionResultError
+        If the reproduced reaction result is inconsistent with the given
+        result.
+    DuplicateReactionError
+        If there are duplicate reactions in the input.
     """
-    # TODO: docstring を記載
     return _pair_reverse_reactions(
         id_to_reaction, assemblies, components, skip_already_found=True)
+
+
+@dataclass(frozen=True)
+class _ReactionIndex(Generic[A]):
+    init_assem_id: A
+    entering_assem_id: A | None
+    product_assem_id: A
+    leaving_assem_id: A | None
 
 
 class _NoOverwriteDict(UserDict):
