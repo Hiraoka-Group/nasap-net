@@ -14,7 +14,10 @@ def perform_intra_reaction(
     """Perform an intra-molecular reaction on the given assembly."""
     mle = mle_with_dup  # For brevity
 
-    raw_product = assembly.add_bond(mle.metal, mle.entering)
-    raw_product = raw_product.remove_bond(mle.metal, mle.leaving)
+    raw_product = (
+        assembly
+        .add_bond(mle.metal, mle.entering)
+        .remove_bond(mle.metal, mle.leaving)
+    )
 
     return separate_if_possible(raw_product, mle.metal)
