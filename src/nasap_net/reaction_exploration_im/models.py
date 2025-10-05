@@ -74,7 +74,7 @@ class Component:
             aux_edges: Iterable[AuxEdge] | None = None
             ):
         object.__setattr__(self, 'kind', kind)
-        object.__setattr__(self, 'sites', frozenset(sites))
+        object.__setattr__(self, 'site_ids', frozenset(sites))
         if aux_edges is None:
             aux_edges = frozenset()
         else:
