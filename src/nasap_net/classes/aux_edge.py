@@ -2,9 +2,7 @@ from typing import Any
 
 import yaml
 
-import nasap_net as rx
 from nasap_net.utils import FrozenUnorderedPair
-
 from .validations import (validate_name_of_aux_type,
                           validate_name_of_binding_site)
 
@@ -98,6 +96,6 @@ class AuxEdge(yaml.YAMLObject):
     def to_yaml(cls, dumper, data):
         return dumper.represent_mapping(
             cls.yaml_tag, {
-            'binding_sites': sorted(data.binding_sites),
+            'binding_sites': sorted(data.site_comb),
             'aux_kind': data.aux_kind},
             flow_style=cls.yaml_flow_style)

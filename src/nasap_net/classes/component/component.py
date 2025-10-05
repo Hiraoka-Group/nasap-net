@@ -3,9 +3,9 @@ from typing import cast
 
 import yaml
 
+from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 from ..aux_edge import AuxEdge
 from ..validations import validate_name_of_binding_site
-from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 
 __all__ = ['Component']
 
@@ -87,11 +87,11 @@ class Component(yaml.YAMLObject):
 
     @classmethod
     def to_yaml(cls, dumper, data):
-        data_dict = {'binding_sites': sorted(data.binding_sites)}
+        data_dict = {'binding_sites': sorted(data.site_comb)}
         if data.aux_edges:
             data_dict['aux_edges'] = sorted(
                 data.aux_edges,
-                key=lambda edge: sorted(edge.binding_sites))
+                key=lambda edge: sorted(edge.site_comb))
         return dumper.represent_mapping(
             cls.yaml_tag, data_dict,
             flow_style=cls.yaml_flow_style)

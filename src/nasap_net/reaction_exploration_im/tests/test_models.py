@@ -9,7 +9,7 @@ from nasap_net.reaction_exploration_im import Assembly, BindingSite, Bond, \
 def test_component():
     M = Component(kind="M", sites=["a", "b"])
     assert M.kind == "M"
-    assert M.sites == frozenset({"a", "b"})
+    assert M.site_ids == frozenset({"a", "b"})
 
 
 def test_component_immutability():
@@ -17,7 +17,7 @@ def test_component_immutability():
     with pytest.raises(FrozenInstanceError):
         M.kind = "M2"
     with pytest.raises(FrozenInstanceError):
-        M.sites = frozenset({"c"})
+        M.site_ids = frozenset({"c"})
 
 
 def test_binding_site():
