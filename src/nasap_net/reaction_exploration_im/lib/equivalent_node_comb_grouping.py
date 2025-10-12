@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Mapping
 
-from .union_find import UnionFind
+from nasap_net.utils import UnionFind
 from ..models import BindingSite
 
 

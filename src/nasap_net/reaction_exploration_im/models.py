@@ -57,9 +57,17 @@ class Bond:
 @dataclass(frozen=True)
 class AuxEdge:
     """An auxiliary edge between two binding sites on the same component."""
-    site1: ID
-    site2: ID
+    site_id1: ID
+    site_id2: ID
     kind: str | None = None
+
+    def get_binding_sites(
+            self, comp_id: ID) -> tuple[BindingSite, BindingSite]:
+        """Return the binding sites of this auxiliary edge."""
+        return (
+            BindingSite(component_id=comp_id, site=self.site_id1),
+            BindingSite(component_id=comp_id, site=self.site_id2)
+        )
 
 
 @dataclass(frozen=True, init=False)
@@ -80,6 +88,13 @@ class Component:
         else:
             aux_edges = frozenset(aux_edges)
         object.__setattr__(self, 'aux_edges', aux_edges)
+
+    def get_binding_sites(self, comp_id: ID) -> frozenset[BindingSite]:
+        """Return the binding sites of this component."""
+        return frozenset(
+            BindingSite(component_id=comp_id, site=site_id)
+            for site_id in self.site_ids
+        )
 
 
 class InvalidBondError(Exception):

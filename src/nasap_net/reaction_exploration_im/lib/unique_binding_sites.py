@@ -2,7 +2,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from .equivalent_node_comb_grouping import group_equivalent_node_combs
-from .isom_iteration import iter_isomorphisms
+from .igraph import get_all_isomorphisms
 from ..models import Assembly, BindingSite
 
 
@@ -18,10 +18,12 @@ def extract_unique_site_combinations(
         assembly: Assembly,
         ) -> list[UniqueComb]:
     """Compute unique binding sites or binding site sets."""
-    self_isomorphisms = iter_isomorphisms(assembly, assembly)
+    self_isomorphisms = get_all_isomorphisms(assembly, assembly)
+    binding_site_isoms = [
+        isom.binding_site_mapping for isom in self_isomorphisms]
 
     grouped_node_combs = group_equivalent_node_combs(
-        binding_site_combs, self_isomorphisms)
+        binding_site_combs, binding_site_isoms)
 
     return [
         UniqueComb(

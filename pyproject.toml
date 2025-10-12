@@ -22,6 +22,9 @@ cachetools = "^5.5.0"
 types-cachetools = "^5.5.0.20240820"
 click = "^8.1.8"
 pylint = "^3.3.8"
+python-igraph = "^0.11.9"
+frozendict = "^2.4.6"
+bidict = "^0.23.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.2"
