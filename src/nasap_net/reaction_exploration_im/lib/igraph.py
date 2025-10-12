@@ -152,7 +152,17 @@ def get_all_isomorphisms(
     conv_res2 = convert_assembly_to_igraph(assem2)
 
     colors = _color_vertices_and_edges(conv_res1.graph, conv_res2.graph)
-    raise NotImplementedError()
+
+    res: list[list[int]] = conv_res1.graph.get_isomorphisms_vf2(
+        conv_res2.graph,
+        color1=colors.v_color1,
+        color2=colors.v_color2,
+        edge_color1=colors.e_color1,
+        edge_color2=colors.e_color2,
+    )
+
+    return [_decode_mapping(mapping, conv_res1, conv_res2) for mapping in res]
+
 
 def _decode_mapping(
         mapping: list[int],
@@ -189,12 +199,12 @@ def _color_vertices_and_edges(g1: ig.Graph, g2: ig.Graph) -> _Colors:
     try:
         v_color1, v_color2 = _vertex_color_lists(g1, g2)
     except _NotIsomorphicError:
-        raise NoIsomorphismFoundError()
+        raise NoIsomorphismFoundError() from None
 
     try:
         e_color1, e_color2 = _edge_color_lists(g1, g2)
     except _NotIsomorphicError:
-        raise NoIsomorphismFoundError()
+        raise NoIsomorphismFoundError() from None
 
     return _Colors(
         v_color1=tuple(v_color1),

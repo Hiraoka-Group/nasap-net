@@ -6,7 +6,7 @@ from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
 from .lib import _ReactionOutOfScopeError, \
     _represent_reaction_with_given_assemblies
-from .models import Assembly, AssemblyWithID, MLEKind, Reaction, \
+from .models import Assembly, MLEKind, Reaction, \
     ReactionCandidate
 
 
@@ -16,7 +16,7 @@ def explore_reactions(
         ) -> Iterator[Reaction]:
     # Add assembly IDs to assemblies
     assems_with_ids = [
-        AssemblyWithID.from_assembly(assem_id, assem)
+        Assembly.from_assembly(assem_id, assem)
         for assem_id, assem in assemblies.items()]
 
     reaction_iters: list[Iterator[ReactionCandidate]] = []

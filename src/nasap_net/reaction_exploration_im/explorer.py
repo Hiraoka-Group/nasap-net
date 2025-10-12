@@ -7,7 +7,7 @@ from nasap_net.reaction_exploration_im.lib import \
     extract_unique_site_combinations
 from nasap_net.reaction_exploration_im.lib.intra_reaction_performance import \
     perform_intra_reaction
-from nasap_net.reaction_exploration_im.models import AssemblyWithID, \
+from nasap_net.reaction_exploration_im.models import Assembly, \
     BindingSite, MLE, \
     MLEKind, MLEWithDup, ReactionCandidate
 
@@ -24,9 +24,7 @@ class ReactionExplorer(ABC):
         pass
 
     @abstractmethod
-    def _get_unique_mles(
-            self, mle_binding_sites_list: Iterable[MLE],
-            ) -> Iterator[MLEWithDup]:
+    def _get_unique_mles(self, mles: Iterable[MLE],) -> Iterator[MLEWithDup]:
         pass
 
     @abstractmethod
@@ -38,7 +36,7 @@ class ReactionExplorer(ABC):
 
 @dataclass(frozen=True)
 class IntraReactionExplorer(ReactionExplorer):
-    assembly: AssemblyWithID
+    assembly: Assembly
     mle_kind: MLEKind
 
     def _iter_mles(self) -> Iterator[MLE]:
@@ -83,17 +81,14 @@ class IntraReactionExplorer(ReactionExplorer):
             yield MLE(metal, leaving, entering)
 
     def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLEWithDup]:
-        unique_ml_pairs = extract_unique_site_combinations(
-            [(mle.metal, mle.leaving) for mle in mles], self.assembly)
-        unique_entering_sites = extract_unique_site_combinations(
-            [(mle.entering,) for mle in mles], self.assembly)
-        for unique_ml, unique_e in itertools.product(
-                unique_ml_pairs, unique_entering_sites):
-            metal, leaving = unique_ml.site_comb
-            (entering,) = unique_e.site_comb
+        unique_mle_trios = extract_unique_site_combinations(
+            [(mle.metal, mle.leaving, mle.entering) for mle in mles],
+             self.assembly)
+        for unique_mle in unique_mle_trios:
+            metal, leaving, entering = unique_mle.site_comb
             yield MLEWithDup(
-                metal, leaving, entering,
-                duplication=(unique_ml.duplication * unique_e.duplication))
+                metal=metal, leaving=leaving, entering=entering,
+                duplication=unique_mle.duplication)
 
     def _perform_reaction(self, mle: MLEWithDup) -> ReactionCandidate:
         product, leaving = perform_intra_reaction(self.assembly, mle)
@@ -111,17 +106,25 @@ class IntraReactionExplorer(ReactionExplorer):
 
 @dataclass(frozen=True)
 class InterReactionExplorer(ReactionExplorer):
-    init_assembly: AssemblyWithID
-    entering_assembly: AssemblyWithID
+    init_assembly: Assembly
+    entering_assembly: Assembly
     mle_kind: MLEKind
 
     def _iter_mles(self) -> Iterator[MLE]:
         raise NotImplementedError()
 
-    def _get_unique_mles(
-            self, mle_binding_sites_list: Iterable[MLE],
-            ) -> Iterator[MLEWithDup]:
-        raise NotImplementedError()
+    def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLEWithDup]:
+        unique_ml_pairs = extract_unique_site_combinations(
+            [(mle.metal, mle.leaving) for mle in mles], self.assembly)
+        unique_entering_sites = extract_unique_site_combinations(
+            [(mle.entering,) for mle in mles], self.assembly)
+        for unique_ml, unique_e in itertools.product(
+                unique_ml_pairs, unique_entering_sites):
+            metal, leaving = unique_ml.site_comb
+            (entering,) = unique_e.site_comb
+            yield MLEWithDup(
+                metal, leaving, entering,
+                duplication=(unique_ml.duplication * unique_e.duplication))
 
     def _perform_reaction(
             self, site_mle: MLEWithDup,

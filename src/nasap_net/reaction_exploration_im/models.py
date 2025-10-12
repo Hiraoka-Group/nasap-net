@@ -2,6 +2,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from functools import cached_property
 from types import MappingProxyType
+from typing import Self
 
 from frozendict import frozendict
 
@@ -132,13 +133,17 @@ class Assembly:
     """
     _components: frozendict[ID, Component]
     bonds: frozenset[Bond]
+    id: ID | None
 
     def __init__(
             self, components: Mapping[ID, Component],
             bonds: Iterable[Bond],
+            *,
+            id_: ID | None = None
             ):
         object.__setattr__(self, '_components', frozendict(components))
         object.__setattr__(self, 'bonds', frozenset(bonds))
+        object.__setattr__(self, 'id', id_)
         self._validate()
 
     def _validate(self):
@@ -244,60 +249,18 @@ class Assembly:
 
     def copy_with(
             self,
+            *,
             components: Mapping[ID, Component] | None = None,
-            bonds: Iterable[Bond] | None = None
-            ) -> 'Assembly':
-        """Return a copy of the assembly with optional modifications."""
-        if components is None:
-            components = self.components
-        if bonds is None:
-            bonds = self.bonds
-        return Assembly(components=components, bonds=bonds)
-
-
-class AssemblyWithID(Assembly):
-    _id: ID
-
-    """An assembly with an associated ID."""
-    def __init__(
-            self,
-            id_: ID,
-            components: Mapping[ID, Component],
-            bonds: Iterable[Bond]
-            ):
-        super().__init__(components=components, bonds=bonds)
-        object.__setattr__(self, '_id', id_)
-
-    @property
-    def id(self) -> ID:
-        """Return the ID of the assembly."""
-        return self._id
-
-    @classmethod
-    def from_assembly(
-            cls, id_: ID, assembly: Assembly
-            ) -> 'AssemblyWithID':
-        """Create an AssemblyWithID from an existing Assembly and an ID."""
-        return cls(
-            id_=id_,
-            components=assembly.components,
-            bonds=assembly.bonds
-            )
-
-    def copy_with(
-            self,
+            bonds: Iterable[Bond] | None = None,
             id_: ID | None = None,
-            components: Mapping[ID, Component] | None = None,
-            bonds: Iterable[Bond] | None = None
-            ) -> 'AssemblyWithID':
+            ) -> Self:
         """Return a copy of the assembly with optional modifications."""
-        if id_ is None:
-            id_ = self.id
         if components is None:
             components = self.components
         if bonds is None:
             bonds = self.bonds
-        return AssemblyWithID(id_=id_, components=components, bonds=bonds)
+        return self.__class__(
+            components=components, bonds=bonds, id_=id_)
 
 
 @dataclass(frozen=True)
@@ -324,8 +287,8 @@ class MLEWithDup:
 
 @dataclass(frozen=True)
 class ReactionCandidate:
-    init_assem: AssemblyWithID
-    entering_assem: AssemblyWithID | None
+    init_assem: Assembly
+    entering_assem: Assembly | None
     product_assem: Assembly
     leaving_assem: Assembly | None
     metal_bs: BindingSite
@@ -346,10 +309,10 @@ class ReactionCandidate:
 
 @dataclass(frozen=True)
 class Reaction:
-    init_assem_id: AssemblyWithID
-    entering_assem_id: AssemblyWithID | None
-    product_assem_id: AssemblyWithID
-    leaving_assem_id: AssemblyWithID | None
+    init_assem_id: Assembly
+    entering_assem_id: Assembly | None
+    product_assem_id: Assembly
+    leaving_assem_id: Assembly | None
     metal_bs: BindingSite
     leaving_bs: BindingSite
     entering_bs: BindingSite

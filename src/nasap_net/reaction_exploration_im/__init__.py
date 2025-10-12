@@ -1,1 +1,1 @@
-from .models import Assembly, BindingSite, Bond, Component
+from .models import Assembly, AuxEdge, BindingSite, Bond, Component

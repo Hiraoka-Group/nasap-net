@@ -16,8 +16,8 @@ def perform_intra_reaction(
 
     raw_product = (
         assembly
-        .add_bond(mle.metal, mle.entering)
         .remove_bond(mle.metal, mle.leaving)
+        .add_bond(mle.metal, mle.entering)
     )
 
-    return separate_if_possible(raw_product, mle.metal)
+    return separate_if_possible(raw_product, mle.metal.component_id)

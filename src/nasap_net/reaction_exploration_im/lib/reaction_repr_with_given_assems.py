@@ -2,7 +2,7 @@ from typing import Iterable
 
 from .isomorphic_assembly_search import \
     _AssemblyNotFoundError, find_isomorphic_assembly
-from ..models import AssemblyWithID, \
+from ..models import Assembly, \
     Reaction, ReactionCandidate
 
 
@@ -12,7 +12,7 @@ class _ReactionOutOfScopeError(Exception):
 
 def _represent_reaction_with_given_assemblies(
         reaction: ReactionCandidate,
-        assemblies: Iterable[AssemblyWithID],
+        assemblies: Iterable[Assembly],
         ) -> Reaction:
     # Cond-1: The product assembly must exist in the provided assemblies.
     try:
