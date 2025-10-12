@@ -87,11 +87,11 @@ class Component(yaml.YAMLObject):
 
     @classmethod
     def to_yaml(cls, dumper, data):
-        data_dict = {'binding_sites': sorted(data.site_comb)}
+        data_dict = {'binding_sites': sorted(data.binding_sites)}
         if data.aux_edges:
             data_dict['aux_edges'] = sorted(
                 data.aux_edges,
-                key=lambda edge: sorted(edge.site_comb))
+                key=lambda edge: sorted(edge.binding_sites))
         return dumper.represent_mapping(
             cls.yaml_tag, data_dict,
             flow_style=cls.yaml_flow_style)

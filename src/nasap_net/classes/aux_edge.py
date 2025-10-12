@@ -96,6 +96,6 @@ class AuxEdge(yaml.YAMLObject):
     def to_yaml(cls, dumper, data):
         return dumper.represent_mapping(
             cls.yaml_tag, {
-            'binding_sites': sorted(data.site_comb),
+            'binding_sites': sorted(data.binding_sites),
             'aux_kind': data.aux_kind},
             flow_style=cls.yaml_flow_style)
