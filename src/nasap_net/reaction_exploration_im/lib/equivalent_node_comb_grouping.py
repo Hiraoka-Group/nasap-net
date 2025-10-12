@@ -2,8 +2,7 @@ from collections.abc import Iterable
 
 from nasap_net.utils import UnionFind
 from .igraph import get_all_isomorphisms
-from .. import Assembly
-from ..models import BindingSite
+from ..models import Assembly, BindingSite
 
 
 def group_equivalent_node_combs(

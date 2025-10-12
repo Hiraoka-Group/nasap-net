@@ -1,16 +1,12 @@
-from typing import TypeVar
-
 from nasap_net.reaction_exploration_im.models import Assembly, MLEWithDup
 from .separation import \
     separate_if_possible
 
-_T = TypeVar('_T', bound=Assembly)
-
 
 def perform_intra_reaction(
-        assembly: _T,
+        assembly: Assembly,
         mle_with_dup: MLEWithDup
-        ) -> tuple[_T, _T | None]:
+        ) -> tuple[Assembly, Assembly | None]:
     """Perform an intra-molecular reaction on the given assembly."""
     mle = mle_with_dup  # For brevity
 

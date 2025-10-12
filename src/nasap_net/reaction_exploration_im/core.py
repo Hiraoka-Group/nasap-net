@@ -16,7 +16,7 @@ def explore_reactions(
         ) -> Iterator[Reaction]:
     # Add assembly IDs to assemblies
     assems_with_ids = [
-        Assembly.from_assembly(assem_id, assem)
+        assem.copy_with(id_=assem_id)
         for assem_id, assem in assemblies.items()]
 
     reaction_iters: list[Iterator[ReactionCandidate]] = []

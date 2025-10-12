@@ -298,13 +298,19 @@ class ReactionCandidate:
 
     @property
     def init_assem_id(self) -> ID:
-        return self.init_assem.id
+        id_ = self.init_assem.id
+        if id_ is None:
+            raise ValueError("Initial assembly does not have an ID.")
+        return id_
 
     @property
     def entering_assem_id(self) -> ID | None:
         if self.entering_assem is None:
             return None
-        return self.entering_assem.id
+        id_ = self.entering_assem.id
+        if id_ is None:
+            raise ValueError("Entering assembly does not have an ID.")
+        return id_
 
 
 @dataclass(frozen=True)
@@ -317,15 +323,3 @@ class Reaction:
     leaving_bs: BindingSite
     entering_bs: BindingSite
     duplicate_count: int
-
-MLX = Assembly(
-    components={
-        'M1': Component(kind='M', sites={1, 2}),
-        'L1': Component(kind='L', sites={1, 2}),
-        'X1': Component(kind='X', sites={1}),
-    },
-    bonds=[
-        Bond('M1', 'L1', 1, 1),
-        Bond('M1', 'X1', 2, 1),
-    ]
-)
