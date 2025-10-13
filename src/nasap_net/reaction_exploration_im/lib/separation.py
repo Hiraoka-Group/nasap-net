@@ -1,22 +1,47 @@
 from collections.abc import Iterable
 
-from nasap_net.isomorphism import \
-    convert_assembly_to_igraph
+from nasap_net.isomorphism import convert_assembly_to_igraph
 from nasap_net.models import Assembly
 from nasap_net.types import ID
 
 
 class SeparatedIntoMoreThanTwoPartsError(Exception):
+    """Exception raised when an assembly is separated into more than two parts."""
     pass
 
 
 def separate_if_possible(
-        assembly: Assembly,
-        metal_comp_id: ID
+        assembly: Assembly, metal_comp_id: ID
         ) -> tuple[Assembly, Assembly | None]:
     """Separate the assembly into product and leaving assemblies if possible.
 
-    Assembly ID will be set to None for both assemblies.
+    If the assembly can be separated into two disconnected sub-assemblies,
+    this function will return the two sub-assemblies. Otherwise, it will return
+    the original assembly and None.
+
+    The one containing the metal component will be the product assembly.
+    `metal_comp_id` will be used to identify the metal component.
+
+    Note that the assembly ID will be set to None in the returned assemblies.
+
+    Parameters
+    ----------
+    assembly : Assembly
+        The assembly to be separated.
+    metal_comp_id : ID
+        The component ID of the metal center. Used to identify the product assembly.
+
+    Returns
+    -------
+    product_assembly : Assembly
+        The assembly containing the metal center.
+    leaving_assembly : Assembly or None
+        The separated leaving assembly, if it exists; otherwise None.
+
+    Raises
+    ------
+    SeparatedIntoMoreThanTwoPartsError
+        If the assembly is separated into more than two parts.
     """
     conv_res = convert_assembly_to_igraph(assembly)
     g = conv_res.graph

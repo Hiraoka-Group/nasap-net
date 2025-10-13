@@ -2,12 +2,11 @@ from collections.abc import Iterable, Mapping
 from itertools import chain, product
 from typing import Iterator
 
+from nasap_net.models import Assembly
 from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
-from .lib import _ReactionOutOfScopeError, \
-    _represent_reaction_with_given_assemblies
+from .lib import ReactionOutOfScopeError, ReactionResolver
 from .models import MLEKind, Reaction
-from ..models import Assembly
 
 
 def explore_reactions(
@@ -32,9 +31,10 @@ def explore_reactions(
                 init_assem, entering_assem, mle_kind)
             reaction_iters.append(inter_explorer.explore())
 
+    resolver = ReactionResolver(assems_with_ids)
+
     for reaction in chain.from_iterable(reaction_iters):
         try:
-            yield _represent_reaction_with_given_assemblies(
-                reaction, assems_with_ids)
-        except _ReactionOutOfScopeError:
+            yield resolver.resolve(reaction)
+        except ReactionOutOfScopeError:
             continue

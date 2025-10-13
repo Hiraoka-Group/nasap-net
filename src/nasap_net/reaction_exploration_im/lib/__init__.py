@@ -1,6 +1,8 @@
-from .binding_site_equivalence import extract_unique_site_combinations, \
-    group_equivalent_node_combs
-from .isomorphic_assembly_search import find_isomorphic_assembly
-from .reaction_repr_with_given_assems import _ReactionOutOfScopeError, \
-    _represent_reaction_with_given_assemblies
-from .separation import separate_if_possible
+from .binding_site_equivalence import UniqueComb, \
+    extract_unique_site_combinations, group_equivalent_node_combs
+from .isomorphic_assembly_search import AssemblyNotFoundError, \
+    IsomorphicAssemblyFinder, light_signature
+from .reaction_resolver import ReactionOutOfScopeError, \
+    ReactionResolver
+from .separation import SeparatedIntoMoreThanTwoPartsError, \
+    separate_if_possible

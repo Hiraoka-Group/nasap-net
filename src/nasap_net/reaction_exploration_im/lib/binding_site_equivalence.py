@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from nasap_net.isomorphism import get_all_isomorphisms
-from ...models import Assembly, BindingSite
-from ...utils import UnionFind
+from nasap_net.models import Assembly, BindingSite
+from nasap_net.utils import UnionFind
 
 
 @dataclass(frozen=True)
