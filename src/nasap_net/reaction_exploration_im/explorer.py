@@ -21,7 +21,7 @@ class ReactionExplorer(ABC):
         pass
 
     @abstractmethod
-    def _get_unique_mles(self, mles: Iterable[MLE],) -> Iterator[MLE]:
+    def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
         pass
 
     @abstractmethod
@@ -161,10 +161,11 @@ class InterReactionExplorer(ReactionExplorer):
             yield MLE(metal, leaving, entering)
 
     def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
+        mles1, mles2 = itertools.tee(mles)
         unique_ml_pairs = extract_unique_site_combinations(
-            [(mle.metal, mle.leaving) for mle in mles], self.init_assembly)
+            [(mle.metal, mle.leaving) for mle in mles1], self.init_assembly)
         unique_entering_sites = extract_unique_site_combinations(
-            [(mle.entering,) for mle in mles], self.entering_assembly)
+            [(mle.entering,) for mle in mles2], self.entering_assembly)
         for unique_ml, unique_e in itertools.product(
                 unique_ml_pairs, unique_entering_sites):
             metal, leaving = unique_ml.site_comb
@@ -207,7 +208,7 @@ class InterReactionExplorer(ReactionExplorer):
         product, leaving = separate_if_possible(
             raw_product, renamed_mle.metal.component_id)
 
-        if self.init_assembly.id == self.entering_assembly.id:
+        if self.init_assembly == self.entering_assembly:
             dup = mle.duplication * 2
         else:
             dup = mle.duplication
