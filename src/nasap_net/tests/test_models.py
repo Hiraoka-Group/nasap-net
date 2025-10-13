@@ -2,8 +2,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from nasap_net.reaction_exploration_im import Assembly, BindingSite, Bond, \
-    Component
+from nasap_net.models import Assembly, BindingSite, Bond, Component
 
 
 def test_component():

@@ -3,9 +3,10 @@ from dataclasses import dataclass
 
 import igraph as ig
 from bidict import frozenbidict
+from frozendict import frozendict
 
+from nasap_net.models import Assembly, BindingSite
 from nasap_net.types import ID
-from ..models import Assembly, BindingSite
 
 
 @dataclass(frozen=True, init=False)
@@ -118,10 +119,20 @@ class NoIsomorphismFoundError(Exception):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class Isomorphism:
-    comp_id_mapping: Mapping[ID, ID]
-    binding_site_mapping: Mapping[BindingSite, BindingSite]
+    comp_id_mapping: frozendict[ID, ID]
+    binding_site_mapping: frozendict[BindingSite, BindingSite]
+
+    def __init__(
+            self,
+            comp_id_mapping: Mapping[ID, ID],
+            binding_site_mapping: Mapping[BindingSite, BindingSite]
+    ) -> None:
+        object.__setattr__(
+            self, 'comp_id_mapping', frozendict(comp_id_mapping))
+        object.__setattr__(
+            self, 'binding_site_mapping', frozendict(binding_site_mapping))
 
 
 def get_isomorphism(assem1: Assembly, assem2: Assembly) -> Isomorphism:
@@ -147,7 +158,7 @@ def get_isomorphism(assem1: Assembly, assem2: Assembly) -> Isomorphism:
 
 
 def get_all_isomorphisms(
-        assem1: Assembly, assem2: Assembly) -> list[Isomorphism]:
+        assem1: Assembly, assem2: Assembly) -> set[Isomorphism]:
     conv_res1 = convert_assembly_to_igraph(assem1)
     conv_res2 = convert_assembly_to_igraph(assem2)
 
@@ -161,7 +172,7 @@ def get_all_isomorphisms(
         edge_color2=colors.e_color2,
     )
 
-    return [_decode_mapping(mapping, conv_res1, conv_res2) for mapping in res]
+    return {_decode_mapping(mapping, conv_res1, conv_res2) for mapping in res}
 
 
 def _decode_mapping(

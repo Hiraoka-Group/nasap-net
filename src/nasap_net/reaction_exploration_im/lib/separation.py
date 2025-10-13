@@ -1,8 +1,8 @@
 from collections.abc import Iterable
 
-from nasap_net.reaction_exploration_im.lib.igraph import \
+from nasap_net.isomorphism import \
     convert_assembly_to_igraph
-from nasap_net.reaction_exploration_im.models import Assembly
+from nasap_net.models import Assembly
 from nasap_net.types import ID
 
 
@@ -37,8 +37,8 @@ def separate_if_possible(
                 raise SeparatedIntoMoreThanTwoPartsError()
     if not g2_comp:
         return assembly, None
-    assem1 = create_sub_assembly(assembly, g1_comp)
-    assem2 = create_sub_assembly(assembly, g2_comp)
+    assem1 = _create_sub_assembly(assembly, g1_comp)
+    assem2 = _create_sub_assembly(assembly, g2_comp)
 
     if metal_comp_id in assem1.components:
         return assem1, assem2
@@ -47,7 +47,8 @@ def separate_if_possible(
         return assem2, assem1
 
 
-def create_sub_assembly(assembly: Assembly, comp_ids: Iterable[ID]) -> Assembly:
+def _create_sub_assembly(
+        assembly: Assembly, comp_ids: Iterable[ID]) -> Assembly:
     """Create a sub-assembly containing only the specified components.
 
     Assembly ID will be set to None.

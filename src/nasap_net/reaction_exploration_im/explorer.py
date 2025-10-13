@@ -3,17 +3,17 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Iterable, Iterator
 
+from nasap_net.models import Assembly, BindingSite
 from nasap_net.reaction_exploration_im.lib import \
     extract_unique_site_combinations
-from nasap_net.reaction_exploration_im.lib.intra_reaction_performance import \
-    perform_intra_reaction
-from nasap_net.reaction_exploration_im.models import Assembly, \
-    BindingSite, MLE, \
-    MLEKind, MLEWithDup, ReactionCandidate
+from nasap_net.reaction_exploration_im.lib.separation import \
+    separate_if_possible
+from nasap_net.reaction_exploration_im.models import MLE, MLEKind, \
+    Reaction
 
 
 class ReactionExplorer(ABC):
-    def explore(self) -> Iterator[ReactionCandidate]:
+    def explore(self) -> Iterator[Reaction]:
         mles = self._iter_mles()
         unique_mles = self._get_unique_mles(mles)
         for mle in unique_mles:
@@ -24,13 +24,11 @@ class ReactionExplorer(ABC):
         pass
 
     @abstractmethod
-    def _get_unique_mles(self, mles: Iterable[MLE],) -> Iterator[MLEWithDup]:
+    def _get_unique_mles(self, mles: Iterable[MLE],) -> Iterator[MLE]:
         pass
 
     @abstractmethod
-    def _perform_reaction(
-            self, site_mle: MLEWithDup,
-            ) -> ReactionCandidate:
+    def _perform_reaction(self, mle: MLE) -> Reaction:
         pass
 
 
@@ -80,19 +78,27 @@ class IntraReactionExplorer(ReactionExplorer):
                 ml_pair, entering_sites):
             yield MLE(metal, leaving, entering)
 
-    def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLEWithDup]:
+    def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
         unique_mle_trios = extract_unique_site_combinations(
             [(mle.metal, mle.leaving, mle.entering) for mle in mles],
              self.assembly)
         for unique_mle in unique_mle_trios:
             metal, leaving, entering = unique_mle.site_comb
-            yield MLEWithDup(
-                metal=metal, leaving=leaving, entering=entering,
+            yield MLE(
+                metal, leaving, entering,
                 duplication=unique_mle.duplication)
 
-    def _perform_reaction(self, mle: MLEWithDup) -> ReactionCandidate:
-        product, leaving = perform_intra_reaction(self.assembly, mle)
-        return ReactionCandidate(
+    def _perform_reaction(self, mle: MLE) -> Reaction:
+        raw_product = (
+            self.assembly
+                .remove_bond(mle.metal, mle.leaving)
+                .add_bond(mle.metal, mle.entering)
+        )
+
+        product, leaving = separate_if_possible(
+            raw_product, mle.metal.component_id)
+
+        return Reaction(
             init_assem=self.assembly,
             entering_assem=None,
             product_assem=product,
@@ -113,20 +119,18 @@ class InterReactionExplorer(ReactionExplorer):
     def _iter_mles(self) -> Iterator[MLE]:
         raise NotImplementedError()
 
-    def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLEWithDup]:
+    def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
         unique_ml_pairs = extract_unique_site_combinations(
-            [(mle.metal, mle.leaving) for mle in mles], self.assembly)
+            [(mle.metal, mle.leaving) for mle in mles], self.init_assembly)
         unique_entering_sites = extract_unique_site_combinations(
-            [(mle.entering,) for mle in mles], self.assembly)
+            [(mle.entering,) for mle in mles], self.entering_assembly)
         for unique_ml, unique_e in itertools.product(
                 unique_ml_pairs, unique_entering_sites):
             metal, leaving = unique_ml.site_comb
             (entering,) = unique_e.site_comb
-            yield MLEWithDup(
+            yield MLE(
                 metal, leaving, entering,
-                duplication=(unique_ml.duplication * unique_e.duplication))
+                duplication=unique_ml.duplication * unique_e.duplication)
 
-    def _perform_reaction(
-            self, site_mle: MLEWithDup,
-            ) -> ReactionCandidate:
+    def _perform_reaction(self, mle: MLE) -> Reaction:
         raise NotImplementedError()

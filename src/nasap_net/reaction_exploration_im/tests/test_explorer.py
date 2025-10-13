@@ -1,10 +1,9 @@
 import pytest
 
-from nasap_net.reaction_exploration_im import AuxEdge, BindingSite, Bond, \
-    Component
+from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
 from nasap_net.reaction_exploration_im.explorer import IntraReactionExplorer
-from nasap_net.reaction_exploration_im.models import Assembly, MLE, MLEKind, \
-    MLEWithDup, ReactionCandidate
+from nasap_net.reaction_exploration_im.models import MLE, MLEKind, \
+    Reaction
 
 
 @pytest.fixture
@@ -92,12 +91,12 @@ def test__get_unique_mles(ML2X2_cis):
     }
 
     expected = {
-        MLEWithDup(
+        MLE(
             BindingSite('M0', 0), BindingSite('X0', 0), BindingSite('L0', 1),
-            2),
-        MLEWithDup(
+            duplication=2),
+        MLE(
             BindingSite('M0', 0), BindingSite('X0', 0), BindingSite('L1', 1),
-            2),
+            duplication=2),
     }
 
     unique_mles = set(explorer._get_unique_mles(mles))
@@ -111,10 +110,11 @@ def test__perform_reaction(ML2X2_cis, ML2X_trans_ring, free_X):
         mle_kind=MLEKind(metal='M', leaving='X', entering='L'),
     )
 
-    mle_with_dup = MLEWithDup(
-        BindingSite('M0', 0), BindingSite('X0', 0), BindingSite('L0', 1), 2)
+    mle_with_dup = MLE(
+        BindingSite('M0', 0), BindingSite('X0', 0), BindingSite('L0', 1),
+        duplication=2)
 
-    expected = ReactionCandidate(
+    expected = Reaction(
         init_assem=ML2X2_cis,
         entering_assem=None,
         product_assem=ML2X_trans_ring,

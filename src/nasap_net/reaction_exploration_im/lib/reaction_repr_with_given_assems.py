@@ -2,8 +2,8 @@ from typing import Iterable
 
 from .isomorphic_assembly_search import \
     _AssemblyNotFoundError, find_isomorphic_assembly
-from ..models import Assembly, \
-    Reaction, ReactionCandidate
+from ..models import Reaction
+from ...models import Assembly
 
 
 class _ReactionOutOfScopeError(Exception):
@@ -11,7 +11,7 @@ class _ReactionOutOfScopeError(Exception):
 
 
 def _represent_reaction_with_given_assemblies(
-        reaction: ReactionCandidate,
+        reaction: Reaction,
         assemblies: Iterable[Assembly],
         ) -> Reaction:
     # Cond-1: The product assembly must exist in the provided assemblies.
@@ -23,10 +23,10 @@ def _represent_reaction_with_given_assemblies(
 
     if reaction.leaving_assem is None:
         return Reaction(
-            init_assem_id=reaction.init_assem,
-            entering_assem_id=reaction.entering_assem,
-            product_assem_id=isom_product_assem,
-            leaving_assem_id=None,
+            init_assem=reaction.init_assem,
+            entering_assem=reaction.entering_assem,
+            product_assem=isom_product_assem,
+            leaving_assem=None,
             metal_bs=reaction.metal_bs,
             leaving_bs=reaction.leaving_bs,
             entering_bs=reaction.entering_bs,
@@ -41,10 +41,10 @@ def _represent_reaction_with_given_assemblies(
         raise _ReactionOutOfScopeError("Leaving assembly not found") from e
 
     return Reaction(
-        init_assem_id=reaction.init_assem,
-        entering_assem_id=reaction.entering_assem,
-        product_assem_id=isom_product_assem,
-        leaving_assem_id=isom_leaving_assem,
+        init_assem=reaction.init_assem,
+        entering_assem=reaction.entering_assem,
+        product_assem=isom_product_assem,
+        leaving_assem=isom_leaving_assem,
         metal_bs=reaction.metal_bs,
         leaving_bs=reaction.leaving_bs,
         entering_bs=reaction.entering_bs,

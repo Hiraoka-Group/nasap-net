@@ -6,8 +6,8 @@ from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
 from .lib import _ReactionOutOfScopeError, \
     _represent_reaction_with_given_assemblies
-from .models import Assembly, MLEKind, Reaction, \
-    ReactionCandidate
+from .models import MLEKind, Reaction
+from ..models import Assembly
 
 
 def explore_reactions(
@@ -19,7 +19,7 @@ def explore_reactions(
         assem.copy_with(id_=assem_id)
         for assem_id, assem in assemblies.items()]
 
-    reaction_iters: list[Iterator[ReactionCandidate]] = []
+    reaction_iters: list[Iterator[Reaction]] = []
     for mle_kind in mle_kinds:
         # Intra-molecular reactions
         for assem in assems_with_ids:

@@ -1,5 +1,4 @@
-from nasap_net.reaction_exploration_im import Assembly, AuxEdge, BindingSite, \
-    Bond, Component
+from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
 from nasap_net.reaction_exploration_im.lib import group_equivalent_node_combs
 
 

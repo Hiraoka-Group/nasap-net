@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from nasap_net.reaction_exploration_im import Assembly
+from nasap_net.models import Assembly
 
 
 class _AssemblyNotFoundError(Exception):
