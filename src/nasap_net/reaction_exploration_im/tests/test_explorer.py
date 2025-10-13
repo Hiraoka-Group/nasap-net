@@ -10,8 +10,7 @@ from nasap_net.reaction_exploration_im.models import MLE, MLEKind, \
 def M() -> Component:
     return Component(
         kind='M', sites=[0, 1, 2, 3],
-        aux_edges=[AuxEdge(0, 1), AuxEdge(1, 2), AuxEdge(2, 3), AuxEdge(3, 0)]
-    )
+        aux_edges=[AuxEdge(0, 1), AuxEdge(1, 2), AuxEdge(2, 3), AuxEdge(3, 0)])
 
 
 @pytest.fixture

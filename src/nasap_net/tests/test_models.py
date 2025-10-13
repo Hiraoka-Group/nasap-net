@@ -20,24 +20,24 @@ def test_component_immutability():
 
 
 def test_binding_site():
-    site = BindingSite(component_id="M1", site="a")
+    site = BindingSite(component_id="M1", site_id="a")
     assert site.component_id == "M1"
-    assert site.site == "a"
+    assert site.site_id == "a"
 
 
 def test_binding_site_ordering():
-    site1 = BindingSite(component_id="M1", site="a")
-    site2 = BindingSite(component_id="M1", site="b")
-    site3 = BindingSite(component_id="M2", site="a")
+    site1 = BindingSite(component_id="M1", site_id="a")
+    site2 = BindingSite(component_id="M1", site_id="b")
+    site3 = BindingSite(component_id="M2", site_id="a")
     assert site1 < site2
     assert site1 < site3
     assert site2 < site3
 
 
 def test_binding_site_equality():
-    site1 = BindingSite(component_id="M1", site="a")
-    site2 = BindingSite(component_id="M1", site="a")
-    site3 = BindingSite(component_id="M1", site="b")
+    site1 = BindingSite(component_id="M1", site_id="a")
+    site2 = BindingSite(component_id="M1", site_id="a")
+    site3 = BindingSite(component_id="M1", site_id="b")
     assert site1 == site2
     assert site1 != site3
 
@@ -45,8 +45,8 @@ def test_binding_site_equality():
 def test_bond():
     bond = Bond(comp_id1="L1", comp_id2="M1", site1="a", site2="b")
     assert bond.sites == (
-        BindingSite(component_id="L1", site="a"),
-        BindingSite(component_id="M1", site="b")
+        BindingSite(component_id="L1", site_id="a"),
+        BindingSite(component_id="M1", site_id="b")
         )
 
 

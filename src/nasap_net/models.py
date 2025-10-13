@@ -1,7 +1,8 @@
+from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from functools import cached_property
 from types import MappingProxyType
-from typing import Iterable, Mapping, Self
+from typing import Self
 
 from frozendict import frozendict
 
@@ -16,22 +17,25 @@ class IDNotSetError(Exception):
 class BindingSite:
     """A specific binding site on a specific component."""
     component_id: ID
-    site: ID
+    site_id: ID
 
 
 @dataclass(frozen=True, init=False)
-class Bond:
+class Bond(Iterable):
     """A bond between two binding sites on two components."""
     sites: tuple[BindingSite, BindingSite]
 
     def __init__(self, comp_id1: ID, comp_id2: ID, site1: ID, site2: ID):
         if comp_id1 == comp_id2:
             raise ValueError("Components in a bond must be different.")
-        comp_and_site1 = BindingSite(component_id=comp_id1, site=site1)
-        comp_and_site2 = BindingSite(component_id=comp_id2, site=site2)
+        comp_and_site1 = BindingSite(component_id=comp_id1, site_id=site1)
+        comp_and_site2 = BindingSite(component_id=comp_id2, site_id=site2)
         object.__setattr__(
             self, 'sites',
             tuple(sorted((comp_and_site1, comp_and_site2))))  # type:ignore
+
+    def __iter__(self) -> Iterator[BindingSite]:
+        return iter(self.sites)
 
     @property
     def component_ids(self) -> tuple[ID, ID]:
@@ -44,8 +48,8 @@ class Bond:
         return cls(
             comp_id1=site1.component_id,
             comp_id2=site2.component_id,
-            site1=site1.site,
-            site2=site2.site
+            site1=site1.site_id,
+            site2=site2.site_id
             )
 
 
@@ -60,8 +64,8 @@ class AuxEdge:
             self, comp_id: ID) -> tuple[BindingSite, BindingSite]:
         """Return the binding sites of this auxiliary edge."""
         return (
-            BindingSite(component_id=comp_id, site=self.site_id1),
-            BindingSite(component_id=comp_id, site=self.site_id2)
+            BindingSite(component_id=comp_id, site_id=self.site_id1),
+            BindingSite(component_id=comp_id, site_id=self.site_id2)
         )
 
 
@@ -87,7 +91,7 @@ class Component:
     def get_binding_sites(self, comp_id: ID) -> frozenset[BindingSite]:
         """Return the binding sites of this component."""
         return frozenset(
-            BindingSite(component_id=comp_id, site=site_id)
+            BindingSite(component_id=comp_id, site_id=site_id)
             for site_id in self.site_ids
         )
 
@@ -161,11 +165,11 @@ class Assembly:
             # Validate that the sites exist in the respective components
             for site in bond.sites:
                 component = self._components[site.component_id]
-                if site.site not in component.site_ids:
+                if site.site_id not in component.site_ids:
                     raise InvalidBondError(
                         bond=bond,
                         msg=(
-                            f"Site {site.site} not found in component "
+                            f"Site {site.site_id} not found in component "
                             f"{site.component_id}."))
 
                 # Validate that the site is not already used
@@ -218,7 +222,7 @@ class Assembly:
         sites = set()
         for comp_id, component in self._components.items():
             for site in component.site_ids:
-                sites.add(BindingSite(component_id=comp_id, site=site))
+                sites.add(BindingSite(component_id=comp_id, site_id=site))
         return frozenset(sites)
 
     @cached_property
