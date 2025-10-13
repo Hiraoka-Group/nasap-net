@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Mapping
 from itertools import chain, product
-from typing import Iterator
+from typing import Iterator, TypeVar
 
 from nasap_net.models import Assembly
 from nasap_net.types import ID
@@ -8,9 +8,10 @@ from .explorer import InterReactionExplorer, IntraReactionExplorer
 from .lib import ReactionOutOfScopeError, ReactionResolver
 from .models import MLEKind, Reaction
 
+_T = TypeVar('_T', bound=ID)
 
 def explore_reactions(
-        assemblies: Mapping[ID, Assembly],
+        assemblies: Mapping[_T, Assembly],
         mle_kinds: Iterable[MLEKind],
         ) -> Iterator[Reaction]:
     # Add assembly IDs to assemblies

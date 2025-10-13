@@ -1,5 +1,3 @@
-from collections.abc import Mapping
-
 from nasap_net.models import Assembly, Bond, Component
 from nasap_net.reaction_exploration_im import MLEKind, explore_reactions
 
@@ -8,7 +6,7 @@ def test():
     M = Component(kind='M', sites=[0, 1])
     L = Component(kind='L', sites=[0, 1])
     X = Component(kind='X', sites=[0])
-    assemblies: Mapping = {
+    assemblies = {
         # MX2: X0(0)-(0)M0(1)-(0)X1
         'MX2': Assembly(
             components={'X0': X, 'M0': M, 'X1': X},
