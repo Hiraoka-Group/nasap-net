@@ -207,7 +207,9 @@ class InterReactionExplorer(ReactionExplorer):
 
         product, leaving = separate_if_possible(
             raw_product, metal_comp_id=renamed_mle.metal.component_id)
-
+        
+        # Double the duplication count if both assemblies are the same.
+        # This is because the frequency of "A + A" is twice that of "A + B".
         if self.init_assembly == self.entering_assembly:
             dup = mle.duplication * 2
         else:
