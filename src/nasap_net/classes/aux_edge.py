@@ -2,7 +2,9 @@ from typing import Any
 
 import yaml
 
+import nasap_net as rx
 from nasap_net.utils import FrozenUnorderedPair
+
 from .validations import (validate_name_of_aux_type,
                           validate_name_of_binding_site)
 

@@ -3,9 +3,9 @@ from typing import cast
 
 import yaml
 
-from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 from ..aux_edge import AuxEdge
 from ..validations import validate_name_of_binding_site
+from .bindsite_existence_check import check_bindsites_of_aux_edges_exists
 
 __all__ = ['Component']
 
