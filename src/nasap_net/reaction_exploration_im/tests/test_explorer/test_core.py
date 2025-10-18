@@ -38,4 +38,5 @@ def test():
                    Bond('M1', 1, 'L1', 0), Bond('L1', 1, 'M0', 0)]),
     }
     result = set(explore_reactions(assemblies, [MLEKind('M', 'X', 'L')]))
+    # TODO: add more detailed checks
     assert len(result) == 7
