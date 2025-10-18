@@ -94,7 +94,7 @@ class IntraReactionExplorer(ReactionExplorer):
         )
 
         product, leaving = separate_if_possible(
-            raw_product, mle.metal.component_id)
+            raw_product, metal_comp_id=mle.metal.component_id)
 
         return Reaction(
             init_assem=self.assembly,
@@ -206,7 +206,7 @@ class InterReactionExplorer(ReactionExplorer):
         )
 
         product, leaving = separate_if_possible(
-            raw_product, renamed_mle.metal.component_id)
+            raw_product, metal_comp_id=renamed_mle.metal.component_id)
 
         if self.init_assembly == self.entering_assembly:
             dup = mle.duplication * 2

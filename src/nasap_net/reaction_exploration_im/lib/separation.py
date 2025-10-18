@@ -10,9 +10,7 @@ class SeparatedIntoMoreThanTwoPartsError(Exception):
     pass
 
 
-def separate_if_possible(
-        assembly: Assembly, metal_comp_id: ID
-        ) -> tuple[Assembly, Assembly | None]:
+def separate_if_possible(assembly: Assembly, *, metal_comp_id: ID) -> tuple[Assembly, Assembly | None]:
     """Separate the assembly into product and leaving assemblies if possible.
 
     If the assembly can be separated into two disconnected sub-assemblies,
@@ -26,6 +24,7 @@ def separate_if_possible(
 
     Parameters
     ----------
+    *
     assembly : Assembly
         The assembly to be separated.
     metal_comp_id : ID
