@@ -13,11 +13,6 @@ class AssemblyNotFoundError(Exception):
     pass
 
 
-class DuplicateAssembliesError(Exception):
-    """Exception raised when duplicate assemblies are found in the search space."""
-    pass
-
-
 @dataclass(frozen=True, init=False)
 class IsomorphicAssemblyFinder:
     """Class to find isomorphic assemblies in a search space.
@@ -35,9 +30,6 @@ class IsomorphicAssemblyFinder:
         sig_to_assems: defaultdict[Hashable, set[Assembly]] = defaultdict(set)
         for assembly in self.search_space:
             sig = light_signature(assembly)
-            if assembly in sig_to_assems[sig]:
-                raise DuplicateAssembliesError(
-                    f"Duplicate assemblies found in search space: {assembly}")
             sig_to_assems[sig].add(assembly)
         object.__setattr__(self, '_sig_to_assemblies', frozendict(
             {k: frozenset(v) for k, v in sig_to_assems.items()}
