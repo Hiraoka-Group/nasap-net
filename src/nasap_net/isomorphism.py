@@ -53,7 +53,7 @@ def convert_assembly_to_igraph(assembly: Assembly) -> GraphConversionResult:
                 'comp_id': [comp_id] * len(comp.site_ids),
                 'comp_kind': [comp.kind] * len(comp.site_ids),
                 'core_or_site': ['site'] * len(comp.site_ids),
-                'site_id': comp.site_ids,
+                'site_id': list(comp.site_ids),
             }
         )
         start_id = g.vcount() - len(comp.site_ids)
