@@ -23,7 +23,7 @@ def X() -> Component:
 def MX2(M, X) -> Assembly:
     return Assembly(
         components={'M0': M, 'X0': X, 'X1': X},
-        bonds=[Bond('M0', 'X0', 0, 0), Bond('M0', 'X1', 1, 0)])
+        bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'X1', 0)])
 
 @pytest.fixture
 def free_L(L) -> Assembly:
@@ -33,8 +33,8 @@ def free_L(L) -> Assembly:
 def test_explore(MX2, free_L, M, L, X):
     renamed_MLX = Assembly(
         {'init_M0': M, 'entering_L0': L, 'init_X1': X},
-        [Bond('init_M0', 'entering_L0', 0, 0),
-         Bond('init_M0', 'init_X1', 1, 0)]
+        [Bond('init_M0', 0, 'entering_L0', 0),
+         Bond('init_M0', 1, 'init_X1', 0)]
     )
     renamed_X = Assembly(
         {'init_X0': X},
@@ -86,8 +86,8 @@ def test__perform_reaction(MX2, free_L, M, L, X):
     # NOTE: Component IDs in the assemblies are renamed to avoid ID conflicts.
     renamed_MLX = Assembly(
         {'init_M0': M, 'entering_L0': L, 'init_X1': X},
-        [Bond('init_M0', 'entering_L0', 0, 0),
-         Bond('init_M0', 'init_X1', 1, 0)]
+        [Bond('init_M0', 0, 'entering_L0', 0),
+         Bond('init_M0', 1, 'init_X1', 0)]
     )
     renamed_X = Assembly(
         {'init_X0': X},

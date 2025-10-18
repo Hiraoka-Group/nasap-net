@@ -9,11 +9,11 @@ def test_get_all_isomorphisms():
     X = Component(kind='X', sites=[0])
     MX2 = Assembly(
         components={'M1': M, 'X1': X, 'X2': X},
-        bonds=[Bond('M1', 'X1', 0, 0), Bond('M1', 'X2', 1, 0)]
+        bonds=[Bond('M1', 0, 'X1', 0), Bond('M1', 1, 'X2', 0)]
     )
     MX2_2 = Assembly(
         components={'M10': M, 'X10': X, 'X20': X},
-        bonds=[Bond('M10', 'X10', 0, 0), Bond('M10', 'X20', 1, 0)]
+        bonds=[Bond('M10', 0, 'X10', 0), Bond('M10', 1, 'X20', 0)]
     )
 
     isoms = get_all_isomorphisms(MX2, MX2_2)

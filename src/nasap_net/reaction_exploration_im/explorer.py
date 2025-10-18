@@ -250,10 +250,8 @@ def _rename_assembly(
         renaming_func(id_): comp
         for id_, comp in assembly.components.items()}
     renamed_bonds = {
-        Bond(
-            comp_id1=renaming_func(site1.component_id),
-            comp_id2=renaming_func(site2.component_id),
-            site1=site1.site_id, site2=site2.site_id)
+        Bond(comp_id1=renaming_func(site1.component_id), site1=site1.site_id,
+             comp_id2=renaming_func(site2.component_id), site2=site2.site_id)
         for (site1, site2) in assembly.bonds}
     return Assembly(components=renamed_components, bonds=renamed_bonds)
 

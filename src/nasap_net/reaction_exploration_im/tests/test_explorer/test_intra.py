@@ -25,10 +25,10 @@ def ML2X2_cis(M, L, X) -> Assembly:
         id_='ML2X2_cis',
         components={'M0': M, 'L0': L, 'L1': L, 'X0': X, 'X1': X},
         bonds=[
-            Bond('M0', 'X0', 0, 0),
-            Bond('M0', 'X1', 1, 0),
-            Bond('M0', 'L0', 2, 0),
-            Bond('M0', 'L1', 3, 0),
+            Bond('M0', 0, 'X0', 0),
+            Bond('M0', 1, 'X1', 0),
+            Bond('M0', 2, 'L0', 0),
+            Bond('M0', 3, 'L1', 0),
         ]
     )
 
@@ -37,10 +37,10 @@ def ML2X_trans_ring(M, L, X) -> Assembly:
     return Assembly(
         components={'M0': M, 'L0': L, 'L1': L, 'X1': X},
         bonds=[
-            Bond('M0', 'L0', 0, 1),
-            Bond('M0', 'X1', 1, 0),
-            Bond('M0', 'L0', 2, 0),
-            Bond('M0', 'L1', 3, 0),
+            Bond('M0', 0, 'L0', 1),
+            Bond('M0', 1, 'X1', 0),
+            Bond('M0', 2, 'L0', 0),
+            Bond('M0', 3, 'L1', 0),
         ]
     )
 
@@ -49,10 +49,10 @@ def ML2X_cis_ring(M, L, X) -> Assembly:
     return Assembly(
         components={'M0': M, 'L0': L, 'L1': L, 'X1': X},
         bonds=[
-            Bond('M0', 'L1', 0, 1),
-            Bond('M0', 'X1', 1, 0),
-            Bond('M0', 'L0', 2, 0),
-            Bond('M0', 'L1', 3, 0)
+            Bond('M0', 0, 'L1', 1),
+            Bond('M0', 1, 'X1', 0),
+            Bond('M0', 2, 'L0', 0),
+            Bond('M0', 3, 'L1', 0)
         ]
     )
 

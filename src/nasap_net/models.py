@@ -25,7 +25,7 @@ class Bond(Iterable):
     """A bond between two binding sites on two components."""
     sites: tuple[BindingSite, BindingSite]
 
-    def __init__(self, comp_id1: ID, comp_id2: ID, site1: ID, site2: ID):
+    def __init__(self, comp_id1: ID, site1: ID, comp_id2: ID, site2: ID):
         if comp_id1 == comp_id2:
             raise ValueError("Components in a bond must be different.")
         comp_and_site1 = BindingSite(component_id=comp_id1, site_id=site1)

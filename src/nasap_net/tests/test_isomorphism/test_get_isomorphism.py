@@ -8,11 +8,11 @@ def test_get_isomorphism():
     X = Component(kind='X', sites=[0])
     MLX = Assembly(
         components={'M1': M, 'L1': L, 'X1': X},
-        bonds=[Bond('M1', 'L1', 0, 0), Bond('M1', 'X1', 1, 0)]
+        bonds=[Bond('M1', 0, 'L1', 0), Bond('M1', 1, 'X1', 0)]
     )
     MLX_permuted = Assembly(
         components={'L2': L, 'X2': X, 'M2': M},
-        bonds=[Bond('M2', 'L2', 1, 0), Bond('M2', 'X2', 0, 0)]
+        bonds=[Bond('M2', 1, 'L2', 0), Bond('M2', 0, 'X2', 0)]
     )
     isom = get_isomorphism(MLX, MLX_permuted)
     assert isom.comp_id_mapping == {'M1': 'M2', 'L1': 'L2', 'X1': 'X2'}

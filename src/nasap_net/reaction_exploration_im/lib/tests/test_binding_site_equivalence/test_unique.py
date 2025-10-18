@@ -12,7 +12,7 @@ def MX2():
     X = Component(kind='X', sites=[0])
     return Assembly(
         components={'M0': M, 'X0': X, 'X1': X},
-        bonds=[Bond('X0', 'M0', 0, 0), Bond('M0', 'X1', 1, 0)]
+        bonds=[Bond('X0', 0, 'M0', 0), Bond('M0', 1, 'X1', 0)]
     )
 
 
@@ -70,8 +70,8 @@ def test_site_triplets():
     X = Component(kind='X', sites=[0])
     cis_ML2X2 = Assembly(
         {'M0': M, 'L0': L, 'L1': L, 'X0': X, 'X1': X},
-        [Bond('M0', 'X0', 0, 0), Bond('M0', 'X1', 1, 0),
-         Bond('M0', 'L0', 2, 0), Bond('M0', 'L1', 3, 0)]
+        [Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'X1', 0),
+         Bond('M0', 2, 'L0', 0), Bond('M0', 3, 'L1', 0)]
     )
     binding_site_combs = [
         (BindingSite('M0', 0), BindingSite('X0', 0), BindingSite('L0', 1)),  # trans

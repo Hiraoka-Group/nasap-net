@@ -7,7 +7,7 @@ def test_single_binding_site():
     X = Component(kind='X', sites=[0])
     MX2 = Assembly(
         components={'M0': M, 'X0': X, 'X1': X},
-        bonds=[Bond('M0', 'X0', 0, 0), Bond('M0', 'X1', 1, 0)]
+        bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'X1', 0)]
     )
 
     expected = {
@@ -29,7 +29,7 @@ def test_binding_site_pairs():
     X = Component(kind='X', sites=[0])
     MX2 = Assembly(
         components={'M0': M, 'X0': X, 'X1': X},
-        bonds=[Bond('M0', 'X0', 0, 0), Bond('M0', 'X1', 1, 0)]
+        bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'X1', 0)]
     )
 
     expected = {
@@ -64,10 +64,10 @@ def test_aux_edges():
     ML2X2_cis = Assembly(
         components={'M0': M, 'L0': L, 'L1': L, 'X0': X, 'X1': X},
         bonds=[
-            Bond('M0', 'X0', 0, 0),
-            Bond('M0', 'X1', 1, 0),
-            Bond('M0', 'L0', 2, 0),
-            Bond('M0', 'L1', 3, 0),
+            Bond('M0', 0, 'X0', 0),
+            Bond('M0', 1, 'X1', 0),
+            Bond('M0', 2, 'L0', 0),
+            Bond('M0', 3, 'L1', 0),
         ]
     )
 
