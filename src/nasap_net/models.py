@@ -1,27 +1,24 @@
 from collections.abc import Iterable, Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from types import MappingProxyType
 from typing import Self
 
 from frozendict import frozendict
 
-from nasap_net.types import ID
-
-
-class IDNotSetError(Exception):
-    pass
+from nasap_net.exceptions import IDNotSetError
+from nasap_net.types import ID, SupportsDunderLt
 
 
 @dataclass(frozen=True, order=True)
-class BindingSite:
+class BindingSite(SupportsDunderLt):
     """A specific binding site on a specific component."""
     component_id: ID
     site_id: ID
 
 
-@dataclass(frozen=True, init=False)
-class Bond(Iterable):
+@dataclass(frozen=True, init=False, order=True)
+class Bond(Iterable, SupportsDunderLt):
     """A bond between two binding sites on two components."""
     sites: tuple[BindingSite, BindingSite]
 
@@ -53,19 +50,28 @@ class Bond(Iterable):
             )
 
 
-@dataclass(frozen=True)
-class AuxEdge:
+@dataclass(frozen=True, init=False, order=True)
+class AuxEdge(SupportsDunderLt):
     """An auxiliary edge between two binding sites on the same component."""
-    site_id1: ID
-    site_id2: ID
-    kind: str | None = None
+    site_ids: tuple[ID, ID]
+    kind: str | None = field(kw_only=True, default=None)
+
+    def __init__(
+            self, site_id1: ID, site_id2: ID, kind: str | None = None):
+        if site_id1 == site_id2:
+            raise ValueError("Sites in an auxiliary edge must be different.")
+        object.__setattr__(
+            self, 'site_ids',
+            tuple(sorted((site_id1, site_id2))))  # type:ignore
+        object.__setattr__(self, 'kind', kind)
 
     def get_binding_sites(
             self, comp_id: ID) -> tuple[BindingSite, BindingSite]:
         """Return the binding sites of this auxiliary edge."""
+        site_id1, site_id2 = self.site_ids
         return (
-            BindingSite(component_id=comp_id, site_id=self.site_id1),
-            BindingSite(component_id=comp_id, site_id=self.site_id2)
+            BindingSite(component_id=comp_id, site_id=site_id1),
+            BindingSite(component_id=comp_id, site_id=site_id2)
         )
 
 
@@ -149,6 +155,11 @@ class Assembly:
         """Return the ID of the assembly."""
         if self._id is None:
             raise IDNotSetError("Assembly ID is not set.")
+        return self._id
+
+    @property
+    def id_or_none(self) -> ID | None:
+        """Return the ID of the assembly, or None if not set."""
         return self._id
 
     def _validate(self):
