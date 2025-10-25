@@ -1,7 +1,7 @@
 import pytest
 import yaml
 
-from nasap_net.yaml.helper import split_yaml_documents  # ← 実際の関数名に置き換えてください
+from nasap_net.yaml.helper import split_yaml_documents
 
 
 def test_simple_multi_doc():

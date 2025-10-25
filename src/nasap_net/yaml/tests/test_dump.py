@@ -1,8 +1,8 @@
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
-from nasap_net.yaml import dump, load
+from nasap_net.yaml import dump
 
 
-def test_round_trip():
+def test_dump():
     M = Component(kind='M', sites=[0, 1])
     X = Component(kind='X', sites=[0])
     M_aux = Component(
@@ -26,5 +26,34 @@ def test_round_trip():
     }
 
     dumped = dump(assemblies)
-    loaded = load(dumped)
-    assert loaded == assemblies
+
+    assert dumped == """M: !Component
+  kind: M
+  sites: [0, 1]
+M(aux): !Component
+  kind: M(aux)
+  sites: [0, 1, 2]
+  aux_edges:
+  - sites: [0, 1]
+  - sites: [0, 2]
+    kind: cis
+X: !Component
+  kind: X
+  sites: [0]
+---
+M(aux)X3: !LightAssembly
+  components: {M0: M(aux), X0: X, X1: X, X2: X}
+  bonds:
+  - [M0, 0, X0, 0]
+  - [M0, 1, X1, 0]
+  - [M0, 2, X2, 0]
+MX2: !LightAssembly
+  components: {M0: M, X0: X, X1: X}
+  bonds:
+  - [M0, 0, X0, 0]
+  - [M0, 1, X1, 0]
+  id: MX2
+free_X: !LightAssembly
+  components: {X0: X}
+  bonds: []
+"""
