@@ -1,4 +1,7 @@
-from nasap_net.light_assembly import convert_assemblies_to_light_ones
+import pytest
+
+from nasap_net.light_assembly import InconsistentComponentKindError, \
+    convert_assemblies_to_light_ones
 from nasap_net.light_assembly.models import LightAssembly
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
@@ -61,3 +64,16 @@ def test():
             bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'L0', 0),
                    Bond('M0', 2, 'X1', 0), Bond('M0', 3, 'L1', 0)]),
     }
+
+
+def test_inconsistent_component_kind_error():
+    X1 = Component(kind='X', sites=[0])
+    X2 = Component(kind='X', sites=[1])  # Same kind but different sites
+
+    assemblies = {
+        'free_X1': Assembly(components={'X0': X1}, bonds=[]),
+        'free_X2': Assembly(components={'X0': X2}, bonds=[]),
+    }
+
+    with pytest.raises(InconsistentComponentKindError):
+        convert_assemblies_to_light_ones(assemblies)

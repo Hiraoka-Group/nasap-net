@@ -16,22 +16,26 @@ class InconsistentComponentKindError(Exception):
     """Raised when there are inconsistent definitions for a component kind,
     i.e., the same kind name corresponds to different component structures.
     """
-    pass
+    def __init__(
+            self,
+            component_kind: str,
+            message: str = 'Inconsistent definitions for component kind.'
+    ) -> None:
+        self.component_kind = component_kind
+        super().__init__(f'{message}: Kind: "{component_kind}".')
 
 
 _T = TypeVar('_T', bound=ID)
 
 def convert_assemblies_to_light_ones(
-        assemblies: Mapping[_T, Assembly]) -> ConversionResult:
+        assemblies: Mapping[_T, Assembly],
+) -> ConversionResult:
     light_assemblies = _assemblies_to_light_assemblies(assemblies)
 
     try:
         components = _extract_components(assemblies.values())
-    except InconsistentComponentKindError:
-        raise InconsistentComponentKindError(
-            "Failed to convert assemblies to light assemblies due to "
-            "inconsistent component kind definitions."
-        ) from None
+    except InconsistentComponentKindError as e:
+        raise InconsistentComponentKindError(e.component_kind) from None
 
     return ConversionResult(
         light_assemblies=light_assemblies,
@@ -39,14 +43,15 @@ def convert_assemblies_to_light_ones(
     )
 
 
-def _extract_components(assemblies: Iterable[Assembly]) -> dict[str, Component]:
+def _extract_components(
+        assemblies: Iterable[Assembly],
+) -> dict[str, Component]:
     components: dict[str, Component] = {}
     for assembly in assemblies:
         for comp in assembly.components.values():
             if comp.kind in components:
                 if comp != components[comp.kind]:
-                    raise InconsistentComponentKindError(
-                        f"Inconsistent definitions for component kind '{comp.kind}'.")
+                    raise InconsistentComponentKindError(comp.kind)
             else:
                 components[comp.kind] = comp
     return components
