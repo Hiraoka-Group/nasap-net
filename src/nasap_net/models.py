@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
-from functools import cached_property
+from functools import cached_property, total_ordering
 from types import MappingProxyType
 from typing import Self
 
@@ -50,10 +50,11 @@ class Bond(Iterable, SupportsDunderLt):
             )
 
 
-@dataclass(frozen=True, init=False, order=True)
+@total_ordering
+@dataclass(frozen=True, init=False)
 class AuxEdge(SupportsDunderLt):
     """An auxiliary edge between two binding sites on the same component."""
-    site_ids: tuple[ID, ID]
+    site_ids: frozenset[ID]
     kind: str | None = field(kw_only=True, default=None)
 
     def __init__(
@@ -62,17 +63,25 @@ class AuxEdge(SupportsDunderLt):
             raise ValueError("Sites in an auxiliary edge must be different.")
         object.__setattr__(
             self, 'site_ids',
-            tuple(sorted((site_id1, site_id2))))  # type:ignore
+            frozenset({site_id1, site_id2}))
         object.__setattr__(self, 'kind', kind)
 
+    def __lt__(self, other):
+        if not isinstance(other, AuxEdge):
+            return NotImplemented
+        self_values = [sorted(self.site_ids), self.kind]
+        other_values = [sorted(other.site_ids), other.kind]
+        return self_values < other_values
+
     def get_binding_sites(
-            self, comp_id: ID) -> tuple[BindingSite, BindingSite]:
+            self, comp_id: ID,
+    ) -> frozenset[BindingSite]:
         """Return the binding sites of this auxiliary edge."""
         site_id1, site_id2 = self.site_ids
-        return (
+        return frozenset({
             BindingSite(component_id=comp_id, site_id=site_id1),
             BindingSite(component_id=comp_id, site_id=site_id2)
-        )
+        })
 
 
 @dataclass(frozen=True, init=False)
