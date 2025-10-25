@@ -1,9 +1,11 @@
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from typing import Iterable, Mapping, TypeVar
+from typing import TypeVar
 
-from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
-from .models import LightAssembly
+from ..assembly import Assembly
+from ..component import Component
+from ..light_assembly import LightAssembly
 
 
 @dataclass(frozen=True)

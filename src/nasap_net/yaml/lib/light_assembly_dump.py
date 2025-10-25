@@ -2,8 +2,7 @@ from typing import Any
 
 import yaml
 
-from nasap_net.light_assembly import LightAssembly
-from nasap_net.models import Bond
+from nasap_net.models import Bond, LightAssembly
 
 
 def dump_light_assemblies(assemblies: Any) -> str:

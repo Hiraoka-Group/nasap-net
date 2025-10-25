@@ -1,9 +1,10 @@
 from collections.abc import Mapping
 from typing import TypeVar
 
-from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
-from .models import LightAssembly
+from ..assembly import Assembly
+from ..component import Component
+from ..light_assembly import LightAssembly
 
 _T = TypeVar('_T', bound=ID)
 

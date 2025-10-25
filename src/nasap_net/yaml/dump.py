@@ -2,11 +2,10 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import TypeVar
 
-from nasap_net.light_assembly import convert_assemblies_to_light_ones
 from nasap_net.models import Assembly
+from nasap_net.models.conversion import convert_assemblies_to_light_ones
 from nasap_net.types import ID
-from nasap_net.yaml.lib import dump_components, \
-    dump_light_assemblies
+from nasap_net.yaml.lib import dump_components, dump_light_assemblies
 
 _T = TypeVar('_T', bound=ID)
 
