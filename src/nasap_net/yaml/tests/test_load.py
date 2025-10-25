@@ -1,0 +1,59 @@
+from nasap_net.models import Assembly, AuxEdge, Bond, Component
+from nasap_net.yaml import load
+
+
+def test_load():
+    yaml_str = """M: !Component
+  kind: M
+  sites: [0, 1]
+M(aux): !Component
+  kind: M(aux)
+  sites: [0, 1, 2]
+  aux_edges:
+  - sites: [0, 1]
+  - sites: [0, 2]
+    kind: cis
+X: !Component
+  kind: X
+  sites: [0]
+---
+M(aux)X3: !LightAssembly
+  components: {M0: M(aux), X0: X, X1: X, X2: X}
+  bonds:
+  - [M0, 0, X0, 0]
+  - [M0, 1, X1, 0]
+  - [M0, 2, X2, 0]
+MX2: !LightAssembly
+  components: {M0: M, X0: X, X1: X}
+  bonds:
+  - [M0, 0, X0, 0]
+  - [M0, 1, X1, 0]
+  id: MX2
+free_X: !LightAssembly
+  components: {X0: X}
+  bonds: []
+"""
+
+    loaded = load(yaml_str)
+
+    M = Component(kind='M', sites=[0, 1])
+    X = Component(kind='X', sites=[0])
+    M_aux = Component(
+        kind='M(aux)', sites=[0, 1, 2],
+        aux_edges=[AuxEdge(0, 1), AuxEdge(0, 2, kind='cis')])
+
+    assert loaded == {
+        'free_X': Assembly(components={'X0': X}, bonds=[]),
+        # MX2: X0(0)-(0)M0(1)-(0)X1
+        'MX2': Assembly(
+            id_='MX2',
+            components={'X0': X, 'M0': M, 'X1': X},
+            bonds=[Bond('X0', 0, 'M0', 0), Bond('M0', 1, 'X1', 0)]),
+        'M(aux)X3': Assembly(
+            components={'M0': M_aux, 'X0': X, 'X1': X, 'X2': X},
+            bonds=[
+                Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'X1', 0),
+                Bond('M0', 2, 'X2', 0)
+            ]
+        ),
+    }
