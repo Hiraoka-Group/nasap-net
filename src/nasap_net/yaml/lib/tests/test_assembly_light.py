@@ -1,12 +1,40 @@
-import yaml
+import pytest
 
 from nasap_net.light_assembly import LightAssembly
 from nasap_net.models import Bond
-from nasap_net.yaml.separative.lib import AssemblyLightLoader, \
-    LightAssemblyDumper
+from nasap_net.yaml.lib import dump_light_assemblies, \
+    load_light_assemblies
 
 
-def test_assembly_light_dump_and_load():
+@pytest.fixture
+def MX2():
+    return LightAssembly(
+        id_='MX2',
+        components={'X0': 'X', 'M0': 'M', 'X1': 'X'},
+        bonds=[Bond('X0', 0, 'M0', 0), Bond('M0', 1, 'X1', 0)])
+
+@pytest.fixture
+def dumped_MX2():
+    return """!LightAssembly
+components: {M0: M, X0: X, X1: X}
+bonds:
+- [M0, 0, X0, 0]
+- [M0, 1, X1, 0]
+id: MX2
+"""
+
+
+def test_dump(MX2, dumped_MX2):
+    dumped = dump_light_assemblies(MX2)
+    assert dumped == dumped_MX2
+
+
+def test_load(MX2, dumped_MX2):
+    loaded = load_light_assemblies(dumped_MX2)  # type: ignore
+    assert loaded == MX2
+
+
+def test_round_trip():
     assemblies = {
         # MX2: X0(0)-(0)M0(1)-(0)X1
         'MX2': LightAssembly(
@@ -28,9 +56,6 @@ def test_assembly_light_dump_and_load():
                    Bond('M0', 2, 'X1', 0), Bond('M0', 3, 'L1', 0)]),
     }
 
-    dumped_assemblies = yaml.dump(
-        assemblies, Dumper=LightAssemblyDumper, sort_keys=False,
-        default_flow_style=None)
-    loaded_assemblies = yaml.load(
-        dumped_assemblies, Loader=AssemblyLightLoader)
+    dumped_assemblies = dump_light_assemblies(assemblies)
+    loaded_assemblies = load_light_assemblies(dumped_assemblies)
     assert loaded_assemblies == assemblies

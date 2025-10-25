@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterable, Mapping
+from typing import Iterable, Mapping, TypeVar
 
 from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
@@ -19,8 +19,10 @@ class InconsistentComponentKindError(Exception):
     pass
 
 
+_T = TypeVar('_T', bound=ID)
+
 def convert_assemblies_to_light_ones(
-        assemblies: Mapping[ID, Assembly]) -> ConversionResult:
+        assemblies: Mapping[_T, Assembly]) -> ConversionResult:
     light_assemblies = _assemblies_to_light_assemblies(assemblies)
 
     try:
@@ -38,7 +40,7 @@ def convert_assemblies_to_light_ones(
 
 
 def _extract_components(assemblies: Iterable[Assembly]) -> dict[str, Component]:
-    components = {}
+    components: dict[str, Component] = {}
     for assembly in assemblies:
         for comp in assembly.components.values():
             if comp.kind in components:
@@ -51,7 +53,7 @@ def _extract_components(assemblies: Iterable[Assembly]) -> dict[str, Component]:
 
 
 def _assemblies_to_light_assemblies(
-        assemblies: Mapping[ID, Assembly],
+        assemblies: Mapping[_T, Assembly],
         ) -> Mapping[ID, LightAssembly]:
     return {
         assembly_id: LightAssembly.from_assembly(assembly)

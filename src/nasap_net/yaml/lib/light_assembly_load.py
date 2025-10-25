@@ -7,14 +7,22 @@ from nasap_net.models import Bond, Component
 from nasap_net.types import ID
 
 
-class AssemblyLightLoader(yaml.SafeLoader):
+def load_light_assemblies(yaml_str: str) -> dict[ID, LightAssembly]:
+    """Load light assemblies from a YAML string."""
+    return yaml.load(yaml_str, Loader=_LightAssemblyLoader)  # type: ignore
+
+
+class _LightAssemblyLoader(yaml.SafeLoader):
     component_context: Mapping[str, Component] = {}
 
-    def ignore_aliases(self, data):
+    def ignore_aliases(self, _):
         return True
 
 
-def _light_assembly_constructor(loader: yaml.Loader, node: yaml.Node) -> LightAssembly:
+def _light_assembly_constructor(
+        loader: _LightAssemblyLoader,
+        node: yaml.Node,
+) -> LightAssembly:
     assert isinstance(node, yaml.MappingNode)
     mapping = loader.construct_mapping(node, deep=True)
     components: dict[ID, str] = mapping['components']
@@ -26,9 +34,13 @@ def _light_assembly_constructor(loader: yaml.Loader, node: yaml.Node) -> LightAs
         id_=assembly_id,
     )
 
+
 def _construct_bond(bonds: Iterable[ID]) -> Bond:
-        comp_id1, site_id1, comp_id2, site_id2 = bonds
-        return Bond(comp_id1, site_id1, comp_id2, site_id2)
+    comp_id1, site_id1, comp_id2, site_id2 = bonds
+    return Bond(comp_id1, site_id1, comp_id2, site_id2)
 
 
-yaml.add_constructor('!LightAssembly', _light_assembly_constructor, Loader=AssemblyLightLoader)
+yaml.add_constructor(
+    '!LightAssembly', _light_assembly_constructor,
+    Loader=_LightAssemblyLoader
+)

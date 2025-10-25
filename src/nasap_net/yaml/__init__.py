@@ -1,2 +1,2 @@
-from .assembly_dump import AssemblyDumper
-from .separative import dump_assemblies_and_components_separately, dump_into_documents
+from .dump import dump
+from .load import load

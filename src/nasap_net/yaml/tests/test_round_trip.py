@@ -1,10 +1,10 @@
-import yaml
-
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
-from nasap_net.yaml import AssemblyDumper
+from nasap_net.yaml import load
+from nasap_net.yaml.dump import \
+    dump
 
 
-def test_assembly_dump_and_load():
+def test_round_trip():
     M = Component(kind='M', sites=[0, 1])
     L = Component(kind='L', sites=[0, 1])
     X = Component(kind='X', sites=[0])
@@ -15,6 +15,7 @@ def test_assembly_dump_and_load():
     assemblies = {
         # MX2: X0(0)-(0)M0(1)-(0)X1
         'MX2': Assembly(
+            id_='MX2',
             components={'X0': X, 'M0': M, 'X1': X},
             bonds=[Bond('X0', 0, 'M0', 0), Bond('M0', 1, 'X1', 0)]),
         'free_X': Assembly(components={'X0': X}, bonds=[]),
@@ -31,9 +32,7 @@ def test_assembly_dump_and_load():
             bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'L0', 0),
                    Bond('M0', 2, 'X1', 0), Bond('M0', 3, 'L1', 0)]),
     }
-    dumped_assemblies = yaml.dump(
-        assemblies, Dumper=AssemblyDumper, sort_keys=False,
-        default_flow_style=None)
-    print()
-    print(dumped_assemblies)
-    # TODO: implement loading test
+
+    dumped = dump(assemblies)
+    loaded = load(dumped)
+    assert loaded == assemblies
