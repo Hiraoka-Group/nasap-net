@@ -1,9 +1,11 @@
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from typing import Iterable, Mapping, Self
+from typing import Self
 
 from nasap_net.exceptions import IDNotSetError
-from nasap_net.models import Assembly, Bond
 from nasap_net.types import ID
+from .assembly import Assembly
+from .bond import Bond
 
 
 @dataclass(frozen=True, init=False)

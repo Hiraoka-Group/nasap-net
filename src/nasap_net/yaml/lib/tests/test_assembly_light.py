@@ -1,9 +1,7 @@
 import pytest
 
-from nasap_net.light_assembly import LightAssembly
-from nasap_net.models import Bond
-from nasap_net.yaml.lib import dump_light_assemblies, \
-    load_light_assemblies
+from nasap_net.models import Bond, LightAssembly
+from nasap_net.yaml.lib import dump_light_assemblies, load_light_assemblies
 
 
 @pytest.fixture

@@ -2,8 +2,7 @@ from collections.abc import Iterable, Mapping
 
 import yaml
 
-from nasap_net.light_assembly import LightAssembly
-from nasap_net.models import Bond, Component
+from nasap_net.models import Bond, Component, LightAssembly
 from nasap_net.types import ID
 
 

@@ -1,114 +1,16 @@
-from collections.abc import Iterable, Iterator, Mapping
-from dataclasses import dataclass, field
-from functools import cached_property, total_ordering
+from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
+from functools import cached_property
 from types import MappingProxyType
 from typing import Self
 
 from frozendict import frozendict
 
 from nasap_net.exceptions import IDNotSetError
-from nasap_net.types import ID, SupportsDunderLt
-
-
-@dataclass(frozen=True, order=True)
-class BindingSite(SupportsDunderLt):
-    """A specific binding site on a specific component."""
-    component_id: ID
-    site_id: ID
-
-
-@dataclass(frozen=True, init=False, order=True)
-class Bond(Iterable, SupportsDunderLt):
-    """A bond between two binding sites on two components."""
-    sites: tuple[BindingSite, BindingSite]
-
-    def __init__(self, comp_id1: ID, site1: ID, comp_id2: ID, site2: ID):
-        if comp_id1 == comp_id2:
-            raise ValueError("Components in a bond must be different.")
-        comp_and_site1 = BindingSite(component_id=comp_id1, site_id=site1)
-        comp_and_site2 = BindingSite(component_id=comp_id2, site_id=site2)
-        object.__setattr__(
-            self, 'sites',
-            tuple(sorted((comp_and_site1, comp_and_site2))))  # type:ignore
-
-    def __iter__(self) -> Iterator[BindingSite]:
-        return iter(self.sites)
-
-    @property
-    def component_ids(self) -> tuple[ID, ID]:
-        """Return the component IDs involved in the bond."""
-        return self.sites[0].component_id, self.sites[1].component_id
-
-    @classmethod
-    def from_sites(cls, site1: BindingSite, site2: BindingSite) -> 'Bond':
-        """Create a Bond from two BindingSite instances."""
-        return cls(
-            comp_id1=site1.component_id,
-            comp_id2=site2.component_id,
-            site1=site1.site_id,
-            site2=site2.site_id
-            )
-
-
-@total_ordering
-@dataclass(frozen=True, init=False)
-class AuxEdge(SupportsDunderLt):
-    """An auxiliary edge between two binding sites on the same component."""
-    site_ids: frozenset[ID]
-    kind: str | None = field(kw_only=True, default=None)
-
-    def __init__(
-            self, site_id1: ID, site_id2: ID, kind: str | None = None):
-        if site_id1 == site_id2:
-            raise ValueError("Sites in an auxiliary edge must be different.")
-        object.__setattr__(
-            self, 'site_ids',
-            frozenset({site_id1, site_id2}))
-        object.__setattr__(self, 'kind', kind)
-
-    def __lt__(self, other):
-        if not isinstance(other, AuxEdge):
-            return NotImplemented
-        self_values = [sorted(self.site_ids), self.kind]
-        other_values = [sorted(other.site_ids), other.kind]
-        return self_values < other_values
-
-    def get_binding_sites(
-            self, comp_id: ID,
-    ) -> frozenset[BindingSite]:
-        """Return the binding sites of this auxiliary edge."""
-        site_id1, site_id2 = self.site_ids
-        return frozenset({
-            BindingSite(component_id=comp_id, site_id=site_id1),
-            BindingSite(component_id=comp_id, site_id=site_id2)
-        })
-
-
-@dataclass(frozen=True, init=False)
-class Component:
-    """Component"""
-    kind: str
-    site_ids: frozenset[ID]
-    aux_edges: frozenset[AuxEdge]
-
-    def __init__(
-            self, kind: str, sites: Iterable[ID],
-            aux_edges: Iterable[AuxEdge] | None = None
-            ):
-        object.__setattr__(self, 'kind', kind)
-        object.__setattr__(self, 'site_ids', frozenset(sites))
-        if aux_edges is None:
-            aux_edges = frozenset()
-        else:
-            aux_edges = frozenset(aux_edges)
-        object.__setattr__(self, 'aux_edges', aux_edges)
-
-    def get_binding_sites(self, comp_id: ID) -> frozenset[BindingSite]:
-        """Return the binding sites of this component."""
-        return frozenset(
-            BindingSite(component_id=comp_id, site_id=site_id)
-            for site_id in self.site_ids
-        )
+from nasap_net.types import ID
+from .binding_site import BindingSite
+from .bond import Bond
+from .component import Component
 
 
 class InvalidBondError(Exception):
@@ -126,7 +28,7 @@ class Assembly:
 
     Parameters
     ----------
-    components : Mapping[C, Component[S]]
+    components : Mapping[C, nasap_net.models.component.Component[S]]
         A mapping from component IDs to their corresponding components.
     bonds : Iterable[Bond[C, S]]
         An iterable of bonds connecting the components.

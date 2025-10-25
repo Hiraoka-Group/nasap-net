@@ -1,6 +1,5 @@
-from nasap_net.light_assembly import LightAssembly, \
-    convert_light_assemblies_to_rich_ones
-from nasap_net.models import Assembly, Component
+from nasap_net.models import Assembly, Component, LightAssembly
+from nasap_net.models.conversion import convert_light_assemblies_to_rich_ones
 from nasap_net.types import ID
 from nasap_net.yaml.helper import split_yaml_documents
 from nasap_net.yaml.lib import load_components, load_light_assemblies

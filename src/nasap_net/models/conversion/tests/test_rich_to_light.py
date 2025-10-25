@@ -1,9 +1,8 @@
 import pytest
 
-from nasap_net.light_assembly import InconsistentComponentKindError, \
+from nasap_net.models import Assembly, AuxEdge, Bond, Component, LightAssembly
+from nasap_net.models.conversion import InconsistentComponentKindError, \
     convert_assemblies_to_light_ones
-from nasap_net.light_assembly.models import LightAssembly
-from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
 def test():
