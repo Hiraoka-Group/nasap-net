@@ -65,6 +65,9 @@ class IntraReactionExplorer(ReactionExplorer):
           - The component kind of the metal binding site is `mle_kind.metal`.
           - The component kind of the leaving binding site is `mle_kind.leaving`.
           - The entering binding site is free and has the component kind `mle_kind.entering`.
+          - The component of the entering binding site and the component of the metal
+            binding site have no bonds between them.
+            (Currently, parallel bonds are not supported.)
         """
         ml_pair = _enum_ml_pair(
             self.assembly,
@@ -75,7 +78,9 @@ class IntraReactionExplorer(ReactionExplorer):
 
         for (metal, leaving), entering in itertools.product(
                 ml_pair, entering_sites):
-            yield MLE(metal, leaving, entering)
+            if not self.assembly.has_bond_between_components(
+                    metal.component_id, entering.component_id):
+                yield MLE(metal, leaving, entering)
 
     def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
         unique_mle_trios = extract_unique_site_combinations(
