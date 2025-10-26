@@ -2,9 +2,7 @@ import pytest
 
 from nasap_net.models import Assembly, Component
 from nasap_net.models.component_consistency_check import \
-    check_component_consistency
-from nasap_net.models.exceptions import \
-    InconsistentComponentBetweenAssembliesError
+    InconsistentComponentBetweenAssembliesError, check_component_consistency
 
 
 def test_valid_case():

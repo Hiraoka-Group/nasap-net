@@ -10,7 +10,7 @@ from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.types import ID
 from .binding_site import BindingSite
 from .bond import Bond
-from .component import Component, InconsistentComponentError
+from .component import Component
 
 
 @dataclass
@@ -23,6 +23,23 @@ class InvalidBondError(NasapNetError):
         if self.detail:
             return f'{base_msg} - {self.detail}'
         return base_msg
+
+
+@dataclass
+class InconsistentComponentError(Exception):
+    """Raised when there are inconsistent definitions for a component kind,
+    i.e., the same kind name corresponds to different component structures.
+    """
+    component_kind: str
+    component1: Component
+    component2: Component
+
+    def __str__(self) -> str:
+        return (
+            f'Inconsistent definitions for component kind '
+            f'"{self.component_kind}": '
+            f'Component 1: {self.component1}, Component 2: {self.component2}.'
+        )
 
 
 @dataclass(frozen=True, init=False)

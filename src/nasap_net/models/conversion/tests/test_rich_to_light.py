@@ -1,9 +1,9 @@
 import pytest
 
 from nasap_net.models import Assembly, AuxEdge, Bond, Component, LightAssembly
-from nasap_net.models.conversion import convert_assemblies_to_light_ones
-from nasap_net.models.exceptions import \
+from nasap_net.models.component_consistency_check import \
     InconsistentComponentBetweenAssembliesError
+from nasap_net.models.conversion import convert_assemblies_to_light_ones
 
 
 def test():

@@ -1,7 +1,7 @@
 import pytest
 
 from nasap_net.models import Assembly, Bond, Component
-from nasap_net.models.component import InconsistentComponentError
+from nasap_net.models.assembly import InconsistentComponentError
 
 
 def test_assembly():

@@ -59,20 +59,3 @@ class Component:
             BindingSite(component_id=comp_id, site_id=site_id)
             for site_id in self.site_ids
         )
-
-
-@dataclass
-class InconsistentComponentError(Exception):
-    """Raised when there are inconsistent definitions for a component kind,
-    i.e., the same kind name corresponds to different component structures.
-    """
-    component_kind: str
-    component1: Component
-    component2: Component
-
-    def __str__(self) -> str:
-        return (
-            f'Inconsistent definitions for component kind '
-            f'"{self.component_kind}": '
-            f'Component 1: {self.component1}, Component 2: {self.component2}.'
-        )
