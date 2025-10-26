@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 
+from nasap_net.exceptions import NasapNetError
 from nasap_net.models import Assembly, BindingSite, Bond
 from nasap_net.types import ID
 from .lib import extract_unique_site_combinations, separate_if_possible
@@ -242,7 +243,7 @@ def _enum_ml_pair(
     return ml_pair
 
 
-class ComponentIDCollisionError(Exception):
+class ComponentIDCollisionError(NasapNetError):
     pass
 
 

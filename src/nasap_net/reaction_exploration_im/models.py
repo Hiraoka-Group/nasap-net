@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from nasap_net.exceptions import NasapNetError
 from nasap_net.models import Assembly, BindingSite
 from nasap_net.types import ID
 
@@ -11,7 +12,7 @@ class MLEKind:
     entering: str
 
 
-class DuplicationNotSetError(Exception):
+class DuplicationNotSetError(NasapNetError):
     pass
 
 
