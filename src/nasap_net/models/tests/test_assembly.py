@@ -23,3 +23,40 @@ def test_inconsistent_component_kind_error():
             components={'L0': L1, 'L1': L2},
             bonds=set()
         )
+
+
+def test___repr__():
+    M = Component(kind='M', sites=[0, 1])
+    X = Component(kind='X', sites=[0])
+    assembly = Assembly(
+        components={'X0': X, 'M0': M, 'X1': X},
+        bonds={Bond('X0', 0, 'M0', 0), Bond('M0', 1, 'X1', 0)},
+    )
+    expected_repr = (
+        "<Assembly components={'M0': 'M', 'X0': 'X', 'X1': 'X'}, "
+        "bonds=[('M0', 0, 'X0', 0), ('M0', 1, 'X1', 0)]>"
+    )
+    assert repr(assembly) == expected_repr
+
+
+def test___repr___with_id():
+    X = Component(kind='X', sites=[0])
+    assembly = Assembly(
+        id_='free_X',
+        components={'X0': X},
+        bonds=[],
+    )
+    expected_repr = (
+        "<Assembly id='free_X', components={'X0': 'X'}, bonds=[]>"
+    )
+
+
+def test___repr___with_no_bonds():
+    X = Component(kind='X', sites=[0])
+    assembly = Assembly(
+        components={'X0': X},
+        bonds=[],
+    )
+    expected_repr = (
+        "<Assembly components={'X0': 'X'}, bonds=[]>"
+    )

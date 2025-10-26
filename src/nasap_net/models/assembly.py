@@ -85,17 +85,17 @@ class Assembly:
 
     def __repr__(self):
         comp_str = ', '.join(
-            f'{comp_id}: {comp.kind}' for comp_id, comp
-            in self._components.items()
+            f'{repr(comp_id)}: {repr(comp.kind)}' for comp_id, comp
+            in sorted(self._components.items())
         )
 
         def bond_to_str(bond: Bond) -> str:
-            site1, site2 = bond.sites
+            site1, site2 = sorted(bond.sites)
             return (
-                f'({site1.component_id}, {site1.site_id}, '
-                f'{site2.component_id}, {site2.site_id})'
+                f'({repr(site1.component_id)}, {repr(site1.site_id)}, '
+                f'{repr(site2.component_id)}, {repr(site2.site_id)})'
             )
-        bond_str = ', '.join(bond_to_str(bond) for bond in self.bonds)
+        bond_str = ', '.join(bond_to_str(bond) for bond in sorted(self.bonds))
 
         if self._id is None:
             return f'<Assembly components={{{comp_str}}}, bonds=[{bond_str}]>'
