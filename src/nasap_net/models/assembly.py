@@ -11,6 +11,7 @@ from nasap_net.types import ID
 from .binding_site import BindingSite
 from .bond import Bond
 from .component import Component
+from .exceptions import InconsistentComponentKindError
 
 
 class InvalidBondError(Exception):
@@ -35,7 +36,9 @@ class Assembly:
 
     Raises
     ------
-    ValueError
+    - InconsistentComponentKindError
+        If components with the same kind have different structures.
+    - InvalidBondError
         - If any bond references a non-existent component or site.
         - If a component bonds to itself.
         - If a site is used more than once.
@@ -73,42 +76,10 @@ class Assembly:
         """Return the ID of the assembly, or None if not set."""
         return self._id
 
-    def _validate(self):
-        component_keys = set(self._components.keys())
-        used_sites = set()
-        for bond in self.bonds:
-            # Validate that the components exist
-            for comp_id in bond.component_ids:
-                if comp_id not in component_keys:
-                    raise InvalidBondError(
-                        bond=bond,
-                        msg=f"Component {comp_id} not found in assembly.")
-
-            # Validate that the sites exist in the respective components
-            for site in bond.sites:
-                component = self._components[site.component_id]
-                if site.site_id not in component.site_ids:
-                    raise InvalidBondError(
-                        bond=bond,
-                        msg=(
-                            f"Site {site.site_id} not found in component "
-                            f"{site.component_id}."))
-
-                # Validate that the site is not already used
-                if site in used_sites:
-                    raise InvalidBondError(
-                        bond=bond,
-                        msg=f"Site {site} is already used in another bond.")
-                used_sites.add(site)
-
     @property
     def components(self) -> Mapping[ID, Component]:
         """Return the components in the assembly as an immutable mapping."""
         return MappingProxyType(self._components)
-
-    def _get_component_of_site(self, site: BindingSite) -> Component:
-        """Return the component corresponding to the given binding site."""
-        return self._components[site.component_id]
 
     def get_component_kind_of_site(self, site: BindingSite) -> str:
         """Return the component kind of the given binding site."""
@@ -138,28 +109,6 @@ class Assembly:
         """Check if a binding site has a bond."""
         return site in self._site_connection
 
-    @cached_property
-    def _all_sites(self) -> frozenset[BindingSite]:
-        """Return all binding sites in the assembly."""
-        sites = set()
-        for comp_id, component in self._components.items():
-            for site in component.site_ids:
-                sites.add(BindingSite(component_id=comp_id, site_id=site))
-        return frozenset(sites)
-
-    @cached_property
-    def _site_connection(self) -> Mapping[BindingSite, BindingSite]:
-        """Return a mapping of each binding site to its connected binding site.
-
-        Only bonded sites are included in the mapping.
-        """
-        connection = {}
-        for bond in self.bonds:
-            site1, site2 = bond.sites
-            connection[site1] = site2
-            connection[site2] = site1
-        return MappingProxyType(connection)
-
     def add_bond(self, site1: BindingSite, site2: BindingSite):
         """Return a new assembly with an additional bond."""
         new_bond = Bond.from_sites(site1, site2)
@@ -188,3 +137,71 @@ class Assembly:
             bonds = self.bonds
         return self.__class__(
             components=components, bonds=bonds, id_=id_)
+
+    @cached_property
+    def _all_sites(self) -> frozenset[BindingSite]:
+        """Return all binding sites in the assembly."""
+        sites = set()
+        for comp_id, component in self._components.items():
+            for site in component.site_ids:
+                sites.add(BindingSite(component_id=comp_id, site_id=site))
+        return frozenset(sites)
+
+    @cached_property
+    def _site_connection(self) -> Mapping[BindingSite, BindingSite]:
+        """Return a mapping of each binding site to its connected binding site.
+
+        Only bonded sites are included in the mapping.
+        """
+        connection = {}
+        for bond in self.bonds:
+            site1, site2 = bond.sites
+            connection[site1] = site2
+            connection[site2] = site1
+        return MappingProxyType(connection)
+
+    def _get_component_of_site(self, site: BindingSite) -> Component:
+        """Return the component corresponding to the given binding site."""
+        return self._components[site.component_id]
+
+    def _validate(self):
+        self._validate_components()
+        self._validate_bonds()
+
+    def _validate_components(self):
+        # Components with the same kind should have the same structure.
+        comp_kind_to_obj: dict[str, Component] = {}
+        for comp in self._components.values():
+            if comp.kind in comp_kind_to_obj:
+                if comp != comp_kind_to_obj[comp.kind]:
+                    raise InconsistentComponentKindError(comp.kind)
+            else:
+                comp_kind_to_obj[comp.kind] = comp
+
+    def _validate_bonds(self):
+        component_keys = set(self._components.keys())
+        used_sites = set()
+        for bond in self.bonds:
+            # Validate that the components exist
+            for comp_id in bond.component_ids:
+                if comp_id not in component_keys:
+                    raise InvalidBondError(
+                        bond=bond,
+                        msg=f"Component {comp_id} not found in assembly.")
+
+            # Validate that the sites exist in the respective components
+            for site in bond.sites:
+                component = self._components[site.component_id]
+                if site.site_id not in component.site_ids:
+                    raise InvalidBondError(
+                        bond=bond,
+                        msg=(
+                            f"Site {site.site_id} not found in component "
+                            f"{site.component_id}."))
+
+                # Validate that the site is not already used
+                if site in used_sites:
+                    raise InvalidBondError(
+                        bond=bond,
+                        msg=f"Site {site} is already used in another bond.")
+                used_sites.add(site)

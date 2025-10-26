@@ -5,6 +5,7 @@ from typing import TypeVar
 from nasap_net.types import ID
 from ..assembly import Assembly
 from ..component import Component
+from ..exceptions import InconsistentComponentKindError
 from ..light_assembly import LightAssembly
 
 
@@ -12,19 +13,6 @@ from ..light_assembly import LightAssembly
 class ConversionResult:
     light_assemblies: Mapping[ID, LightAssembly]
     components: Mapping[str, Component]
-
-
-class InconsistentComponentKindError(Exception):
-    """Raised when there are inconsistent definitions for a component kind,
-    i.e., the same kind name corresponds to different component structures.
-    """
-    def __init__(
-            self,
-            component_kind: str,
-            message: str = 'Inconsistent definitions for component kind.'
-    ) -> None:
-        self.component_kind = component_kind
-        super().__init__(f'{message}: Kind: "{component_kind}".')
 
 
 _T = TypeVar('_T', bound=ID)
