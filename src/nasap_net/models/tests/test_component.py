@@ -14,6 +14,6 @@ def test_component():
 def test_component_immutability():
     M = Component(kind="M", sites=["a", "b"])
     with pytest.raises(FrozenInstanceError):
-        M.kind = "M2"
+        M.kind = "M2"  # type: ignore[attr-defined, misc]
     with pytest.raises(FrozenInstanceError):
-        M.site_ids = frozenset({"c"})
+        M.site_ids = frozenset({"c"})  # type: ignore[attr-defined, misc]
