@@ -27,7 +27,7 @@ class InvalidBondError(NasapNetError):
 
 
 @dataclass
-class InconsistentComponentError(Exception):
+class InconsistentComponentError(NasapNetError):
     """Raised when there are inconsistent definitions for a component kind,
     i.e., the same kind name corresponds to different component structures.
     """
@@ -40,6 +40,19 @@ class InconsistentComponentError(Exception):
             f'Inconsistent definitions for component kind '
             f'"{self.component_kind}": '
             f'Component 1: {self.component1}, Component 2: {self.component2}.'
+        )
+
+
+@dataclass
+class ParallelBondError(NasapNetError):
+    bond1: Bond
+    bond2: Bond
+
+    def __str__(self) -> str:
+        return (
+            f'Multiple bonds between the same pair of components '
+            f'are not supported: '
+            f'Bond 1: {self.bond1}, Bond 2: {self.bond2}.'
         )
 
 
@@ -63,11 +76,18 @@ class Assembly:
         - If a component bonds to itself.
         - If a site is used more than once.
         - If the assembly is not connected.
+    - ParallelBondError
+        If there are multiple bonds between the same pair of components.
 
     Warnings
     --------
     - The assembly does not enforce connectivity; it is the user's
       responsibility to ensure that the assembly is connected as needed.
+
+    Notes
+    -----
+    Currently, the assembly does not support parallel bonds (multiple bonds
+    between the same pair of components), e.g., chelate complexes.
     """
     _components: frozendict[ID, Component]
     bonds: frozenset[Bond]
@@ -143,7 +163,11 @@ class Assembly:
 
     def has_bond(self, site: BindingSite) -> bool:
         """Check if a binding site has a bond."""
-        return site in self._site_connection
+        return site in self._sites_with_bond
+
+    def has_bond_between_components(self, comp_id1: ID, comp_id2: ID) -> bool:
+        """Check if there is a bond between two components."""
+        return frozenset({comp_id1, comp_id2}) in self._component_connection
 
     def add_bond(self, site1: BindingSite, site2: BindingSite):
         """Return a new assembly with an additional bond."""
@@ -184,17 +208,21 @@ class Assembly:
         return frozenset(sites)
 
     @cached_property
-    def _site_connection(self) -> Mapping[BindingSite, BindingSite]:
-        """Return a mapping of each binding site to its connected binding site.
-
-        Only bonded sites are included in the mapping.
-        """
-        connection = {}
+    def _sites_with_bond(self) -> frozenset[BindingSite]:
+        """Return a set of binding sites that have bonds."""
+        site_with_bonds = set()
         for bond in self.bonds:
-            site1, site2 = bond.sites
-            connection[site1] = site2
-            connection[site2] = site1
-        return MappingProxyType(connection)
+            for site in bond.sites:
+                site_with_bonds.add(site)
+        return frozenset(site_with_bonds)
+
+    @cached_property
+    def _component_connection(self) -> frozenset[frozenset[ID]]:
+        connections = set()
+        for bond in self.bonds:
+            comp_ids = frozenset(bond.component_ids)
+            connections.add(comp_ids)
+        return frozenset(connections)
 
     def _get_component_of_site(self, site: BindingSite) -> Component:
         """Return the component corresponding to the given binding site."""
@@ -203,6 +231,7 @@ class Assembly:
     def _validate(self):
         self._validate_components()
         self._validate_bonds()
+        self._validate_parallel_bonds()
 
     def _validate_components(self):
         # Components with the same kind should have the same structure.
@@ -245,3 +274,13 @@ class Assembly:
                         bond=bond,
                         detail=f"Site {site} is already used in another bond.")
                 used_sites.add(site)
+
+    def _validate_parallel_bonds(self):
+        # Currently, parallel bonds (multiple bonds between the same pair
+        # of components) are not supported.
+        bonded_pairs = set()
+        for bond in self.bonds:
+            comp_pair = frozenset(bond.component_ids)
+            if comp_pair in bonded_pairs:
+                raise ParallelBondError(bond1=bond, bond2=bond)
+            bonded_pairs.add(comp_pair)
