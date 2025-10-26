@@ -1,19 +1,17 @@
 from collections.abc import Iterable, Mapping
-from typing import TypeVar
+from typing import Any
 
 from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
 from .lib import cap_fragments_with_ligand, enumerate_fragments, \
     extract_unique_assemblies_by_isomorphism
 
-_T = TypeVar('_T', bound=ID)
-
 
 def enumerate_assemblies(
         template: Assembly,
         *,
         leaving_ligand: Component,
-        symmetry_operations: Iterable[Mapping[_T, ID]] | None = None
+        symmetry_operations: Iterable[Mapping[Any, ID]] | None = None
 ) -> list[Assembly]:
     """Enumerate assemblies which can be formed by adding the leaving ligand
     to the fragments of the template assembly.

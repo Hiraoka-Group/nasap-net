@@ -56,6 +56,18 @@ class ParallelBondError(NasapNetError):
         )
 
 
+@dataclass
+class BondNotFoundError(NasapNetError):
+    comp_id1: ID
+    comp_id2: ID
+
+    def __str__(self) -> str:
+        return (
+            f'No bond found between components '
+            f'{self.comp_id1} and {self.comp_id2}.'
+        )
+
+
 @dataclass(frozen=True, init=False)
 class Assembly:
     """An assembly of components connected by bonds.
@@ -168,6 +180,19 @@ class Assembly:
     def has_bond_between_components(self, comp_id1: ID, comp_id2: ID) -> bool:
         """Check if there is a bond between two components."""
         return frozenset({comp_id1, comp_id2}) in self._component_connection
+
+    def get_bond_by_comp_ids(self, comp_id1: ID, comp_id2: ID) -> Bond:
+        """Return the bond between two components, or None if not bonded.
+
+        Notes
+        -----
+        This method assumes that there is no parallel bonds between the
+        same pair of components.
+        """
+        for bond in self.bonds:
+            if bond.component_ids == frozenset({comp_id1, comp_id2}):
+                return bond
+        raise BondNotFoundError(comp_id1=comp_id1, comp_id2=comp_id2)
 
     def add_bond(self, site1: BindingSite, site2: BindingSite):
         """Return a new assembly with an additional bond."""
