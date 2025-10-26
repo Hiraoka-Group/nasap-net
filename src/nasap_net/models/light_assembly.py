@@ -1,11 +1,12 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from typing import Self
+from typing import Any, Self
 
 from nasap_net.exceptions import IDNotSetError
 from nasap_net.types import ID
 from .assembly import Assembly
 from .bond import Bond
+from .helper import construct_repr
 
 
 @dataclass(frozen=True, init=False)
@@ -25,24 +26,12 @@ class LightAssembly:
         object.__setattr__(self, '_id', id_)
 
     def __repr__(self):
-        def bond_to_str(bond: Bond) -> str:
-            site1, site2 = sorted(bond.sites)
-            return (
-                f'({repr(site1.component_id)}, {repr(site1.site_id)}, '
-                f'{repr(site2.component_id)}, {repr(site2.site_id)})'
-            )
-        bond_str = ', '.join(bond_to_str(bond) for bond in sorted(self.bonds))
-
-        if self._id is None:
-            return (
-                f'<LightAssembly components={str(self.components)}, '
-                f'bonds=[{bond_str}]>'
-            )
-        return (
-            f'<LightAssembly id={repr(self._id)}, '
-            f'components={str(self.components)}, '
-            f'bonds=[{bond_str}]>'
-        )
+        fields: dict[str, Any] = {}
+        if self._id is not None:
+            fields['id'] = self._id
+        fields['components'] = self.components
+        fields['bonds'] = [bond.to_tuple() for bond in sorted(self.bonds)]
+        return construct_repr(self.__class__, fields)
 
     @property
     def id(self) -> ID:

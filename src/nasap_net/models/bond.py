@@ -38,6 +38,14 @@ class Bond(Iterable, SupportsDunderLt):
         """Return the component IDs involved in the bond."""
         return frozenset(site.component_id for site in self.sites)
 
+    def to_tuple(self) -> tuple[ID, ID, ID, ID]:
+        """Return the bond as a tuple of component and site IDs."""
+        site1, site2 = sorted(self.sites)
+        return (
+            site1.component_id, site1.site_id,
+            site2.component_id, site2.site_id,
+        )
+
     @classmethod
     def from_sites(cls, site1: BindingSite, site2: BindingSite) -> Self:
         """Create a Bond from two BindingSite instances."""

@@ -2,7 +2,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from functools import cached_property
 from types import MappingProxyType
-from typing import Self
+from typing import Any, Self
 
 from frozendict import frozendict
 
@@ -11,6 +11,7 @@ from nasap_net.types import ID
 from .binding_site import BindingSite
 from .bond import Bond
 from .component import Component
+from .helper import construct_repr
 
 
 @dataclass
@@ -84,25 +85,12 @@ class Assembly:
         self._validate()
 
     def __repr__(self):
-        comp_str = ', '.join(
-            f'{repr(comp_id)}: {repr(comp.kind)}' for comp_id, comp
-            in sorted(self._components.items())
-        )
-
-        def bond_to_str(bond: Bond) -> str:
-            site1, site2 = sorted(bond.sites)
-            return (
-                f'({repr(site1.component_id)}, {repr(site1.site_id)}, '
-                f'{repr(site2.component_id)}, {repr(site2.site_id)})'
-            )
-        bond_str = ', '.join(bond_to_str(bond) for bond in sorted(self.bonds))
-
-        if self._id is None:
-            return f'<Assembly components={{{comp_str}}}, bonds=[{bond_str}]>'
-        return (
-            f'<Assembly id={self._id}, components={{{comp_str}}}, '
-            f'bonds=[{bond_str}]>'
-        )
+        fields: dict[str, Any] = {}
+        if self._id is not None:
+            fields['id'] = self._id
+        fields['components'] = dict(sorted(self.component_id_to_kind.items()))
+        fields['bonds'] = [bond.to_tuple() for bond in sorted(self.bonds)]
+        return construct_repr(self.__class__, fields)
 
     @property
     def id(self) -> ID:
@@ -120,6 +108,14 @@ class Assembly:
     def components(self) -> Mapping[ID, Component]:
         """Return the components in the assembly as an immutable mapping."""
         return MappingProxyType(self._components)
+
+    @cached_property
+    def component_id_to_kind(self) -> Mapping[ID, str]:
+        """Return a mapping from component IDs to their kinds."""
+        return MappingProxyType({
+            comp_id: comp.kind for comp_id, comp
+            in self._components.items()
+        })
 
     def get_component_kind_of_site(self, site: BindingSite) -> str:
         """Return the component kind of the given binding site."""

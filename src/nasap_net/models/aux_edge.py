@@ -37,3 +37,10 @@ class AuxEdge(SupportsDunderLt):
             BindingSite(component_id=comp_id, site_id=site_id1),
             BindingSite(component_id=comp_id, site_id=site_id2)
         })
+
+    def to_tuple(self) -> tuple[ID, ID] | tuple[ID, ID, str]:
+        """Return a tuple representation of the auxiliary edge."""
+        site_id1, site_id2 = sorted(self.site_ids)
+        if self.kind is None:
+            return site_id1, site_id2
+        return site_id1, site_id2, self.kind
