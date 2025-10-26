@@ -56,7 +56,7 @@ class Assembly:
 
     Raises
     ------
-    - InconsistentComponentKindError
+    - InconsistentComponentError
         If components with the same kind have different structures.
     - InvalidBondError
         - If any bond references a non-existent component or site.
