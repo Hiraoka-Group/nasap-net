@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+from nasap_net.exceptions import NasapNetError
 from nasap_net.models import Assembly, Component
 
 
@@ -48,7 +49,7 @@ def check_component_consistency(assemblies: Iterable[Assembly]) -> None:
 
 
 @dataclass
-class InconsistentComponentBetweenAssembliesError(Exception):
+class InconsistentComponentBetweenAssembliesError(NasapNetError):
     """Raised when there are inconsistent definitions for a component kind
     between different assemblies.
     """
