@@ -17,8 +17,8 @@ def check_component_consistency(assemblies: Iterable[Assembly]) -> None:
     Components with the same kind name must have identical structures,
     including site IDs.
 
-    The function raises an InconsistentComponentKindError if it finds
-    any inconsistencies.
+    The function raises an InconsistentComponentBetweenAssembliesError
+    if it finds any inconsistencies.
 
     Parameters
     ----------
@@ -27,7 +27,7 @@ def check_component_consistency(assemblies: Iterable[Assembly]) -> None:
 
     Raises
     ------
-    InconsistentComponentKindError
+    InconsistentComponentBetweenAssembliesError
         If there are inconsistent definitions for a component kind,
         i.e., the same kind name corresponds to different component structures.
     """
