@@ -1,9 +1,11 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import Any
 
 from nasap_net.types import ID
 from .aux_edge import AuxEdge
 from .binding_site import BindingSite
+from .helper import construct_repr
 
 
 @dataclass(frozen=True, init=False)
@@ -24,6 +26,16 @@ class Component:
         else:
             aux_edges = frozenset(aux_edges)
         object.__setattr__(self, 'aux_edges', aux_edges)
+
+    def __repr__(self):
+        fields: dict[str, Any] = {}
+        fields['kind'] = self.kind
+        fields['site_ids'] = sorted(self.site_ids)
+        if self.aux_edges:
+            fields['aux_edges'] = [
+                aux_edge.to_tuple() for aux_edge in sorted(self.aux_edges)
+            ]
+        return construct_repr(self.__class__, fields)
 
     def get_binding_sites(self, comp_id: ID) -> frozenset[BindingSite]:
         """Return the binding sites of this component."""

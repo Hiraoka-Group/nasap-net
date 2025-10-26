@@ -35,7 +35,7 @@ def _light_assembly_representer(
 def _bond_representer(
         dumper: _LightAssemblyDumper, data: Bond
 ) -> yaml.SequenceNode:
-    site1, site2 = data.sites
+    site1, site2 = sorted(data.sites)
     return dumper.represent_list([
         site1.component_id,
         site1.site_id,

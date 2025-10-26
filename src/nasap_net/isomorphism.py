@@ -5,6 +5,7 @@ import igraph as ig
 from bidict import frozenbidict
 from frozendict import frozendict
 
+from nasap_net.exceptions import NasapNetError
 from nasap_net.models import Assembly, BindingSite
 from nasap_net.types import ID
 
@@ -118,7 +119,7 @@ def is_isomorphic(assem1: Assembly, assem2: Assembly) -> bool:
     )
 
 
-class NoIsomorphismFoundError(Exception):
+class NoIsomorphismFoundError(NasapNetError):
     pass
 
 
@@ -234,7 +235,7 @@ def _color_vertices_and_edges(g1: ig.Graph, g2: ig.Graph) -> _Colors:
     )
 
 
-class _NotIsomorphicError(Exception):
+class _NotIsomorphicError(NasapNetError):
     pass
 
 

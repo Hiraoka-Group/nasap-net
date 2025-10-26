@@ -1,8 +1,9 @@
 import pytest
 
 from nasap_net.models import Assembly, AuxEdge, Bond, Component, LightAssembly
-from nasap_net.models.conversion import InconsistentComponentKindError, \
-    convert_assemblies_to_light_ones
+from nasap_net.models.component_consistency_check import \
+    InconsistentComponentBetweenAssembliesError
+from nasap_net.models.conversion import convert_assemblies_to_light_ones
 
 
 def test():
@@ -74,5 +75,5 @@ def test_inconsistent_component_kind_error():
         'free_X2': Assembly(components={'X0': X2}, bonds=[]),
     }
 
-    with pytest.raises(InconsistentComponentKindError):
+    with pytest.raises(InconsistentComponentBetweenAssembliesError):
         convert_assemblies_to_light_ones(assemblies)
