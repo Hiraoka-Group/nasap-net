@@ -1,7 +1,7 @@
 import pytest
 
 from nasap_net.models import Assembly, Bond, Component
-from nasap_net.models.exceptions import InconsistentComponentKindError
+from nasap_net.models.component import InconsistentComponentError
 
 
 def test_assembly():
@@ -18,7 +18,7 @@ def test_assembly():
 def test_inconsistent_component_kind_error():
     L1 = Component(kind='L', sites=[0, 1])
     L2 = Component(kind='L', sites=[2, 3])
-    with pytest.raises(InconsistentComponentKindError):
+    with pytest.raises(InconsistentComponentError):
         Assembly(
             components={'L0': L1, 'L1': L2},
             bonds=set()

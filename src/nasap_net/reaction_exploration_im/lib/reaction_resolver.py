@@ -1,13 +1,14 @@
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
+from nasap_net.exceptions import NasapNetError
 from nasap_net.models import Assembly
 from .isomorphic_assembly_search import AssemblyNotFoundError, \
     IsomorphicAssemblyFinder
 from ..models import Reaction
 
 
-class ReactionOutOfScopeError(Exception):
+class ReactionOutOfScopeError(NasapNetError):
     """Exception raised when a reaction cannot be resolved to the assembly space."""
     pass
 

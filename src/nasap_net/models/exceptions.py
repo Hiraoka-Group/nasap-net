@@ -1,14 +1,20 @@
-class InconsistentComponentKindError(Exception):
-    """Raised when there are inconsistent definitions for a component kind,
-    i.e., the same kind name corresponds to different component structures.
+from dataclasses import dataclass
+
+from .assembly import Assembly
+
+
+@dataclass
+class InconsistentComponentBetweenAssembliesError(Exception):
+    """Raised when there are inconsistent definitions for a component kind
+    between different assemblies.
     """
-    def __init__(
-            self,
-            component_kind: str,
-            message: str = (
-                    'Components with the same kind must have the same '
-                    'structure, including site IDs'
-            )
-    ) -> None:
-        self.component_kind = component_kind
-        super().__init__(f'{message}: Kind: "{component_kind}".')
+    component_kind: str
+    assembly1: Assembly
+    assembly2: Assembly
+
+    def __str__(self) -> str:
+        return (
+            f'Inconsistent definitions for component kind '
+            f'"{self.component_kind}" between assemblies: '
+            f'Assembly 1: {self.assembly1}, Assembly 2: {self.assembly2}.'
+        )

@@ -1,14 +1,17 @@
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
+from functools import total_ordering
+from typing import Self
 
 from nasap_net.types import ID, SupportsDunderLt
 from .binding_site import BindingSite
 
 
-@dataclass(frozen=True, init=False, order=True)
+@total_ordering
+@dataclass(frozen=True, init=False)
 class Bond(Iterable, SupportsDunderLt):
     """A bond between two binding sites on two components."""
-    sites: tuple[BindingSite, BindingSite]
+    sites: frozenset[BindingSite]
 
     def __init__(self, comp_id1: ID, site1: ID, comp_id2: ID, site2: ID):
         if comp_id1 == comp_id2:
@@ -17,18 +20,26 @@ class Bond(Iterable, SupportsDunderLt):
         comp_and_site2 = BindingSite(component_id=comp_id2, site_id=site2)
         object.__setattr__(
             self, 'sites',
-            tuple(sorted((comp_and_site1, comp_and_site2))))  # type:ignore
+            frozenset((comp_and_site1, comp_and_site2))
+        )
 
     def __iter__(self) -> Iterator[BindingSite]:
-        return iter(self.sites)
+        return iter(sorted(self.sites))
+
+    def __lt__(self, other):
+        if not isinstance(other, Bond):
+            return NotImplemented
+        self_values = sorted(self.sites)
+        other_values = sorted(other.sites)
+        return self_values < other_values
 
     @property
-    def component_ids(self) -> tuple[ID, ID]:
+    def component_ids(self) -> frozenset[ID]:
         """Return the component IDs involved in the bond."""
-        return self.sites[0].component_id, self.sites[1].component_id
+        return frozenset(site.component_id for site in self.sites)
 
     @classmethod
-    def from_sites(cls, site1: BindingSite, site2: BindingSite) -> 'Bond':
+    def from_sites(cls, site1: BindingSite, site2: BindingSite) -> Self:
         """Create a Bond from two BindingSite instances."""
         return cls(
             comp_id1=site1.component_id,

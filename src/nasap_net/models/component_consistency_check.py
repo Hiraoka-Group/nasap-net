@@ -1,0 +1,49 @@
+from collections.abc import Iterable
+from dataclasses import dataclass
+
+from nasap_net.models import Assembly, Component
+from nasap_net.models.exceptions import \
+    InconsistentComponentBetweenAssembliesError
+
+
+@dataclass(frozen=True)
+class FoundComponent:
+    component: Component
+    source_assembly: Assembly
+
+
+def check_component_consistency(assemblies: Iterable[Assembly]) -> None:
+    """Check for consistent definitions of component kinds across assemblies.
+
+    Components with the same kind name must have identical structures,
+    including site IDs.
+
+    The function raises an InconsistentComponentKindError if it finds
+    any inconsistencies.
+
+    Parameters
+    ----------
+    assemblies : Iterable[Assembly]
+        An iterable of Assembly instances to check for component consistency.
+
+    Raises
+    ------
+    InconsistentComponentKindError
+        If there are inconsistent definitions for a component kind,
+        i.e., the same kind name corresponds to different component structures.
+    """
+    found_components: dict[str, FoundComponent] = {}
+    for assembly in assemblies:
+        for comp in assembly.components.values():
+            if comp.kind in found_components:
+                if comp != found_components[comp.kind].component:
+                    raise InconsistentComponentBetweenAssembliesError(
+                        component_kind=comp.kind,
+                        assembly1=found_components[comp.kind].source_assembly,
+                        assembly2=assembly,
+                    )
+            else:
+                found_components[comp.kind] = FoundComponent(
+                    component=comp,
+                    source_assembly=assembly
+                )

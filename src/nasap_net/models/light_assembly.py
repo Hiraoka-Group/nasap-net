@@ -24,6 +24,26 @@ class LightAssembly:
         object.__setattr__(self, 'bonds', frozenset(bonds))
         object.__setattr__(self, '_id', id_)
 
+    def __repr__(self):
+        def bond_to_str(bond: Bond) -> str:
+            site1, site2 = sorted(bond.sites)
+            return (
+                f'({repr(site1.component_id)}, {repr(site1.site_id)}, '
+                f'{repr(site2.component_id)}, {repr(site2.site_id)})'
+            )
+        bond_str = ', '.join(bond_to_str(bond) for bond in sorted(self.bonds))
+
+        if self._id is None:
+            return (
+                f'<LightAssembly components={str(self.components)}, '
+                f'bonds=[{bond_str}]>'
+            )
+        return (
+            f'<LightAssembly id={repr(self._id)}, '
+            f'components={str(self.components)}, '
+            f'bonds=[{bond_str}]>'
+        )
+
     @property
     def id(self) -> ID:
         if self._id is None:

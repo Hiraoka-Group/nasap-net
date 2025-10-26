@@ -25,9 +25,54 @@ class Component:
             aux_edges = frozenset(aux_edges)
         object.__setattr__(self, 'aux_edges', aux_edges)
 
+    def __repr__(self):
+        # <Component kind='M', site_ids=[0, 1], aux_edges=[(0, 1, 'cis')]>
+        site_ids_str = ', '.join(str(s) for s in sorted(self.site_ids))
+        if not self.aux_edges:
+            return (
+                f'<Component kind={self.kind!r}, '
+                f'site_ids=[{site_ids_str}]>'
+            )
+
+        # If there are auxiliary edges
+        def aux_edge_to_str(aux_edge: AuxEdge) -> str:
+            site_ids_str = (
+                ', '.join(str(s) for s in sorted(aux_edge.site_ids))
+            )
+            if aux_edge.kind is None:
+                return f'({site_ids_str})'
+            return f'({site_ids_str}, {aux_edge.kind})'
+
+        aux_edges_str = ', '.join(
+            aux_edge_to_str(aux_edge) for aux_edge in sorted(self.aux_edges)
+        )
+
+        return (
+            f'<Component kind={self.kind!r}, '
+            f'site_ids=[{site_ids_str}], '
+            f'aux_edges=[{aux_edges_str}]>'
+        )
+
     def get_binding_sites(self, comp_id: ID) -> frozenset[BindingSite]:
         """Return the binding sites of this component."""
         return frozenset(
             BindingSite(component_id=comp_id, site_id=site_id)
             for site_id in self.site_ids
+        )
+
+
+@dataclass
+class InconsistentComponentError(Exception):
+    """Raised when there are inconsistent definitions for a component kind,
+    i.e., the same kind name corresponds to different component structures.
+    """
+    component_kind: str
+    component1: Component
+    component2: Component
+
+    def __str__(self) -> str:
+        return (
+            f'Inconsistent definitions for component kind '
+            f'"{self.component_kind}": '
+            f'Component 1: {self.component1}, Component 2: {self.component2}.'
         )

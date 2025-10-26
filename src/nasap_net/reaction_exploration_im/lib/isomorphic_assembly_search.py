@@ -4,11 +4,12 @@ from dataclasses import dataclass, field
 
 from frozendict import frozendict
 
+from nasap_net.exceptions import NasapNetError
 from nasap_net.isomorphism import is_isomorphic
 from nasap_net.models import Assembly
 
 
-class AssemblyNotFoundError(Exception):
+class AssemblyNotFoundError(NasapNetError):
     """Exception raised when no isomorphic assembly is found in the search space."""
     pass
 

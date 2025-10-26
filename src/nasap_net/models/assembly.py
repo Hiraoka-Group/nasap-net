@@ -6,21 +6,23 @@ from typing import Self
 
 from frozendict import frozendict
 
-from nasap_net.exceptions import IDNotSetError
+from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.types import ID
 from .binding_site import BindingSite
 from .bond import Bond
-from .component import Component
-from .exceptions import InconsistentComponentKindError
+from .component import Component, InconsistentComponentError
 
 
-class InvalidBondError(Exception):
-    def __init__(self, *, bond: Bond, msg: str = ""):
-        self.bond = bond
-        combined_msg = f"Invalid bond: {bond}"
-        if msg:
-            combined_msg += f" - {msg}"
-        super().__init__(combined_msg)
+@dataclass
+class InvalidBondError(NasapNetError):
+    bond: Bond
+    detail: str | None = None
+
+    def __str__(self) -> str:
+        base_msg = f'Invalid bond: {self.bond}'
+        if self.detail:
+            return f'{base_msg} - {self.detail}'
+        return base_msg
 
 
 @dataclass(frozen=True, init=False)
@@ -63,6 +65,27 @@ class Assembly:
         object.__setattr__(self, 'bonds', frozenset(bonds))
         object.__setattr__(self, '_id', id_)
         self._validate()
+
+    def __repr__(self):
+        comp_str = ', '.join(
+            f'{comp_id}: {comp.kind}' for comp_id, comp
+            in self._components.items()
+        )
+
+        def bond_to_str(bond: Bond) -> str:
+            site1, site2 = bond.sites
+            return (
+                f'({site1.component_id}, {site1.site_id}, '
+                f'{site2.component_id}, {site2.site_id})'
+            )
+        bond_str = ', '.join(bond_to_str(bond) for bond in self.bonds)
+
+        if self._id is None:
+            return f'<Assembly components={{{comp_str}}}, bonds=[{bond_str}]>'
+        return (
+            f'<Assembly id={self._id}, components={{{comp_str}}}, '
+            f'bonds=[{bond_str}]>'
+        )
 
     @property
     def id(self) -> ID:
@@ -174,7 +197,11 @@ class Assembly:
         for comp in self._components.values():
             if comp.kind in comp_kind_to_obj:
                 if comp != comp_kind_to_obj[comp.kind]:
-                    raise InconsistentComponentKindError(comp.kind)
+                    raise InconsistentComponentError(
+                        component_kind=comp.kind,
+                        component1=comp,
+                        component2=comp_kind_to_obj[comp.kind],
+                    )
             else:
                 comp_kind_to_obj[comp.kind] = comp
 
@@ -187,7 +214,7 @@ class Assembly:
                 if comp_id not in component_keys:
                     raise InvalidBondError(
                         bond=bond,
-                        msg=f"Component {comp_id} not found in assembly.")
+                        detail=f"Component {comp_id} not found in assembly.")
 
             # Validate that the sites exist in the respective components
             for site in bond.sites:
@@ -195,7 +222,7 @@ class Assembly:
                 if site.site_id not in component.site_ids:
                     raise InvalidBondError(
                         bond=bond,
-                        msg=(
+                        detail=(
                             f"Site {site.site_id} not found in component "
                             f"{site.component_id}."))
 
@@ -203,5 +230,5 @@ class Assembly:
                 if site in used_sites:
                     raise InvalidBondError(
                         bond=bond,
-                        msg=f"Site {site} is already used in another bond.")
+                        detail=f"Site {site} is already used in another bond.")
                 used_sites.add(site)
