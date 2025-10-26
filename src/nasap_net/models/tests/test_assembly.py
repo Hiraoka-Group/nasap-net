@@ -49,6 +49,7 @@ def test___repr___with_id():
     expected_repr = (
         "<Assembly id='free_X', components={'X0': 'X'}, bonds=[]>"
     )
+    assert repr(assembly) == expected_repr
 
 
 def test___repr___with_no_bonds():
@@ -60,3 +61,4 @@ def test___repr___with_no_bonds():
     expected_repr = (
         "<Assembly components={'X0': 'X'}, bonds=[]>"
     )
+    assert repr(assembly) == expected_repr
