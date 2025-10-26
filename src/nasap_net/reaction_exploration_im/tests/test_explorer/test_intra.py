@@ -30,12 +30,12 @@ def M2L2X5(M, L, X) -> Assembly:
                 (2)                (1)
         X1(0)-(1)M0(3)-(0)L0(1)-(0)M1(2)-(0)L1(1)
                 (0)                (3)
-                 |                  | 
+                 |                  |
                 (0)                (0)
                  X0                 X4
     """
     return Assembly(
-        id_='M2L2X3',
+        id_='M2L2X5',
         components={
             'M0': M, 'X0': X, 'X1': X, 'X2': X,
             'L0': L,

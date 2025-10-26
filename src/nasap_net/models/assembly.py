@@ -278,9 +278,11 @@ class Assembly:
     def _validate_parallel_bonds(self):
         # Currently, parallel bonds (multiple bonds between the same pair
         # of components) are not supported.
-        bonded_pairs = set()
+        bonded_pairs: dict[frozenset[ID], Bond] = {}
         for bond in self.bonds:
             comp_pair = frozenset(bond.component_ids)
             if comp_pair in bonded_pairs:
-                raise ParallelBondError(bond1=bond, bond2=bond)
-            bonded_pairs.add(comp_pair)
+                raise ParallelBondError(
+                    bond1=bonded_pairs[comp_pair], bond2=bond
+                )
+            bonded_pairs[comp_pair] = bond
