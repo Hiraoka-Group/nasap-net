@@ -1,4 +1,4 @@
-from .fragment_growth import grow_fragment
+from .fragment_growth import enumerate_one_step_grown_fragments
 from .is_new import is_new
 from .key import get_key
 from .starting_fragments import get_unique_starting_fragments

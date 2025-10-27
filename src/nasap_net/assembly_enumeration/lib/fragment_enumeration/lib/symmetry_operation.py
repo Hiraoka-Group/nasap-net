@@ -31,7 +31,10 @@ def apply_symmetry_operation(
         )
         for bond in fragment.bonds
     ]
-    return Fragment(components=components, bonds=bonds)
+    return fragment.copy_with(
+        components=components,
+        bonds=bonds,
+    )
 
 
 class InvalidSymmetryOperationError(NasapNetError):
