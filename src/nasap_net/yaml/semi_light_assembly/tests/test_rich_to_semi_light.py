@@ -1,9 +1,10 @@
 import pytest
 
-from nasap_net.models import Assembly, AuxEdge, Bond, Component, LightAssembly
+from nasap_net.models import Assembly, AuxEdge, Bond, Component
 from nasap_net.models.component_consistency_check import \
     InconsistentComponentBetweenAssembliesError
-from nasap_net.models.conversion import convert_assemblies_to_light_ones
+from nasap_net.yaml.semi_light_assembly import SemiLightAssembly, \
+    convert_assemblies_to_semi_light_ones
 
 
 def test():
@@ -35,7 +36,7 @@ def test():
                    Bond('M0', 2, 'X1', 0), Bond('M0', 3, 'L1', 0)]),
     }
 
-    conv_res = convert_assemblies_to_light_ones(assemblies)
+    conv_res = convert_assemblies_to_semi_light_ones(assemblies)
 
     assert conv_res.components == {
         'M': M,
@@ -44,22 +45,22 @@ def test():
         'M(sq)': M_square,
     }
 
-    assert conv_res.light_assemblies == {
+    assert conv_res.semi_light_assemblies == {
         # MX2: X0(0)-(0)M0(1)-(0)X1
-        'MX2': LightAssembly(
+        'MX2': SemiLightAssembly(
             id_='MX2',
             components={'X0': 'X', 'M0': 'M', 'X1': 'X'},
             bonds=[Bond('X0', 0, 'M0', 0), Bond('M0', 1, 'X1', 0)]),
-        'free_X': LightAssembly(components={'X0': 'X'}, bonds=[]),
+        'free_X': SemiLightAssembly(components={'X0': 'X'}, bonds=[]),
         # MLX: (0)L0(1)-(0)M0(1)-(0)X0
-        'MLX': LightAssembly(
+        'MLX': SemiLightAssembly(
             components={'L0': 'L', 'M0': 'M', 'X0': 'X'},
             bonds=[Bond('L0', 1, 'M0', 0), Bond('M0', 1, 'X0', 0)]),
-        'M(sq)X4': LightAssembly(
+        'M(sq)X4': SemiLightAssembly(
             components={'M0': 'M(sq)', 'X0': 'X', 'X1': 'X', 'X2': 'X', 'X3': 'X'},
             bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'X1', 0),
                    Bond('M0', 2, 'X2', 0), Bond('M0', 3, 'X3', 0)]),
-        'M(sq)L2X2': LightAssembly(
+        'M(sq)L2X2': SemiLightAssembly(
             components={'M0': 'M(sq)', 'L0': 'L', 'L1': 'L', 'X0': 'X', 'X1': 'X'},
             bonds=[Bond('M0', 0, 'X0', 0), Bond('M0', 1, 'L0', 0),
                    Bond('M0', 2, 'X1', 0), Bond('M0', 3, 'L1', 0)]),
@@ -76,4 +77,4 @@ def test_inconsistent_component_kind_error():
     }
 
     with pytest.raises(InconsistentComponentBetweenAssembliesError):
-        convert_assemblies_to_light_ones(assemblies)
+        convert_assemblies_to_semi_light_ones(assemblies)
