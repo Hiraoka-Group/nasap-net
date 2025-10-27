@@ -8,10 +8,10 @@ from frozendict import frozendict
 
 from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.types import ID
+from nasap_net.utils import construct_repr
 from .binding_site import BindingSite
 from .bond import Bond
 from .component import Component
-from .helper import construct_repr
 
 
 @dataclass

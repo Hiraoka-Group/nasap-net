@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from typing import Any
 
 from nasap_net.types import ID
+from nasap_net.utils import construct_repr
 from .aux_edge import AuxEdge
 from .binding_site import BindingSite
-from .helper import construct_repr
 
 
 @dataclass(frozen=True, init=False)

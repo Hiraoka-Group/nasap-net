@@ -5,4 +5,5 @@ from .frozen_unordered_pair import *
 from .mapping_iterable_comparison import *
 from .nested_dict_update import *
 from .node_equivalence import *
+from .repr_constructor import construct_repr
 from .union_find import UnionFind

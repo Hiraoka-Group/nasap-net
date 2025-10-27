@@ -2,31 +2,31 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import TypeVar
 
+from nasap_net.models import Assembly, Component
+from nasap_net.models.component_consistency_check import \
+    check_component_consistency
 from nasap_net.types import ID
-from ..assembly import Assembly
-from ..component import Component
-from ..component_consistency_check import check_component_consistency
-from ..light_assembly import LightAssembly
+from .semi_light_assembly import SemiLightAssembly
 
 
 @dataclass(frozen=True)
 class ConversionResult:
-    light_assemblies: Mapping[ID, LightAssembly]
+    semi_light_assemblies: Mapping[ID, SemiLightAssembly]
     components: Mapping[str, Component]
 
 
 _T = TypeVar('_T', bound=ID)
 
-def convert_assemblies_to_light_ones(
+def convert_assemblies_to_semi_light_ones(
         assemblies: Mapping[_T, Assembly],
 ) -> ConversionResult:
-    light_assemblies = _assemblies_to_light_assemblies(assemblies)
+    semi_light_assemblies = _assemblies_to_semi_light_assemblies(assemblies)
 
     check_component_consistency(assemblies.values())
     components = _extract_components(assemblies.values())
 
     return ConversionResult(
-        light_assemblies=light_assemblies,
+        semi_light_assemblies=semi_light_assemblies,
         components=components,
     )
 
@@ -44,10 +44,10 @@ def _extract_components(
     return components
 
 
-def _assemblies_to_light_assemblies(
+def _assemblies_to_semi_light_assemblies(
         assemblies: Mapping[_T, Assembly],
-        ) -> Mapping[ID, LightAssembly]:
+        ) -> Mapping[ID, SemiLightAssembly]:
     return {
-        assembly_id: LightAssembly.from_assembly(assembly)
+        assembly_id: SemiLightAssembly.from_assembly(assembly)
         for assembly_id, assembly in assemblies.items()
     }
