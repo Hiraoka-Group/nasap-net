@@ -41,19 +41,19 @@ X: !Component
   kind: X
   sites: [0]
 ---
-M(aux)X3: !LightAssembly
+M(aux)X3: !Assembly
   components: {M0: M(aux), X0: X, X1: X, X2: X}
   bonds:
   - [M0, 0, X0, 0]
   - [M0, 1, X1, 0]
   - [M0, 2, X2, 0]
-MX2: !LightAssembly
+MX2: !Assembly
   components: {M0: M, X0: X, X1: X}
   bonds:
   - [M0, 0, X0, 0]
   - [M0, 1, X1, 0]
   id: MX2
-free_X: !LightAssembly
+free_X: !Assembly
   components: {X0: X}
   bonds: []
 """

@@ -2,32 +2,33 @@ from collections.abc import Iterable, Mapping
 
 import yaml
 
-from nasap_net.models import Bond, Component, LightAssembly
+from nasap_net.models import Bond, Component
 from nasap_net.types import ID
+from nasap_net.yaml.semi_light_assembly import SemiLightAssembly
 
 
-def load_light_assemblies(yaml_str: str) -> dict[ID, LightAssembly]:
+def load_semi_light_assemblies(yaml_str: str) -> dict[ID, SemiLightAssembly]:
     """Load light assemblies from a YAML string."""
-    return yaml.load(yaml_str, Loader=_LightAssemblyLoader)  # type: ignore
+    return yaml.load(yaml_str, Loader=_SemiLightAssemblyLoader)  # type: ignore
 
 
-class _LightAssemblyLoader(yaml.SafeLoader):
+class _SemiLightAssemblyLoader(yaml.SafeLoader):
     component_context: Mapping[str, Component] = {}
 
     def ignore_aliases(self, _):
         return True
 
 
-def _light_assembly_constructor(
-        loader: _LightAssemblyLoader,
+def _semi_light_assembly_constructor(
+        loader: _SemiLightAssemblyLoader,
         node: yaml.Node,
-) -> LightAssembly:
+) -> SemiLightAssembly:
     assert isinstance(node, yaml.MappingNode)
     mapping = loader.construct_mapping(node, deep=True)
     components: dict[ID, str] = mapping['components']
     bonds: list[Bond] = [_construct_bond(b) for b in mapping['bonds']]
     assembly_id: str | None = mapping.get('id')
-    return LightAssembly(
+    return SemiLightAssembly(
         components=components,
         bonds=bonds,
         id_=assembly_id,
@@ -40,6 +41,6 @@ def _construct_bond(bonds: Iterable[ID]) -> Bond:
 
 
 yaml.add_constructor(
-    '!LightAssembly', _light_assembly_constructor,
-    Loader=_LightAssemblyLoader
+    '!Assembly', _semi_light_assembly_constructor,
+    Loader=_SemiLightAssemblyLoader
 )

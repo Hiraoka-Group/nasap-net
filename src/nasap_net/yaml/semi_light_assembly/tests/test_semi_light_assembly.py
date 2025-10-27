@@ -1,32 +1,34 @@
-from nasap_net.models import Bond, LightAssembly
+from nasap_net.models import Bond
+from nasap_net.yaml.semi_light_assembly import SemiLightAssembly
+
 
 def test___repr__():
-    assembly = LightAssembly(
+    assembly = SemiLightAssembly(
         components={'X0': 'X'},
         bonds=[],
     )
     repr_str = repr(assembly)
     expected_str = (
-        "<LightAssembly components={'X0': 'X'}, bonds=[]>"
+        "<SemiLightAssembly components={'X0': 'X'}, bonds=[]>"
     )
     assert repr_str == expected_str
 
 
 def test___repr___with_id():
-    assembly = LightAssembly(
+    assembly = SemiLightAssembly(
         id_='free_X',
         components={'X0': 'X'},
         bonds=[],
     )
     repr_str = repr(assembly)
     expected_str = (
-        "<LightAssembly id='free_X', components={'X0': 'X'}, bonds=[]>"
+        "<SemiLightAssembly id='free_X', components={'X0': 'X'}, bonds=[]>"
     )
     assert repr_str == expected_str
 
 
 def test___repr___with_bonds():
-    assembly = LightAssembly(
+    assembly = SemiLightAssembly(
         components={'X0': 'X', 'M0': 'M', 'X1': 'X'},
         bonds=[
             Bond('X0', 0, 'M0', 0),
@@ -35,7 +37,7 @@ def test___repr___with_bonds():
     )
     repr_str = repr(assembly)
     expected_str = (
-        "<LightAssembly components={'X0': 'X', 'M0': 'M', 'X1': 'X'}, "
+        "<SemiLightAssembly components={'X0': 'X', 'M0': 'M', 'X1': 'X'}, "
         "bonds=[('M0', 0, 'X0', 0), ('M0', 1, 'X1', 0)]>"
     )
     assert repr_str == expected_str

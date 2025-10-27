@@ -3,14 +3,13 @@ from dataclasses import dataclass
 from typing import Any, Self
 
 from nasap_net.exceptions import IDNotSetError
+from nasap_net.models import Assembly, Bond
 from nasap_net.types import ID
-from .assembly import Assembly
-from .bond import Bond
-from .helper import construct_repr
+from nasap_net.utils import construct_repr
 
 
 @dataclass(frozen=True, init=False)
-class LightAssembly:
+class SemiLightAssembly:
     components: dict[ID, str]
     bonds: frozenset[Bond]
     _id: ID | None
@@ -36,7 +35,7 @@ class LightAssembly:
     @property
     def id(self) -> ID:
         if self._id is None:
-            raise IDNotSetError('LightAssembly ID is not set.')
+            raise IDNotSetError('SemiLightAssembly ID is not set.')
         return self._id
 
     @property
