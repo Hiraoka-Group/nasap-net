@@ -1,18 +1,20 @@
 from collections.abc import Iterable, Mapping
 from typing import Any
 
+from nasap_net.isomorphism import extract_unique_assemblies_by_isomorphism
 from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
-from .lib import cap_fragments_with_ligand, enumerate_fragments, \
-    extract_unique_assemblies_by_isomorphism
+from .lib import cap_assemblies_with_ligand, enumerate_fragments
 
 
 def enumerate_assemblies(
         template: Assembly,
         *,
         leaving_ligand: Component,
-        symmetry_operations: Iterable[Mapping[Any, ID]] | None = None
-) -> list[Assembly]:
+        leaving_ligand_site: ID,
+        metal_kinds: Iterable[str],
+        symmetry_operations: Iterable[Mapping[Any, ID]] | None = None,
+) -> set[Assembly]:
     """Enumerate assemblies which can be formed by adding the leaving ligand
     to the fragments of the template assembly.
 
@@ -43,8 +45,8 @@ def enumerate_assemblies(
 
     Returns
     -------
-    list[Assembly]
-        A list of unique assemblies formed by adding the leaving ligand
+    set[Assembly]
+        A set of unique assemblies formed by adding the leaving ligand
         to the fragments of the template assembly.
     """
     fragments = enumerate_fragments(
@@ -54,8 +56,16 @@ def enumerate_assemblies(
     unique_fragments = extract_unique_assemblies_by_isomorphism(
         fragments,
     )
-    capped_assemblies = cap_fragments_with_ligand(
+    capped_assemblies = cap_assemblies_with_ligand(
         unique_fragments,
-        leaving_ligand=leaving_ligand
+        component=leaving_ligand,
+        component_site_id=leaving_ligand_site,
+        metal_kinds=metal_kinds,
+    )
+    capped_assemblies.add(
+        Assembly(
+            components={f'{leaving_ligand.kind}0': leaving_ligand},
+            bonds=[],
+        )
     )
     return capped_assemblies

@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from frozendict import frozendict
 
 from nasap_net.exceptions import NasapNetError
+from nasap_net.isomorphism.lib.signature import get_light_signature
 from nasap_net.models import Assembly
 from .is_isomorphic import is_isomorphic
 
@@ -30,7 +31,7 @@ class IsomorphicAssemblyFinder:
         object.__setattr__(self, 'search_space', frozenset(search_space))
         sig_to_assems: defaultdict[Hashable, set[Assembly]] = defaultdict(set)
         for assembly in self.search_space:
-            sig = light_signature(assembly)
+            sig = get_light_signature(assembly)
             sig_to_assems[sig].add(assembly)
         object.__setattr__(self, '_sig_to_assemblies', frozendict(
             {k: frozenset(v) for k, v in sig_to_assems.items()}
@@ -54,7 +55,7 @@ class IsomorphicAssemblyFinder:
         AssemblyNotFoundError
             If no isomorphic assembly is found in the search space.
         """
-        sig = light_signature(target)
+        sig = get_light_signature(target)
         candidates = self._sig_to_assemblies.get(sig)
         if not candidates:
             raise AssemblyNotFoundError(
@@ -64,37 +65,3 @@ class IsomorphicAssemblyFinder:
                 return candidate
         raise AssemblyNotFoundError(
             f"No isomorphic assembly found for {target}")
-
-
-def light_signature(assembly: Assembly) -> Hashable:
-    """Compute a light signature of the assembly for quick filtering.
-
-    Assemblies with different signatures are guaranteed to be non-isomorphic.
-    Assemblies with the same signature may or may not be isomorphic.
-
-    The signature consists of:
-    - A sorted tuple of component kinds.
-    - A sorted tuple of sorted tuples of bond component kinds.
-
-    Parameters
-    ----------
-    assembly : Assembly
-        The assembly to compute the signature for.
-
-    Returns
-    -------
-    Hashable
-        The light signature of the assembly.
-    """
-    return (
-        # component kinds
-        tuple(sorted(comp.kind for comp in assembly.components.values())),
-        # bond component kinds
-        tuple(sorted(
-            tuple(sorted([
-                assembly.get_component_kind_of_site(site1),
-                assembly.get_component_kind_of_site(site2),
-            ]))
-            for site1, site2 in assembly.bonds
-        ))
-    )

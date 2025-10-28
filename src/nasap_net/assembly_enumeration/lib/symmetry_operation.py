@@ -8,7 +8,7 @@ from nasap_net.utils import resolve_chain_map
 
 
 @dataclass
-class SymmetricOperations:
+class SymmetryOperations:
     _resolved: dict[str, Mapping[Any, ID]] = field(default_factory=dict)
 
     @property

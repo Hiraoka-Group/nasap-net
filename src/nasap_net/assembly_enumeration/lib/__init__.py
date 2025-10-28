@@ -1,3 +1,3 @@
-from .capping import cap_fragments_with_ligand
+from .capping import cap_assemblies_with_ligand
 from .fragment_enumeration.core import enumerate_fragments
-from .unique import extract_unique_assemblies_by_isomorphism
+from .symmetry_operation import SymmetryOperations
