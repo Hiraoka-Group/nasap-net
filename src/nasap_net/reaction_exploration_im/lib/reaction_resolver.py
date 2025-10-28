@@ -2,9 +2,9 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from nasap_net.exceptions import NasapNetError
-from nasap_net.models import Assembly
-from .isomorphic_assembly_search import AssemblyNotFoundError, \
+from nasap_net.isomorphism import AssemblyNotFoundError, \
     IsomorphicAssemblyFinder
+from nasap_net.models import Assembly
 from ..models import Reaction
 
 

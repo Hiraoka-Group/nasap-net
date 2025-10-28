@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 from frozendict import frozendict
 
 from nasap_net.exceptions import NasapNetError
-from nasap_net.isomorphism import is_isomorphic
 from nasap_net.models import Assembly
+from .is_isomorphic import is_isomorphic
 
 
 class AssemblyNotFoundError(NasapNetError):
