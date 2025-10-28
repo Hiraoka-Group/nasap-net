@@ -116,6 +116,25 @@ class Assembly:
         object.__setattr__(self, '_id', id_)
         self._validate()
 
+    def __lt__(self, other):
+        if not isinstance(other, Assembly):
+            return NotImplemented
+        # 1. number of components
+        # 2. number of bonds
+        # 3. component IDs (sorted)
+        # 4. bonds (sorted)
+        if len(self._components) != len(other._components):
+            return len(self._components) < len(other._components)
+        if len(self.bonds) != len(other.bonds):
+            return len(self.bonds) < len(other.bonds)
+        self_comp_ids = sorted(self._components.keys())
+        other_comp_ids = sorted(other._components.keys())
+        if self_comp_ids != other_comp_ids:
+            return self_comp_ids < other_comp_ids
+        self_bonds = sorted(self.bonds)
+        other_bonds = sorted(other.bonds)
+        return self_bonds < other_bonds
+
     def __repr__(self):
         fields: dict[str, Any] = {}
         if self._id is not None:
