@@ -64,7 +64,7 @@ def test_symmetry_operations(MX2, M, X):
 def test_M4L4(M4L4, M4L4_symmetry_operations):
     frags = enumerate_fragments(
         M4L4,
-        list(M4L4_symmetry_operations.resolved.values())
+        list(M4L4_symmetry_operations.values())
     )
     assert len(frags) == 13
 
@@ -72,7 +72,7 @@ def test_M4L4(M4L4, M4L4_symmetry_operations):
 def test_M2L4(M2L4, M2L4_symmetry_operations):
     frags = enumerate_fragments(
         M2L4,
-        list(M2L4_symmetry_operations.resolved.values())
+        list(M2L4_symmetry_operations.values())
     )
     assert len(frags) == 28
 
@@ -80,6 +80,6 @@ def test_M2L4(M2L4, M2L4_symmetry_operations):
 def test_M9L6(M9L6, M9L6_symmetry_operations):
     frags = enumerate_fragments(
         M9L6,
-        list(M9L6_symmetry_operations.resolved.values())
+        list(M9L6_symmetry_operations.values())
     )
     assert len(frags) == 1480

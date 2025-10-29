@@ -1,6 +1,6 @@
+from collections import UserDict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
-from types import MappingProxyType
 from typing import Any
 
 from nasap_net.types import ID
@@ -8,15 +8,11 @@ from nasap_net.utils import resolve_chain_map
 
 
 @dataclass
-class SymmetryOperations:
-    _resolved: dict[str, Mapping[Any, ID]] = field(default_factory=dict)
-
-    @property
-    def resolved(self) -> Mapping[str, Mapping[Any, ID]]:
-        return MappingProxyType(self._resolved)
+class SymmetryOperations(UserDict):
+    data: dict[str, Mapping[Any, ID]] = field(default_factory=dict)
 
     def add_mapping(self, name: str, mapping: Mapping[Any, ID]) -> None:
-        self._resolved[name] = mapping
+        self.data[name] = mapping
 
     def add_cyclic_permutation(
             self,
@@ -31,7 +27,7 @@ class SymmetryOperations:
             mapping_names: Iterable[str]
     ) -> None:
         mappings = [
-            self._resolved[mapping_name]
+            self.data[mapping_name]
             for mapping_name in list(mapping_names)
         ]
         self.add_mapping(name, resolve_chain_map(*mappings))

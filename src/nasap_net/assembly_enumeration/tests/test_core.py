@@ -7,7 +7,7 @@ def test_M4L4(M4L4, M4L4_symmetry_operations, X):
         leaving_ligand=X,
         leaving_ligand_site=0,
         metal_kinds=['M'],
-        symmetry_operations=list(M4L4_symmetry_operations.resolved.values())
+        symmetry_operations=list(M4L4_symmetry_operations.values())
     )
     assert len(assemblies) == 14
 
@@ -18,7 +18,7 @@ def test_M2L4(M2L4, M2L4_symmetry_operations, X):
         leaving_ligand=X,
         leaving_ligand_site=0,
         metal_kinds=['M'],
-        symmetry_operations=list(M2L4_symmetry_operations.resolved.values())
+        symmetry_operations=list(M2L4_symmetry_operations.values())
     )
     assert len(assemblies) == 29
 
@@ -29,6 +29,6 @@ def test_M9L6(M9L6, M9L6_symmetry_operations, X):
         leaving_ligand=X,
         leaving_ligand_site=0,
         metal_kinds=['M'],
-        symmetry_operations=list(M9L6_symmetry_operations.resolved.values())
+        symmetry_operations=list(M9L6_symmetry_operations.values())
     )
     assert len(assemblies) == 505
