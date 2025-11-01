@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 
-from nasap_net.isomorphism import convert_assembly_to_igraph
+from nasap_net.isomorphism.lib import convert_assembly_to_igraph
 from nasap_net.models import Assembly
 from nasap_net.types import ID
 

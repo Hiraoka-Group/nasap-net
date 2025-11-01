@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from functools import cached_property
+from functools import cached_property, total_ordering
 from types import MappingProxyType
 from typing import Any, Self
 
@@ -56,6 +56,19 @@ class ParallelBondError(NasapNetError):
         )
 
 
+@dataclass
+class BondNotFoundError(NasapNetError):
+    comp_id1: ID
+    comp_id2: ID
+
+    def __str__(self) -> str:
+        return (
+            f'No bond found between components '
+            f'{self.comp_id1} and {self.comp_id2}.'
+        )
+
+
+@total_ordering
 @dataclass(frozen=True, init=False)
 class Assembly:
     """An assembly of components connected by bonds.
@@ -103,6 +116,25 @@ class Assembly:
         object.__setattr__(self, 'bonds', frozenset(bonds))
         object.__setattr__(self, '_id', id_)
         self._validate()
+
+    def __lt__(self, other):
+        if not isinstance(other, Assembly):
+            return NotImplemented
+        # 1. number of components
+        # 2. number of bonds
+        # 3. component IDs (sorted)
+        # 4. bonds (sorted)
+        if len(self._components) != len(other._components):
+            return len(self._components) < len(other._components)
+        if len(self.bonds) != len(other.bonds):
+            return len(self.bonds) < len(other.bonds)
+        self_comp_ids = sorted(self._components.keys())
+        other_comp_ids = sorted(other._components.keys())
+        if self_comp_ids != other_comp_ids:
+            return self_comp_ids < other_comp_ids
+        self_bonds = sorted(self.bonds)
+        other_bonds = sorted(other.bonds)
+        return self_bonds < other_bonds
 
     def __repr__(self):
         fields: dict[str, Any] = {}
@@ -168,6 +200,36 @@ class Assembly:
     def has_bond_between_components(self, comp_id1: ID, comp_id2: ID) -> bool:
         """Check if there is a bond between two components."""
         return frozenset({comp_id1, comp_id2}) in self._component_connection
+
+    def get_bond_by_comp_ids(self, comp_id1: ID, comp_id2: ID) -> Bond:
+        """Return the bond between two components.
+
+        Parameters
+        ----------
+        comp_id1 : ID
+            The ID of the first component.
+        comp_id2 : ID
+            The ID of the second component.
+
+        Returns
+        -------
+        Bond
+            The bond between the two components.
+
+        Raises
+        ------
+        BondNotFoundError
+            If there is no bond between the two components.
+
+        Notes
+        -----
+        This method assumes that there is no parallel bonds between the
+        same pair of components.
+        """
+        for bond in self.bonds:
+            if bond.component_ids == frozenset({comp_id1, comp_id2}):
+                return bond
+        raise BondNotFoundError(comp_id1=comp_id1, comp_id2=comp_id2)
 
     def add_bond(self, site1: BindingSite, site2: BindingSite):
         """Return a new assembly with an additional bond."""

@@ -1,4 +1,5 @@
-from .binding_site_equivalence import UniqueComb, extract_unique_site_combinations, group_equivalent_node_combs
-from .isomorphic_assembly_search import AssemblyNotFoundError, IsomorphicAssemblyFinder, light_signature
+from .binding_site_equivalence import UniqueComb, \
+    extract_unique_site_combinations, group_equivalent_node_combs
 from .reaction_resolver import ReactionOutOfScopeError, ReactionResolver
-from .separation import SeparatedIntoMoreThanTwoPartsError, separate_if_possible
+from .separation import SeparatedIntoMoreThanTwoPartsError, \
+    separate_if_possible

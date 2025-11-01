@@ -1,8 +1,8 @@
 import pytest
 
-from nasap_net.models import Assembly, Bond, Component
-from nasap_net.reaction_exploration_im.lib import AssemblyNotFoundError, \
+from nasap_net.isomorphism import AssemblyNotFoundError, \
     IsomorphicAssemblyFinder
+from nasap_net.models import Assembly, Bond, Component
 
 
 @pytest.fixture
