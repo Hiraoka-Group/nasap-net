@@ -1,4 +1,4 @@
-from collections.abc import Mapping
+from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import TypeVar
 
@@ -10,7 +10,7 @@ from nasap_net.yaml.semi_light_assembly import \
 
 _T = TypeVar('_T', bound=ID)
 
-def dump(assemblies: Mapping[_T, Assembly]) -> str:
+def dump(assemblies: Iterable[Assembly]) -> str:
     """Dump assemblies and components into a YAML string."""
     dumped = _dump_separately(assemblies)
     return '---\n'.join([dumped.components, dumped.assemblies])
@@ -23,13 +23,19 @@ class _Dumped:
 
 
 def _dump_separately(
-        assemblies: Mapping[_T, Assembly],
+        assemblies: Iterable[Assembly],
         ) -> _Dumped:
-    res = convert_assemblies_to_semi_light_ones(assemblies)
+    assembly_map = dict(enumerate(assemblies))
+    res = convert_assemblies_to_semi_light_ones(assembly_map)
+
+    res_assemblies = [
+        res.semi_light_assemblies[id_]
+        for id_ in sorted(res.semi_light_assemblies.keys())
+    ]
 
     return _Dumped(
         assemblies=dump_semi_light_assemblies(
-            dict(sorted(res.semi_light_assemblies.items()))
+            res_assemblies
         ),
         components=dump_components(
             dict(sorted(res.components.items())),
