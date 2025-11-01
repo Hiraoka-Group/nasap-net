@@ -201,7 +201,24 @@ class Assembly:
         return frozenset({comp_id1, comp_id2}) in self._component_connection
 
     def get_bond_by_comp_ids(self, comp_id1: ID, comp_id2: ID) -> Bond:
-        """Return the bond between two components, or None if not bonded.
+        """Return the bond between two components.
+
+        Parameters
+        ----------
+        comp_id1 : ID
+            The ID of the first component.
+        comp_id2 : ID
+            The ID of the second component.
+
+        Returns
+        -------
+        Bond
+            The bond between the two components.
+
+        Raises
+        ------
+        BondNotFoundError
+            If there is no bond between the two components.
 
         Notes
         -----
