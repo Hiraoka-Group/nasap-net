@@ -7,7 +7,7 @@ from nasap_net.types import ID
 from nasap_net.yaml.semi_light_assembly import SemiLightAssembly
 
 
-def load_semi_light_assemblies(yaml_str: str) -> dict[ID, SemiLightAssembly]:
+def load_semi_light_assemblies(yaml_str: str) -> list[SemiLightAssembly]:
     """Load light assemblies from a YAML string."""
     return yaml.load(yaml_str, Loader=_SemiLightAssemblyLoader)  # type: ignore
 
