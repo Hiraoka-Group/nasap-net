@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from functools import cached_property
+from functools import cached_property, total_ordering
 from types import MappingProxyType
 from typing import Any, Self
 
@@ -68,6 +68,7 @@ class BondNotFoundError(NasapNetError):
         )
 
 
+@total_ordering
 @dataclass(frozen=True, init=False)
 class Assembly:
     """An assembly of components connected by bonds.
