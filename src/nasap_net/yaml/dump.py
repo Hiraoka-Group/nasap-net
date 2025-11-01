@@ -27,7 +27,7 @@ def _dump_separately(
         ) -> _Dumped:
     assembly_list = list(assemblies)
     assembly_map = dict(enumerate(assembly_list))
-    res = convert_assemblies_to_semi_light_assemblies(assembly_map)
+    res = convert_assemblies_to_semi_light_ones(assembly_map)
 
     res_assemblies = [
         res.semi_light_assemblies[id_]
