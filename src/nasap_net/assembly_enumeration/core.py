@@ -11,7 +11,7 @@ def enumerate_assemblies(
         template: Assembly,
         *,
         leaving_ligand: Component,
-        leaving_ligand_site: ID,
+        leaving_ligand_site: ID | None = None,
         metal_kinds: Iterable[str],
         symmetry_operations: Iterable[Mapping[Any, ID]] | None = None,
 ) -> set[Assembly]:
@@ -37,21 +37,29 @@ def enumerate_assemblies(
     template : Assembly
         The template assembly to base the enumeration on.
     leaving_ligand : Component
-        The leaving ligand component to be added to the fragments.
-    symmetry_operations : Iterable[Mapping[_T, ID]] | None, optional
-        A list of symmetry operations represented as mappings from original
-        component IDs to transformed component IDs. If None, no symmetry
-        operations are considered.
+        The ligand to be added to the fragments of the template assembly.
+    leaving_ligand_site : ID | None, optional
+        The site ID on the leaving ligand where it will be attached.
+        If None, the first site ID of the leaving ligand will be used.
+        Default is None.
+    metal_kinds : Iterable[str]
+        The kinds of metal components in the assembly. All binding sites on
+        these components will be considered for attaching the leaving ligand.
+    symmetry_operations : Iterable[Mapping[Any, ID]] | None, optional
+        A list of symmetry operations to consider when excluding duplicate
+        assemblies. Each symmetry operation is represented as a mapping from
+        original site IDs to transformed site IDs.
 
     Returns
     -------
     set[Assembly]
         A set of unique assemblies formed by adding the leaving ligand
         to the fragments of the template assembly.
+        Also includes the free leaving ligand as an assembly.
     """
     fragments = enumerate_fragments(
         template,
-        symmetry_operations=symmetry_operations
+        symmetry_operations=symmetry_operations,
     )
     unique_fragments = extract_unique_assemblies_by_isomorphism(
         fragments,
@@ -62,6 +70,7 @@ def enumerate_assemblies(
         component_site_id=leaving_ligand_site,
         metal_kinds=metal_kinds,
     )
+    # Also include the free leaving ligand as an assembly
     capped_assemblies.add(
         Assembly(
             components={f'{leaving_ligand.kind}0': leaving_ligand},

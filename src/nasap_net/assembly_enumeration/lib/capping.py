@@ -7,10 +7,13 @@ from nasap_net.types import ID
 def cap_assemblies_with_ligand(
         fragments: Iterable[Assembly],
         component: Component,
-        component_site_id: ID,
+        component_site_id: ID | None,
         metal_kinds: Iterable[str],
 ) -> set[Assembly]:
     """Cap all free metal sites in the assemblies with the given component"""
+    if component_site_id is None:
+        component_site_id = next(iter(sorted(component.site_ids)))
+
     return {
         cap_assembly(
             assembly=fragment,
