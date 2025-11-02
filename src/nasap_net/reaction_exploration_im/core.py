@@ -46,3 +46,4 @@ def explore_reactions(
             yield resolved
         except ReactionOutOfScopeError:
             continue
+    logger.debug('Reaction exploration completed.')
