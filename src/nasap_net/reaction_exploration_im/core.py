@@ -1,8 +1,9 @@
 import logging
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable
 from itertools import chain, product
 from typing import Iterator, TypeVar
 
+from nasap_net.exceptions import DuplicateIDError, IDNotSetError
 from nasap_net.models import Assembly
 from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
@@ -15,29 +16,39 @@ logger.addHandler(logging.NullHandler())
 _T = TypeVar('_T', bound=ID)
 
 def explore_reactions(
-        assemblies: Mapping[_T, Assembly],
+        assemblies: Iterable[Assembly],
         mle_kinds: Iterable[MLEKind],
         ) -> Iterator[Reaction]:
     logger.debug('Starting reaction exploration.')
-    # Add assembly IDs to assemblies
-    assems_with_ids = [
-        assem.copy_with(id_=assem_id)
-        for assem_id, assem in assemblies.items()]
+    assemblies = list(assemblies)
+
+    assembly_ids: set[ID] = set()
+    # All assemblies must have IDs and unique IDs
+    for assem in assemblies:
+        if assem.id_or_none is None:
+            raise IDNotSetError(
+                'All assemblies must have IDs for reaction exploration.'
+            )
+        if assem.id_ in assembly_ids:
+            raise DuplicateIDError(
+                f'Duplicate assembly ID found: {assem.id_}'
+            )
+        assembly_ids.add(assem.id_)
 
     reaction_iters: list[Iterator[Reaction]] = []
     for mle_kind in mle_kinds:
         # Intra-molecular reactions
-        for assem in assems_with_ids:
+        for assem in assemblies:
             intra_explorer = IntraReactionExplorer(assem, mle_kind)
             reaction_iters.append(intra_explorer.explore())
 
         # Inter-molecular reactions
-        for init_assem, entering_assem in product(assems_with_ids, repeat=2):
+        for init_assem, entering_assem in product(assemblies, repeat=2):
             inter_explorer = InterReactionExplorer(
                 init_assem, entering_assem, mle_kind)
             reaction_iters.append(inter_explorer.explore())
 
-    resolver = ReactionResolver(assems_with_ids)
+    resolver = ReactionResolver(assemblies)
 
     for i, reaction in enumerate(chain.from_iterable(reaction_iters)):
         try:

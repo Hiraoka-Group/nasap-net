@@ -22,7 +22,7 @@ def test___repr___with_id():
     )
     repr_str = repr(assembly)
     expected_str = (
-        "<SemiLightAssembly id='free_X', components={'X0': 'X'}, bonds=[]>"
+        "<SemiLightAssembly id_='free_X', components={'X0': 'X'}, bonds=[]>"
     )
     assert repr_str == expected_str
 
