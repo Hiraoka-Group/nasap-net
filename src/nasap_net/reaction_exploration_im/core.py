@@ -39,10 +39,10 @@ def explore_reactions(
 
     resolver = ReactionResolver(assems_with_ids)
 
-    for reaction in chain.from_iterable(reaction_iters):
+    for i, reaction in enumerate(chain.from_iterable(reaction_iters)):
         try:
             resolved = resolver.resolve(reaction)
-            logger.info('Found reaction: %s', resolved)
+            logger.info('Reaction Found (%d): %s', i, resolved)
             yield resolved
         except ReactionOutOfScopeError:
             continue
