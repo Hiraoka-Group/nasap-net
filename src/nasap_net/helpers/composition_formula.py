@@ -12,7 +12,7 @@ def generate_composition_formula(
     """Generate a composition formula string for the given assembly.
 
     You can specify the order of component kinds in the formula.
-    Components　not specified in `comp_kind_order` will appear at the end of
+    Components not specified in `comp_kind_order` will appear at the end of
     the formula sorted alphabetically.
 
     Parameters

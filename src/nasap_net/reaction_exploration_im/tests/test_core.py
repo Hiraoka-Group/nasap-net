@@ -38,7 +38,7 @@ def test():
                    Bond('L0', 1, 'M1', 0), Bond('M1', 1, 'X1', 0)]),
         # M2L2-ring: //-(0)M0(1)-(0)L0(1)-(0)M1(1)-(0)L1(1)-//
         Assembly(
-            id_='M_2L2-ring',
+            id_='M2L2-ring',
             components={'M0': M, 'L0': L, 'M1': M, 'L1': L},
             bonds=[Bond('M0', 1, 'L0', 0), Bond('L0', 1, 'M1', 0),
                    Bond('M1', 1, 'L1', 0), Bond('L1', 1, 'M0', 0)]),
