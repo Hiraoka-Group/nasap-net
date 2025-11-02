@@ -4,3 +4,7 @@ class NasapNetError(Exception):
 
 class IDNotSetError(NasapNetError):
     pass
+
+
+class DuplicateIDError(NasapNetError):
+    pass
