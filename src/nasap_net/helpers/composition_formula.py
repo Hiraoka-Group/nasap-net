@@ -2,6 +2,18 @@ from collections import Counter
 from collections.abc import Sequence
 
 from nasap_net.models import Assembly
+from nasap_net.utils import deduplicate_ids
+
+
+def assign_default_assembly_ids(
+        assemblies: Sequence[Assembly],
+) -> list[Assembly]:
+    """Assign default IDs to assemblies"""
+    assigned_assemblies = [
+        assembly.copy_with(id_=generate_composition_formula(assembly))
+        for assembly in assemblies
+    ]
+    return deduplicate_ids(assigned_assemblies)  # type: ignore
 
 
 def generate_composition_formula(
