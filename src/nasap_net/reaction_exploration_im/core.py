@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Iterable, Mapping
 from itertools import chain, product
 from typing import Iterator, TypeVar
@@ -8,12 +9,16 @@ from .explorer import InterReactionExplorer, IntraReactionExplorer
 from .lib import ReactionOutOfScopeError, ReactionResolver
 from .models import MLEKind, Reaction
 
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
+
 _T = TypeVar('_T', bound=ID)
 
 def explore_reactions(
         assemblies: Mapping[_T, Assembly],
         mle_kinds: Iterable[MLEKind],
         ) -> Iterator[Reaction]:
+    logger.debug('Starting reaction exploration.')
     # Add assembly IDs to assemblies
     assems_with_ids = [
         assem.copy_with(id_=assem_id)
@@ -36,6 +41,8 @@ def explore_reactions(
 
     for reaction in chain.from_iterable(reaction_iters):
         try:
-            yield resolver.resolve(reaction)
+            resolved = resolver.resolve(reaction)
+            logger.info('Found reaction: %s', resolved)
+            yield resolved
         except ReactionOutOfScopeError:
             continue
