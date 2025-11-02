@@ -49,7 +49,7 @@ X: !Component
   bonds:
   - [M0, 0, X0, 0]
   - [M0, 1, X1, 0]
-  id: MX2
+  id_: MX2
 - !Assembly
   components: {M0: M(aux), X0: X, X1: X, X2: X}
   bonds:

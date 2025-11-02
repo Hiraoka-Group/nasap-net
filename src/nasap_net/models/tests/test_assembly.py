@@ -47,7 +47,7 @@ def test___repr___with_id():
         bonds=[],
     )
     expected_repr = (
-        "<Assembly id='free_X', components={'X0': 'X'}, bonds=[]>"
+        "<Assembly id_='free_X', components={'X0': 'X'}, bonds=[]>"
     )
     assert repr(assembly) == expected_repr
 

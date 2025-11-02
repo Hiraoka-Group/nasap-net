@@ -139,13 +139,13 @@ class Assembly:
     def __repr__(self):
         fields: dict[str, Any] = {}
         if self._id is not None:
-            fields['id'] = self._id
+            fields['id_'] = self._id
         fields['components'] = dict(sorted(self.component_id_to_kind.items()))
         fields['bonds'] = [bond.to_tuple() for bond in sorted(self.bonds)]
         return construct_repr(self.__class__, fields)
 
     @property
-    def id(self) -> ID:
+    def id_(self) -> ID:
         """Return the ID of the assembly."""
         if self._id is None:
             raise IDNotSetError("Assembly ID is not set.")

@@ -27,7 +27,7 @@ def _semi_light_assembly_constructor(
     mapping = loader.construct_mapping(node, deep=True)
     components: dict[ID, str] = mapping['components']
     bonds: list[Bond] = [_construct_bond(b) for b in mapping['bonds']]
-    assembly_id: str | None = mapping.get('id')
+    assembly_id: str | None = mapping.get('id_')
     return SemiLightAssembly(
         components=components,
         bonds=bonds,

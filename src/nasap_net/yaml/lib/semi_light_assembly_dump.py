@@ -29,7 +29,7 @@ def _semi_light_assembly_representer(
         'bonds': sorted(data.bonds),
     }
     if data.id_or_none is not None:
-        mapping['id'] = data.id
+        mapping['id_'] = data.id_
     return dumper.represent_mapping('!Assembly', mapping)
 
 
