@@ -16,16 +16,16 @@ class Reaction:
     duplicate_count: int
 
     def __str__(self):
-        equation = self.equation
+        equation = self.equation_str
         dup = self.duplicate_count
         return f'{equation} (x{dup})'
 
     def __repr__(self):
-        equation = self.equation
+        equation = self.equation_str
         return f'<{self.__class__.__name__} {equation}>'
 
     @property
-    def equation(self) -> str:
+    def equation_str(self) -> str:
         """Return a string representation of the reaction equation.
 
         If an assembly ID is not set, '??' is used in its place.

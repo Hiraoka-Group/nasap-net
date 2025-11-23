@@ -1,10 +1,8 @@
-import pandas as pd
-
-from nasap_net.io import export_reactions_to_file
+from nasap_net.io import load_reactions_from_file, save_reactions_to_file
 from nasap_net.models import Assembly, BindingSite, Bond, Component, Reaction
 
 
-def test_export_reactions_to_file(tmp_path):
+def test_round_trip(tmp_path):
     M = Component(kind='M', sites=[0, 1])
     L = Component(kind='L', sites=[0, 1])
     X = Component(kind='X', sites=[0])
@@ -21,6 +19,8 @@ def test_export_reactions_to_file(tmp_path):
     )
     free_X = Assembly(id_='free_X', components={'X0': X}, bonds=[])
 
+    assemblies = [MX2, free_L, MLX, free_X]
+
     reactions  = [
         Reaction(
             init_assem=MX2,
@@ -35,20 +35,13 @@ def test_export_reactions_to_file(tmp_path):
     ]
 
     output_file = tmp_path / 'reactions.csv'
-    export_reactions_to_file(reactions, output_file)
+    save_reactions_to_file(reactions, output_file)
 
-    assert output_file.exists()
-    df = pd.read_csv(output_file)
-    assert len(df) == 1
-    row = df.iloc[0]
-    assert row['init_assem_id'] == 'MX2'
-    assert row['entering_assem_id'] == 'free_L'
-    assert row['product_assem_id'] == 'MLX'
-    assert row['leaving_assem_id'] == 'free_X'
-    assert row['metal_bs_component'] == 'M0'
-    assert row['metal_bs_site'] == 0
-    assert row['leaving_bs_component'] == 'X0'
-    assert row['leaving_bs_site'] == 0
-    assert row['entering_bs_component'] == 'L0'
-    assert row['entering_bs_site'] == 0
-    assert row['duplicate_count'] == 4
+    loaded_reactions = load_reactions_from_file(
+        output_file, assemblies,
+        site_id_type='int'
+    )
+
+    assert len(loaded_reactions) == len(reactions)
+    for original, loaded in zip(reactions, loaded_reactions):
+        assert original == loaded

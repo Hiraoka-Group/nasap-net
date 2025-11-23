@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def export_reactions_to_file(
+def save_reactions_to_file(
         reactions: Iterable[Reaction],
         file_path: os.PathLike | str,
         *,
         overwrite: bool = False,
         ) -> None:
-    """Export reactions to a CSV file.
+    """Save reactions to a CSV file.
 
     Resulting CSV columns:
     - init_assem_id : str | int
@@ -36,7 +36,7 @@ def export_reactions_to_file(
     Parameters
     ----------
     reactions : Iterable[Reaction]
-        Reactions to export.
+        Reactions to save.
     file_path : os.PathLike | str
         Path to the CSV file to write.
     overwrite : bool, optional
