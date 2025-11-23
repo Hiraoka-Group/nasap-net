@@ -252,11 +252,18 @@ class Assembly:
             bonds: Iterable[Bond] | None = None,
             id_: ID | None = None,
             ) -> Self:
-        """Return a copy of the assembly with optional modifications."""
+        """Return a copy of the assembly with optional modifications.
+
+        Fields not provided will default to the current values, except for the
+        ID, which will be set to None if not provided.
+
+        If you want to copy the current ID, specify it explicitly,
+        e.g., `copied = assembly.copy_with(id_=assembly.id_or_none)`.
+        """
         return self.__class__(
             components=default_if_none(components, self._components),
             bonds=default_if_none(bonds, self.bonds),
-            id_=default_if_none(id_, self.id_or_none),
+            id_=id_,  # No defaulting for ID
         )
 
     @cached_property

@@ -100,6 +100,6 @@ def test_copy_with_no_changes():
 
     new = original.copy_with()
 
-    assert new.id_or_none == original.id_or_none
+    assert new.id_or_none is None  # ID should not be copied by default
     assert new.components == original.components
     assert new.bonds == original.bonds
