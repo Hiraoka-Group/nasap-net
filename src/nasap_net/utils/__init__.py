@@ -1,6 +1,7 @@
 from .chain_map import *
 from .circular_perm_comparison import *
 from .cyclic_perm import *
+from .default_if_none import default_if_none
 from .frozen_unordered_pair import *
 from .id_deduplication import deduplicate_ids
 from .mapping_iterable_comparison import *
