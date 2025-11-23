@@ -1,10 +1,13 @@
 from dataclasses import dataclass
+from typing import Self
 
+from nasap_net.exceptions import IDNotSetError
 from nasap_net.models import Assembly, BindingSite
 from nasap_net.types import ID
+from nasap_net.utils import default_if_none
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class Reaction:
     init_assem: Assembly
     entering_assem: Assembly | None
@@ -14,6 +17,29 @@ class Reaction:
     leaving_bs: BindingSite
     entering_bs: BindingSite
     duplicate_count: int
+    _id: ID | None
+
+    def __init__(
+            self,
+            init_assem: Assembly,
+            entering_assem: Assembly | None,
+            product_assem: Assembly,
+            leaving_assem: Assembly | None,
+            metal_bs: BindingSite,
+            leaving_bs: BindingSite,
+            entering_bs: BindingSite,
+            duplicate_count: int,
+            id_: ID | None = None,
+    ):
+        object.__setattr__(self, 'init_assem', init_assem)
+        object.__setattr__(self, 'entering_assem', entering_assem)
+        object.__setattr__(self, 'product_assem', product_assem)
+        object.__setattr__(self, 'leaving_assem', leaving_assem)
+        object.__setattr__(self, 'metal_bs', metal_bs)
+        object.__setattr__(self, 'leaving_bs', leaving_bs)
+        object.__setattr__(self, 'entering_bs', entering_bs)
+        object.__setattr__(self, 'duplicate_count', duplicate_count)
+        object.__setattr__(self, '_id', id_)
 
     def __str__(self):
         equation = self.equation_str
@@ -22,7 +48,21 @@ class Reaction:
 
     def __repr__(self):
         equation = self.equation_str
-        return f'<{self.__class__.__name__} {equation}>'
+        if self._id is None:
+            return f'<{self.__class__.__name__} {equation}>'
+        return f'<{self.__class__.__name__} ID={self._id} {equation}>'
+
+    @property
+    def id_(self) -> ID:
+        """Return the ID of the reaction."""
+        if self._id is None:
+            raise IDNotSetError("Reaction ID is not set.")
+        return self._id
+
+    @property
+    def id_or_none(self) -> ID | None:
+        """Return the ID of the reaction, or None if not set."""
+        return self._id
 
     @property
     def equation_str(self) -> str:
@@ -75,6 +115,39 @@ class Reaction:
         if self.leaving_assem is None:
             return None
         return self.leaving_assem.id_
+
+    def copy_with(
+            self,
+            *,
+            init_assem: Assembly | None = None,
+            entering_assem: Assembly | None = None,
+            product_assem: Assembly | None = None,
+            leaving_assem: Assembly | None = None,
+            metal_bs: BindingSite | None = None,
+            leaving_bs: BindingSite | None = None,
+            entering_bs: BindingSite | None = None,
+            duplicate_count: int | None = None,
+            id_: ID | None = None,
+            ) -> Self:
+        """Return a copy of the assembly with optional modifications.
+
+        Fields not provided will default to the current values, except for the
+        ID, which will be set to None if not provided.
+
+        If you want to copy the current ID, specify it explicitly,
+        e.g., `copied = assembly.copy_with(id_=assembly.id_or_none)`.
+        """
+        return self.__class__(
+            init_assem=default_if_none(init_assem, self.init_assem),
+            entering_assem=default_if_none(entering_assem, self.entering_assem),
+            product_assem=default_if_none(product_assem, self.product_assem),
+            leaving_assem=default_if_none(leaving_assem, self.leaving_assem),
+            metal_bs=default_if_none(metal_bs, self.metal_bs),
+            leaving_bs=default_if_none(leaving_bs, self.leaving_bs),
+            entering_bs=default_if_none(entering_bs, self.entering_bs),
+            duplicate_count=default_if_none(duplicate_count, self.duplicate_count),
+            id_=id_,
+        )
 
 
 def _assembly_to_id(assembly: Assembly | None) -> ID | None:
