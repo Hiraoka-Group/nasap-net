@@ -1,19 +1,8 @@
-from enum import Enum, auto
-
-
-class DtypeCategory(Enum):
-    """Defines groups of columns that share the same data type.
-
-    Columns of the same DtypeCategory will be converted to the same Python type
-    when loading from a DataFrame.
-    """
-    ASSEMBLY = auto()
-    COMPONENT = auto()
-    SITE = auto()
-    DUPLICATE_COUNT = auto()
+from enum import Enum
 
 
 class Column(Enum):
+    """Column names for reaction data."""
     INIT_ASSEM_ID = 'init_assem_id'
     ENTERING_ASSEM_ID = 'entering_assem_id'
     PRODUCT_ASSEM_ID = 'product_assem_id'
@@ -25,3 +14,4 @@ class Column(Enum):
     ENTERING_BS_COMPONENT = 'entering_bs_component'
     ENTERING_BS_SITE = 'entering_bs_site'
     DUPLICATE_COUNT = 'duplicate_count'
+    ID_ = 'id'

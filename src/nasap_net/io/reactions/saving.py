@@ -17,6 +17,7 @@ def save_reactions(
         file_path: os.PathLike | str,
         *,
         overwrite: bool = False,
+        index: bool = False,
         ) -> None:
     """Save reactions to a CSV file.
 
@@ -32,6 +33,7 @@ def save_reactions(
     - entering_bs_component : str | int
     - entering_bs_site : str | int
     - duplicate_count : int
+    - id_ : str | int | None
 
     Parameters
     ----------
@@ -54,7 +56,7 @@ def save_reactions(
     df = reactions_to_df(reactions)
 
     file_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(file_path)
+    df.to_csv(file_path, index=index)
     logger.info('Saved! --> "%s"', str(file_path))
 
 
@@ -77,8 +79,15 @@ def reactions_to_df(reactions: Iterable[Reaction]) -> pd.DataFrame:
         If any assembly ID in the reactions is not set.
     """
     rows = [
-        ReactionRow.from_reaction(reaction).to_dict()
+        _rename_id_key(ReactionRow.from_reaction(reaction).to_dict())
         for reaction in reactions
     ]
 
     return pd.DataFrame(rows)
+
+
+def _rename_id_key(d: dict) -> dict:
+    """Rename the 'id_' key in the dictionary to 'id'."""
+    if 'id_' in d:
+        d['id'] = d.pop('id_')
+    return d

@@ -22,6 +22,8 @@ def load_reactions(
         assembly_id_type: Literal['str', 'int'] = 'str',
         component_id_type: Literal['str', 'int'] = 'str',
         site_id_type: Literal['str', 'int'] = 'str',
+        reaction_id_type: Literal['str', 'int'] = 'str',
+        has_index_column: bool = False,
 ) -> list[Reaction]:
     """Load reactions from a CSV file and convert to Reaction objects."""
     validate_unique_assembly_ids(assemblies)
@@ -31,7 +33,11 @@ def load_reactions(
     if not file_path.exists():
         raise FileNotFoundError(f'File "{str(file_path)}" does not exist.')
 
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(
+        file_path,
+        index_col=0 if has_index_column else None,
+    )
+    df = df.astype(object).where(pd.notnull(df), None)
 
     types = {'int': int, 'str': str}
 
@@ -41,6 +47,7 @@ def load_reactions(
             assembly_id_type=types[assembly_id_type],
             component_id_type=types[component_id_type],
             site_id_type=types[site_id_type],
+            reaction_id_type=types[reaction_id_type],
         )
         for row in df.to_dict(orient="records")
     ]
@@ -89,4 +96,5 @@ def reaction_row_to_reaction(
             site_id=reaction_row.entering_bs_site,
         ),
         duplicate_count=reaction_row.duplicate_count,
+        id_=reaction_row.id_,
     )
