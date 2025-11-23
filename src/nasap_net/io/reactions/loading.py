@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def load_reactions_from_file(
+def load_reactions(
         file_path: os.PathLike | str,
         assemblies: Iterable[Assembly],
         *,

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from nasap_net.io import save_reactions_to_file
+from nasap_net.io import save_reactions
 from nasap_net.models import Assembly, BindingSite, Bond, Component, Reaction
 
 
@@ -35,7 +35,7 @@ def test_save_reactions_to_file(tmp_path):
     ]
 
     output_file = tmp_path / 'reactions.csv'
-    save_reactions_to_file(reactions, output_file)
+    save_reactions(reactions, output_file)
 
     assert output_file.exists()
     df = pd.read_csv(output_file)

@@ -5,7 +5,7 @@ from nasap_net.io.assemblies.load import load
 from nasap_net.models import Assembly
 
 
-def import_assemblies_from_file(
+def load_assemblies(
         file_path: os.PathLike | str,
         *,
         strict: bool = True,

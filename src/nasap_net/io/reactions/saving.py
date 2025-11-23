@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def save_reactions_to_file(
+def save_reactions(
         reactions: Iterable[Reaction],
         file_path: os.PathLike | str,
         *,

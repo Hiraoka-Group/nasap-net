@@ -1,6 +1,6 @@
 import pytest
 
-from nasap_net.io.assemblies import dump, export_assemblies_to_file
+from nasap_net.io.assemblies import dump, save_assemblies
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
@@ -36,7 +36,7 @@ def test_writes_file_and_contents(tmp_path, sample_assemblies):
     out = tmp_path / "out.yaml"
 
     # write
-    export_assemblies_to_file(assemblies, out, overwrite=False, verbose=False)
+    save_assemblies(assemblies, out, overwrite=False, verbose=False)
 
     # file exists and contents match dump()
     assert out.exists()
@@ -50,7 +50,7 @@ def test_raises_if_exists_and_no_overwrite(tmp_path, sample_assemblies):
     out.write_text("old")
 
     try:
-        export_assemblies_to_file(assemblies, out, overwrite=False, verbose=False)
+        save_assemblies(assemblies, out, overwrite=False, verbose=False)
         raised = False
     except FileExistsError:
         raised = True
@@ -65,7 +65,7 @@ def test_overwrite_ok(tmp_path, sample_assemblies):
     out = tmp_path / "to_overwrite.yaml"
     out.write_text("old content")
 
-    export_assemblies_to_file(assemblies, out, overwrite=True, verbose=False)
+    save_assemblies(assemblies, out, overwrite=True, verbose=False)
 
     assert out.read_text() == dump(assemblies)
 
@@ -74,7 +74,7 @@ def test_creates_parent_dirs(tmp_path, sample_assemblies):
     assemblies = sample_assemblies
     out = tmp_path / "nested" / "a" / "dump.yaml"
 
-    export_assemblies_to_file(assemblies, out, overwrite=False, verbose=False)
+    save_assemblies(assemblies, out, overwrite=False, verbose=False)
 
     assert out.exists()
     assert (tmp_path / "nested" / "a").exists()
@@ -84,7 +84,7 @@ def test_verbose_prints_saved_message(tmp_path, capsys, sample_assemblies):
     assemblies = sample_assemblies
     out = tmp_path / "v.yaml"
 
-    export_assemblies_to_file(assemblies, out, overwrite=False, verbose=True)
+    save_assemblies(assemblies, out, overwrite=False, verbose=True)
 
     captured = capsys.readouterr()
     # message should include path

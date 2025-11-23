@@ -1,4 +1,4 @@
-from nasap_net.io import load_reactions_from_file, save_reactions_to_file
+from nasap_net.io import load_reactions, save_reactions
 from nasap_net.models import Assembly, BindingSite, Bond, Component, Reaction
 
 
@@ -35,9 +35,9 @@ def test_round_trip(tmp_path):
     ]
 
     output_file = tmp_path / 'reactions.csv'
-    save_reactions_to_file(reactions, output_file)
+    save_reactions(reactions, output_file)
 
-    loaded_reactions = load_reactions_from_file(
+    loaded_reactions = load_reactions(
         output_file, assemblies,
         site_id_type='int'
     )

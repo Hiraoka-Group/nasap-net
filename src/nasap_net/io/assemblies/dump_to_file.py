@@ -6,7 +6,7 @@ from nasap_net.io.assemblies.dump import dump
 from nasap_net.models import Assembly
 
 
-def export_assemblies_to_file(
+def save_assemblies(
         assemblies: Iterable[Assembly],
         file_path: os.PathLike | str,
         *,

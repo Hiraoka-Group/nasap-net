@@ -1,4 +1,4 @@
-from nasap_net.io import load_reactions_from_file
+from nasap_net.io import load_reactions
 from nasap_net.models import Assembly, BindingSite, Bond, Component, Reaction
 
 
@@ -30,7 +30,7 @@ MX2,free_L,MLX,free_X,M0,0,X0,0,L0,0,4
     reaction_file = tmp_path / 'reactions.csv'
     reaction_file.write_text(reaction_data)
     # Import reactions from the CSV file
-    imported_reactions = load_reactions_from_file(
+    imported_reactions = load_reactions(
         reaction_file, assemblies,
         assembly_id_type='str',
         component_id_type='str',
