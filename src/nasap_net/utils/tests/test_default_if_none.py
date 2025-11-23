@@ -14,15 +14,17 @@ def test_default_if_none_with_none():
     assert result == default
 
 
-def test_default_if_none_with_string_value():
-    value = "hello"
-    default = "world"
-    result = default_if_none(value, default)
+# The following tests check type behavior.
+
+def test_default_if_none_with_default_none():
+    value = 42
+    default = None
+    result = default_if_none(value, default)  # Should be of type int
     assert result == value
 
 
-def test_default_if_none_with_string_none():
+def test_default_if_none_both_none():
     value = None
-    default = "world"
-    result = default_if_none(value, default)
-    assert result == default
+    default = None
+    result = default_if_none(value, default)  # Should be of type None
+    assert result is None
