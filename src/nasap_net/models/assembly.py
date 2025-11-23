@@ -8,7 +8,7 @@ from frozendict import frozendict
 
 from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.types import ID
-from nasap_net.utils import construct_repr
+from nasap_net.utils import construct_repr, default_if_none
 from .binding_site import BindingSite
 from .bond import Bond
 from .component import Component
@@ -253,14 +253,11 @@ class Assembly:
             id_: ID | None = None,
             ) -> Self:
         """Return a copy of the assembly with optional modifications."""
-        if components is None:
-            components = self.components
-        if bonds is None:
-            bonds = self.bonds
-        if id_ is None:
-            id_ = self.id_or_none
         return self.__class__(
-            components=components, bonds=bonds, id_=id_)
+            components=default_if_none(components, self._components),
+            bonds=default_if_none(bonds, self.bonds),
+            id_=default_if_none(id_, self.id_or_none),
+        )
 
     @cached_property
     def _all_sites(self) -> frozenset[BindingSite]:
