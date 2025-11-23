@@ -1,8 +1,11 @@
+from collections.abc import Iterable
+
 from nasap_net.exceptions import DuplicateIDError, IDNotSetError
+from nasap_net.models import Assembly
 from nasap_net.types import ID
 
 
-def validate_unique_assembly_ids(assemblies):
+def validate_unique_assembly_ids(assemblies: Iterable[Assembly]) -> None:
     """Validate that all assemblies have unique IDs.
 
     Parameters
@@ -22,7 +25,7 @@ def validate_unique_assembly_ids(assemblies):
     for assem in assemblies:
         if assem.id_or_none is None:
             raise IDNotSetError(
-                'All assemblies must have IDs for reaction exploration.'
+                'All assemblies must have IDs.'
             )
         if assem.id_ in assembly_ids:
             raise DuplicateIDError(

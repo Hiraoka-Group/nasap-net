@@ -21,7 +21,7 @@ def test_save_reactions_to_file(tmp_path):
     )
     free_X = Assembly(id_='free_X', components={'X0': X}, bonds=[])
 
-    reactions  = [
+    reactions = [
         Reaction(
             init_assem=MX2,
             entering_assem=free_L,

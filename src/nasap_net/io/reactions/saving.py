@@ -59,7 +59,7 @@ def save_reactions(
 
 
 def reactions_to_df(reactions: Iterable[Reaction]) -> pd.DataFrame:
-    """Convert a dictionary of Reaction objects to a pandas DataFrame.
+    """Convert an iterable of Reaction objects to a pandas DataFrame.
 
     Parameters
     ----------

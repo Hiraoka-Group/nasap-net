@@ -31,18 +31,18 @@ class ReactionRow(Generic[_T, _S, _U]):
     @classmethod
     def from_reaction(cls: type[T], reaction: Reaction) -> T:
         return cls(
-        init_assem_id=reaction.init_assem_id,
-        entering_assem_id=reaction.entering_assem_id,
-        product_assem_id=reaction.product_assem_id,
-        leaving_assem_id=reaction.leaving_assem_id,
-        metal_bs_component=reaction.metal_bs.component_id,
-        metal_bs_site=reaction.metal_bs.site_id,
-        leaving_bs_component=reaction.leaving_bs.component_id,
-        leaving_bs_site=reaction.leaving_bs.site_id,
-        entering_bs_component=reaction.entering_bs.component_id,
-        entering_bs_site=reaction.entering_bs.site_id,
-        duplicate_count=reaction.duplicate_count,
-    )
+            init_assem_id=reaction.init_assem_id,
+            entering_assem_id=reaction.entering_assem_id,
+            product_assem_id=reaction.product_assem_id,
+            leaving_assem_id=reaction.leaving_assem_id,
+            metal_bs_component=reaction.metal_bs.component_id,
+            metal_bs_site=reaction.metal_bs.site_id,
+            leaving_bs_component=reaction.leaving_bs.component_id,
+            leaving_bs_site=reaction.leaving_bs.site_id,
+            entering_bs_component=reaction.entering_bs.component_id,
+            entering_bs_site=reaction.entering_bs.site_id,
+            duplicate_count=reaction.duplicate_count,
+        )
 
     @classmethod
     def from_dict(

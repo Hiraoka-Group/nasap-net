@@ -4,7 +4,7 @@ from enum import Enum, auto
 class DtypeCategory(Enum):
     """Defines groups of columns that share the same data type.
 
-    Columns of the same DtypeClass will be converted to the same Python type
+    Columns of the same DtypeCategory will be converted to the same Python type
     when loading from a DataFrame.
     """
     ASSEMBLY = auto()

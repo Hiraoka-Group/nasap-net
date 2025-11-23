@@ -21,7 +21,7 @@ def test_round_trip(tmp_path):
 
     assemblies = [MX2, free_L, MLX, free_X]
 
-    reactions  = [
+    reactions = [
         Reaction(
             init_assem=MX2,
             entering_assem=free_L,
