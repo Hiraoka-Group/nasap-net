@@ -257,6 +257,8 @@ class Assembly:
             components = self.components
         if bonds is None:
             bonds = self.bonds
+        if id_ is None:
+            id_ = self.id_or_none
         return self.__class__(
             components=components, bonds=bonds, id_=id_)
 

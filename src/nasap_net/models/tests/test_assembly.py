@@ -62,3 +62,44 @@ def test___repr___with_no_bonds():
         "<Assembly components={'X0': 'X'}, bonds=[]>"
     )
     assert repr(assembly) == expected_repr
+
+
+def test_copy_with():
+    L = Component(kind='L', sites=[0, 1])
+    M = Component(kind='M', sites=[0, 1])
+    original = Assembly(
+        id_='original',
+        components={'L1': L, 'M1': M},
+        bonds={Bond('L1', 0, 'M1', 0)},
+    )
+
+    new = original.copy_with(
+        id_='new',
+        components={'L2': L, 'M2': M},
+        bonds={Bond('L2', 1, 'M2', 0)},
+    )
+
+    assert new.id_ == 'new'
+    assert new.components == {'L2': L, 'M2': M}
+    assert new.bonds == frozenset({Bond('L2', 1, 'M2', 0)})
+
+    # Original assembly remains unchanged
+    assert original.id_or_none is None
+    assert original.components == {'L1': L, 'M1': M}
+    assert original.bonds == frozenset({Bond('L1', 0, 'M1', 0)})
+
+
+def test_copy_with_no_changes():
+    L = Component(kind='L', sites=[0, 1])
+    M = Component(kind='M', sites=[0, 1])
+    original = Assembly(
+        id_='original',
+        components={'L1': L, 'M1': M},
+        bonds={Bond('L1', 0, 'M1', 0)},
+    )
+
+    new = original.copy_with()
+
+    assert new.id_or_none == original.id_or_none
+    assert new.components == original.components
+    assert new.bonds == original.bonds
