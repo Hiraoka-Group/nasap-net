@@ -4,10 +4,10 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 
 from nasap_net.exceptions import NasapNetError
-from nasap_net.models import Assembly, BindingSite, Bond
+from nasap_net.models import Assembly, BindingSite, Bond, MLE, MLEKind, \
+    Reaction
 from nasap_net.types import ID
 from .lib import extract_unique_site_combinations, separate_if_possible
-from .models import MLE, MLEKind, Reaction
 
 
 class ReactionExplorer(ABC):

@@ -5,7 +5,7 @@ from nasap_net.exceptions import NasapNetError
 from nasap_net.isomorphism import AssemblyNotFoundError, \
     IsomorphicAssemblyFinder
 from nasap_net.models import Assembly
-from ..models import Reaction
+from nasap_net.models.reaction import Reaction
 
 
 class ReactionOutOfScopeError(NasapNetError):

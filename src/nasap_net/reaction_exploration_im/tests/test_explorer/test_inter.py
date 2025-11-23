@@ -1,8 +1,8 @@
 import pytest
 
-from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
+from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component, \
+    MLE, MLEKind, Reaction
 from nasap_net.reaction_exploration_im.explorer import InterReactionExplorer
-from nasap_net.reaction_exploration_im.models import MLE, MLEKind, Reaction
 
 
 @pytest.fixture

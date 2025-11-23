@@ -3,12 +3,11 @@ from collections.abc import Iterable
 from itertools import chain, product
 from typing import Iterator, TypeVar
 
-from nasap_net.exceptions import DuplicateIDError, IDNotSetError
-from nasap_net.models import Assembly
+from nasap_net.helpers import validate_unique_assembly_ids
+from nasap_net.models import Assembly, MLEKind, Reaction
 from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
 from .lib import ReactionOutOfScopeError, ReactionResolver
-from .models import MLEKind, Reaction
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -22,18 +21,7 @@ def explore_reactions(
     logger.debug('Starting reaction exploration.')
     assemblies = list(assemblies)
 
-    assembly_ids: set[ID] = set()
-    # All assemblies must have IDs and unique IDs
-    for assem in assemblies:
-        if assem.id_or_none is None:
-            raise IDNotSetError(
-                'All assemblies must have IDs for reaction exploration.'
-            )
-        if assem.id_ in assembly_ids:
-            raise DuplicateIDError(
-                f'Duplicate assembly ID found: {assem.id_}'
-            )
-        assembly_ids.add(assem.id_)
+    validate_unique_assembly_ids(assemblies)
 
     reaction_iters: list[Iterator[Reaction]] = []
     for mle_kind in mle_kinds:

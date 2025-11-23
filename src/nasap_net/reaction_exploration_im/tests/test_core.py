@@ -1,5 +1,5 @@
-from nasap_net.models import Assembly, Bond, Component
-from nasap_net.reaction_exploration_im import MLEKind, explore_reactions
+from nasap_net.models import Assembly, Bond, Component, MLEKind
+from nasap_net.reaction_exploration_im import explore_reactions
 
 
 def test():
