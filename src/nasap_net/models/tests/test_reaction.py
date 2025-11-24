@@ -136,3 +136,29 @@ def test_copy_with_no_changes(MX2_plus_free_L):
     assert copied.entering_bs == MX2_plus_free_L.entering_bs
     assert copied.duplicate_count == MX2_plus_free_L.duplicate_count
     assert copied.id_or_none is None  # ID should not be copied by default
+
+
+def test_copy_with_explicit_none_for_optional_assemblies(MX2_plus_free_L):
+    """Test that explicitly passing None to entering_assem and leaving_assem
+    sets them to None, rather than keeping the current values."""
+    # MX2_plus_free_L has non-None entering_assem and leaving_assem
+    assert MX2_plus_free_L.entering_assem is not None
+    assert MX2_plus_free_L.leaving_assem is not None
+
+    # Explicitly set them to None
+    copied = MX2_plus_free_L.copy_with(
+        entering_assem=None,
+        leaving_assem=None,
+    )
+
+    # Verify they are now None
+    assert copied.entering_assem is None
+    assert copied.leaving_assem is None
+    
+    # Verify other fields remain unchanged
+    assert copied.init_assem == MX2_plus_free_L.init_assem
+    assert copied.product_assem == MX2_plus_free_L.product_assem
+    assert copied.metal_bs == MX2_plus_free_L.metal_bs
+    assert copied.leaving_bs == MX2_plus_free_L.leaving_bs
+    assert copied.entering_bs == MX2_plus_free_L.entering_bs
+    assert copied.duplicate_count == MX2_plus_free_L.duplicate_count

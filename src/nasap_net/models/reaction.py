@@ -6,6 +6,9 @@ from nasap_net.models import Assembly, BindingSite
 from nasap_net.types import ID
 from nasap_net.utils import default_if_none
 
+# Sentinel value to distinguish between "not provided" and "explicitly None"
+_UNSET = object()
+
 
 @dataclass(frozen=True, init=False)
 class Reaction:
@@ -120,9 +123,9 @@ class Reaction:
             self,
             *,
             init_assem: Assembly | None = None,
-            entering_assem: Assembly | None = None,
+            entering_assem: Assembly | None | object = _UNSET,
             product_assem: Assembly | None = None,
-            leaving_assem: Assembly | None = None,
+            leaving_assem: Assembly | None | object = _UNSET,
             metal_bs: BindingSite | None = None,
             leaving_bs: BindingSite | None = None,
             entering_bs: BindingSite | None = None,
@@ -139,9 +142,9 @@ class Reaction:
         """
         return self.__class__(
             init_assem=default_if_none(init_assem, self.init_assem),
-            entering_assem=default_if_none(entering_assem, self.entering_assem),
+            entering_assem=self.entering_assem if entering_assem is _UNSET else entering_assem,
             product_assem=default_if_none(product_assem, self.product_assem),
-            leaving_assem=default_if_none(leaving_assem, self.leaving_assem),
+            leaving_assem=self.leaving_assem if leaving_assem is _UNSET else leaving_assem,
             metal_bs=default_if_none(metal_bs, self.metal_bs),
             leaving_bs=default_if_none(leaving_bs, self.leaving_bs),
             entering_bs=default_if_none(entering_bs, self.entering_bs),
