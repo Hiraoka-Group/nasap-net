@@ -8,7 +8,12 @@ from nasap_net.utils import default_if_none
 
 # Sentinel value to distinguish between "not provided" and "explicitly None"
 class _UnsetType:
-    """Sentinel type for unset parameters."""
+    """Sentinel type for distinguishing between unset parameters and explicit None.
+    
+    This is used in methods like copy_with() where we need to differentiate between:
+    - A parameter not being provided (should use current value)
+    - A parameter explicitly set to None (should set field to None)
+    """
     pass
 
 _UNSET = _UnsetType()
@@ -146,11 +151,11 @@ class Reaction:
         """
         # Resolve sentinel values for optional assembly fields
         entering_assem_resolved: Assembly | None = (
-            self.entering_assem if entering_assem is _UNSET 
+            self.entering_assem if entering_assem is _UNSET
             else cast(Assembly | None, entering_assem)
         )
         leaving_assem_resolved: Assembly | None = (
-            self.leaving_assem if leaving_assem is _UNSET 
+            self.leaving_assem if leaving_assem is _UNSET
             else cast(Assembly | None, leaving_assem)
         )
         
