@@ -84,7 +84,7 @@ def test_copy_with():
     assert new.bonds == frozenset({Bond('L2', 1, 'M2', 0)})
 
     # Original assembly remains unchanged
-    assert original.id_or_none is 'original'
+    assert original.id_or_none == 'original'
     assert original.components == {'L1': L, 'M1': M}
     assert original.bonds == frozenset({Bond('L1', 0, 'M1', 0)})
 
