@@ -131,6 +131,16 @@ class Reaction:
             return None
         return self.leaving_assem.id_
 
+    @property
+    def is_inter(self) -> bool:
+        """Return True if the reaction is an inter-molecular reaction."""
+        return self.entering_assem is not None
+
+    @property
+    def is_intra(self) -> bool:
+        """Return True if the reaction is an intra-molecular reaction."""
+        return self.entering_assem is None
+
     def copy_with(
             self,
             *,
