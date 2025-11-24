@@ -103,3 +103,11 @@ def test_copy_with_no_changes():
     assert new.id_or_none is None  # ID should not be copied by default
     assert new.components == original.components
     assert new.bonds == original.bonds
+
+
+def test_copy_with_invalid_none():
+    assem = Assembly(components={}, bonds={})
+    with pytest.raises(TypeError):
+        assem.copy_with(components=None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        assem.copy_with(bonds=None)  # type: ignore[arg-type]

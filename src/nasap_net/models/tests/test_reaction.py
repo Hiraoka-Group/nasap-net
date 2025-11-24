@@ -136,3 +136,47 @@ def test_copy_with_no_changes(MX2_plus_free_L):
     assert copied.entering_bs == MX2_plus_free_L.entering_bs
     assert copied.duplicate_count == MX2_plus_free_L.duplicate_count
     assert copied.id_or_none is None  # ID should not be copied by default
+
+
+def test_override_with_none():
+    reaction = Reaction(
+        init_assem=Assembly(id_='init_assem', components={}, bonds=[]),
+        entering_assem=Assembly(id_='entering_assem', components={}, bonds=[]),
+        product_assem=Assembly(id_='product_assem', components={}, bonds=[]),
+        leaving_assem=Assembly(id_='leaving_assem', components={}, bonds=[]),
+        metal_bs=BindingSite('metal', 0),
+        leaving_bs=BindingSite('leaving', 0),
+        entering_bs=BindingSite('entering', 0),
+        duplicate_count=1,
+    )
+    assert reaction.entering_assem is not None
+    assert reaction.leaving_assem is not None
+
+    # Overridden to None when None is explicitly provided
+    modified = reaction.copy_with(
+        entering_assem=None,
+        leaving_assem=None,
+    )
+    assert modified.entering_assem is None
+    assert modified.leaving_assem is None
+
+    # Original value is used when None is not explicitly provided
+    unmodified = reaction.copy_with()
+    assert unmodified.entering_assem == reaction.entering_assem
+    assert unmodified.leaving_assem == reaction.leaving_assem
+
+    # Other fields cannot be set to None even when None is provided
+    with pytest.raises(TypeError):
+        reaction.copy_with(init_assem=None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        reaction.copy_with(product_assem=None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        reaction.copy_with(metal_bs=None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        reaction.copy_with(leaving_bs=None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        reaction.copy_with(entering_bs=None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        reaction.copy_with(duplicate_count=None)  # type: ignore[arg-type]
+    with pytest.raises(ValueError):
+        reaction.copy_with(duplicate_count=0)  # Should be positive integer

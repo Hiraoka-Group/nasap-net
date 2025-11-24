@@ -1,30 +1,16 @@
-from nasap_net.utils import default_if_none
-
-def test_default_if_none_with_value():
-    value = 42
-    default = 100
-    result = default_if_none(value, default)
-    assert result == value
+from nasap_net.utils.default import MISSING, default_if_missing
 
 
-def test_default_if_none_with_none():
-    value = None
-    default = 100
-    result = default_if_none(value, default)
-    assert result == default
+def test_with_value():
+    result = default_if_missing('value', 'default')
+    assert result == 'value'
 
 
-# The following tests check type behavior.
-
-def test_default_if_none_with_default_none():
-    value = 42
-    default = None
-    result = default_if_none(value, default)  # Should be of type int
-    assert result == value
+def test_with_missing():
+    result = default_if_missing(MISSING, 'default')
+    assert result == 'default'
 
 
-def test_default_if_none_both_none():
-    value = None
-    default = None
-    result = default_if_none(value, default)  # Should be of type None
+def test_no_fallback_for_none():
+    result = default_if_missing(None, 'default')
     assert result is None

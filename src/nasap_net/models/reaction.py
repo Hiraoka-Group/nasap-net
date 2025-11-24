@@ -4,7 +4,7 @@ from typing import Self
 from nasap_net.exceptions import IDNotSetError
 from nasap_net.models import Assembly, BindingSite
 from nasap_net.types import ID
-from nasap_net.utils import default_if_none
+from nasap_net.utils.default import MISSING, Missing, default_if_missing
 
 
 @dataclass(frozen=True, init=False)
@@ -31,6 +31,21 @@ class Reaction:
             duplicate_count: int,
             id_: ID | None = None,
     ):
+        if init_assem is None:
+            raise TypeError("init_assem cannot be None")
+        if product_assem is None:
+            raise TypeError("product_assem cannot be None")
+        if metal_bs is None:
+            raise TypeError("metal_bs cannot be None")
+        if leaving_bs is None:
+            raise TypeError("leaving_bs cannot be None")
+        if entering_bs is None:
+            raise TypeError("entering_bs cannot be None")
+        if duplicate_count is None:
+            raise TypeError("duplicate_count cannot be None")
+        if not duplicate_count > 0:
+            raise ValueError("duplicate_count must be a positive integer")
+
         object.__setattr__(self, 'init_assem', init_assem)
         object.__setattr__(self, 'entering_assem', entering_assem)
         object.__setattr__(self, 'product_assem', product_assem)
@@ -119,17 +134,22 @@ class Reaction:
     def copy_with(
             self,
             *,
-            init_assem: Assembly | None = None,
-            entering_assem: Assembly | None = None,
-            product_assem: Assembly | None = None,
-            leaving_assem: Assembly | None = None,
-            metal_bs: BindingSite | None = None,
-            leaving_bs: BindingSite | None = None,
-            entering_bs: BindingSite | None = None,
-            duplicate_count: int | None = None,
-            id_: ID | None = None,
+            init_assem: Assembly | Missing = MISSING,
+            entering_assem: Assembly | None | Missing = MISSING,
+            product_assem: Assembly | Missing = MISSING,
+            leaving_assem: Assembly | None | Missing = MISSING,
+            metal_bs: BindingSite | Missing = MISSING,
+            leaving_bs: BindingSite | Missing = MISSING,
+            entering_bs: BindingSite | Missing = MISSING,
+            duplicate_count: int | Missing = MISSING,
+            id_: ID | Missing = MISSING,
             ) -> Self:
-        """Return a copy of the assembly with optional modifications.
+        """Return a copy of the reaction with optional modifications.
+
+        - Fields not provided will default to the current values,
+            except for the ID, which will be set to None if not provided.
+        - Fields explicitly set to None will overwrite with None.
+            (only applies to fields that can be None)
 
         Fields not provided will default to the current values, except for the
         ID, which will be set to None if not provided.
@@ -138,15 +158,15 @@ class Reaction:
         e.g., `copied = assembly.copy_with(id_=assembly.id_or_none)`.
         """
         return self.__class__(
-            init_assem=default_if_none(init_assem, self.init_assem),
-            entering_assem=default_if_none(entering_assem, self.entering_assem),
-            product_assem=default_if_none(product_assem, self.product_assem),
-            leaving_assem=default_if_none(leaving_assem, self.leaving_assem),
-            metal_bs=default_if_none(metal_bs, self.metal_bs),
-            leaving_bs=default_if_none(leaving_bs, self.leaving_bs),
-            entering_bs=default_if_none(entering_bs, self.entering_bs),
-            duplicate_count=default_if_none(duplicate_count, self.duplicate_count),
-            id_=id_,
+            init_assem=default_if_missing(init_assem, self.init_assem),
+            entering_assem=default_if_missing(entering_assem, self.entering_assem),
+            product_assem=default_if_missing(product_assem, self.product_assem),
+            leaving_assem=default_if_missing(leaving_assem, self.leaving_assem),
+            metal_bs=default_if_missing(metal_bs, self.metal_bs),
+            leaving_bs=default_if_missing(leaving_bs, self.leaving_bs),
+            entering_bs=default_if_missing(entering_bs, self.entering_bs),
+            duplicate_count=default_if_missing(duplicate_count, self.duplicate_count),
+            id_=default_if_missing(id_, None),
         )
 
 

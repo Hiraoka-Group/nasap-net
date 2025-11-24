@@ -33,7 +33,7 @@ def save_reactions(
     - entering_bs_component : str | int
     - entering_bs_site : str | int
     - duplicate_count : int
-    - id_ : str | int | None
+    - id : str | int | None
 
     Parameters
     ----------
@@ -45,6 +45,8 @@ def save_reactions(
         If True, overwrite the file if it already exists.
         If False, raise an error if the file already exists.
         Default is False.
+    index : bool, optional
+        If True, write row names (index). Default is False.
     """
     file_path = Path(file_path)
     if file_path.exists() and not overwrite:
