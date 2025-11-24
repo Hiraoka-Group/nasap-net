@@ -96,6 +96,26 @@ class Reaction:
         return f'{left} -> {right}'
 
     @property
+    def entering_assem_strict(self) -> Assembly:
+        """Return the entering assembly.
+
+        Errors if there is no entering assembly.
+        """
+        if self.entering_assem is None:
+            raise ValueError("No entering assembly in this reaction.")
+        return self.entering_assem
+
+    @property
+    def leaving_assem_strict(self) -> Assembly:
+        """Return the leaving assembly.
+
+        Errors if there is no leaving assembly.
+        """
+        if self.leaving_assem is None:
+            raise ValueError("No leaving assembly in this reaction.")
+        return self.leaving_assem
+
+    @property
     def init_assem_id(self) -> ID:
         """Return the ID of the initial assembly.
 
@@ -131,15 +151,29 @@ class Reaction:
             return None
         return self.leaving_assem.id_
 
-    @property
     def is_inter(self) -> bool:
         """Return True if the reaction is an inter-molecular reaction."""
         return self.entering_assem is not None
 
-    @property
     def is_intra(self) -> bool:
         """Return True if the reaction is an intra-molecular reaction."""
         return self.entering_assem is None
+
+    @property
+    def metal_kind(self) -> str:
+        """Return the kind of the metal binding site."""
+        return self.init_assem.get_component_kind_of_site(self.entering_bs)
+
+    @property
+    def leaving_kind(self) -> str:
+        """Return the kind of the leaving binding site."""
+        return self.init_assem.get_component_kind_of_site(self.leaving_bs)
+
+    @property
+    def entering_kind(self) -> str:
+        """Return the kind of the entering binding site."""
+        assem = self.init_assem if self.is_intra() else self.entering_assem_strict
+        return assem.get_component_kind_of_site(self.entering_bs)
 
     def copy_with(
             self,
