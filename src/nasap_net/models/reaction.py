@@ -151,11 +151,8 @@ class Reaction:
         - Fields explicitly set to None will overwrite with None.
             (only applies to fields that can be None)
 
-        Fields not provided will default to the current values, except for the
-        ID, which will be set to None if not provided.
-
         If you want to copy the current ID, specify it explicitly,
-        e.g., `copied = assembly.copy_with(id_=assembly.id_or_none)`.
+        e.g., `copied = reaction.copy_with(id_=reaction.id_or_none)`.
         """
         return self.__class__(
             init_assem=default_if_missing(init_assem, self.init_assem),
