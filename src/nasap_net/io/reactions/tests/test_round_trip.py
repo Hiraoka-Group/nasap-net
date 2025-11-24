@@ -101,3 +101,56 @@ def test_nan_handling(tmp_path):
 
     assert len(loaded_reactions) == 1
     assert loaded_reactions[0] == reaction_with_nan
+
+
+def test_types(tmp_path):
+    int_comp = Component(kind='kind', sites=[100])
+    int_assem = Assembly(id_=300, components={200: int_comp}, bonds=[])
+    int_reaction = Reaction(
+        init_assem=int_assem,
+        entering_assem=None,
+        product_assem=int_assem,
+        leaving_assem=None,
+        metal_bs=BindingSite(200, 100),
+        leaving_bs=BindingSite(200, 100),
+        entering_bs=BindingSite(200, 100),
+        duplicate_count=1,
+        id_=400,
+    )
+    output_file = tmp_path / 'reactions.csv'
+    save_reactions([int_reaction], output_file)
+
+    loaded_all_int = load_reactions(
+        output_file,
+        assemblies=[int_assem],
+        assembly_id_type='int',
+        component_id_type='int',
+        site_id_type='int',
+        reaction_id_type='int',
+    )
+    assert len(loaded_all_int) == 1
+    assert loaded_all_int[0] == int_reaction
+
+    str_comp = Component(kind='kind', sites=['100'])
+    str_assem = Assembly(id_='300', components={'200': str_comp}, bonds=[])
+    str_reaction = Reaction(
+        init_assem=str_assem,
+        entering_assem=None,
+        product_assem=str_assem,
+        leaving_assem=None,
+        metal_bs=BindingSite('200', '100'),
+        leaving_bs=BindingSite('200', '100'),
+        entering_bs=BindingSite('200', '100'),
+        duplicate_count=1,
+        id_='400',
+    )
+    loaded_all_str = load_reactions(
+        output_file,
+        assemblies=[str_assem],
+        assembly_id_type='str',
+        component_id_type='str',
+        site_id_type='str',
+        reaction_id_type='str',
+    )
+    assert len(loaded_all_str) == 1
+    assert loaded_all_str[0] == str_reaction
