@@ -154,7 +154,7 @@ def test_copy_with_explicit_none_for_optional_assemblies(MX2_plus_free_L):
     # Verify they are now None
     assert copied.entering_assem is None
     assert copied.leaving_assem is None
-    
+
     # Verify other fields remain unchanged
     assert copied.init_assem == MX2_plus_free_L.init_assem
     assert copied.product_assem == MX2_plus_free_L.product_assem

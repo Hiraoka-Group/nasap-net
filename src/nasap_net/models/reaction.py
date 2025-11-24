@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Self
+from typing import Self, cast
 
 from nasap_net.exceptions import IDNotSetError
 from nasap_net.models import Assembly, BindingSite
@@ -7,7 +7,11 @@ from nasap_net.types import ID
 from nasap_net.utils import default_if_none
 
 # Sentinel value to distinguish between "not provided" and "explicitly None"
-_UNSET = object()
+class _UnsetType:
+    """Sentinel type for unset parameters."""
+    pass
+
+_UNSET = _UnsetType()
 
 
 @dataclass(frozen=True, init=False)
@@ -123,9 +127,9 @@ class Reaction:
             self,
             *,
             init_assem: Assembly | None = None,
-            entering_assem: Assembly | None | object = _UNSET,
+            entering_assem: Assembly | None | _UnsetType = _UNSET,
             product_assem: Assembly | None = None,
-            leaving_assem: Assembly | None | object = _UNSET,
+            leaving_assem: Assembly | None | _UnsetType = _UNSET,
             metal_bs: BindingSite | None = None,
             leaving_bs: BindingSite | None = None,
             entering_bs: BindingSite | None = None,
@@ -140,11 +144,21 @@ class Reaction:
         If you want to copy the current ID, specify it explicitly,
         e.g., `copied = assembly.copy_with(id_=assembly.id_or_none)`.
         """
+        # Resolve sentinel values for optional assembly fields
+        entering_assem_resolved: Assembly | None = (
+            self.entering_assem if entering_assem is _UNSET 
+            else cast(Assembly | None, entering_assem)
+        )
+        leaving_assem_resolved: Assembly | None = (
+            self.leaving_assem if leaving_assem is _UNSET 
+            else cast(Assembly | None, leaving_assem)
+        )
+        
         return self.__class__(
             init_assem=default_if_none(init_assem, self.init_assem),
-            entering_assem=self.entering_assem if entering_assem is _UNSET else entering_assem,
+            entering_assem=entering_assem_resolved,
             product_assem=default_if_none(product_assem, self.product_assem),
-            leaving_assem=self.leaving_assem if leaving_assem is _UNSET else leaving_assem,
+            leaving_assem=leaving_assem_resolved,
             metal_bs=default_if_none(metal_bs, self.metal_bs),
             leaving_bs=default_if_none(leaving_bs, self.leaving_bs),
             entering_bs=default_if_none(entering_bs, self.entering_bs),
