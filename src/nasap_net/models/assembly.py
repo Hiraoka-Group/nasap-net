@@ -9,6 +9,7 @@ from frozendict import frozendict
 from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.types import ID
 from nasap_net.utils import construct_repr
+from nasap_net.utils.default import MISSING, Missing, default_if_missing
 from .binding_site import BindingSite
 from .bond import Bond
 from .component import Component
@@ -112,6 +113,11 @@ class Assembly:
             *,
             id_: ID | None = None
             ):
+        if components is None:
+            raise TypeError("components cannot be None")
+        if bonds is None:
+            raise TypeError("bonds cannot be None")
+
         object.__setattr__(self, '_components', frozendict(components))
         object.__setattr__(self, 'bonds', frozenset(bonds))
         object.__setattr__(self, '_id', id_)
@@ -248,17 +254,23 @@ class Assembly:
     def copy_with(
             self,
             *,
-            components: Mapping[ID, Component] | None = None,
-            bonds: Iterable[Bond] | None = None,
-            id_: ID | None = None,
+            components: Mapping[ID, Component] | Missing = MISSING,
+            bonds: Iterable[Bond] | Missing = MISSING,
+            id_: ID | Missing = MISSING,
             ) -> Self:
-        """Return a copy of the assembly with optional modifications."""
-        if components is None:
-            components = self.components
-        if bonds is None:
-            bonds = self.bonds
+        """Return a copy of the assembly with optional modifications.
+
+        Fields not provided will default to the current values, except for the
+        ID, which will be set to None if not provided.
+
+        If you want to copy the current ID, specify it explicitly,
+        e.g., `copied = assembly.copy_with(id_=assembly.id_or_none)`.
+        """
         return self.__class__(
-            components=components, bonds=bonds, id_=id_)
+            components=default_if_missing(components, self._components),
+            bonds=default_if_missing(bonds, self.bonds),
+            id_=default_if_missing(id_, None),
+        )
 
     @cached_property
     def _all_sites(self) -> frozenset[BindingSite]:
