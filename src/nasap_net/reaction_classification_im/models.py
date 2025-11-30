@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import Self
 
 from nasap_net.models import Reaction
@@ -25,14 +26,14 @@ class ReactionToClassify(Reaction):
         assem = self.init_assem if self.is_intra() else self.entering_assem_strict
         return assem.get_component_kind_of_site(self.entering_bs)
 
-    @property
+    @cached_property
     def forming_ring_size(self) -> int | None:
         """The minimum size of rings formed in this reaction,
         or None if no rings are formed.
         """
         return get_min_forming_ring_size(self)
 
-    @property
+    @cached_property
     def breaking_ring_size(self) -> int | None:
         """The minimum size of rings broken in this reaction,
         or None if no rings are broken.
