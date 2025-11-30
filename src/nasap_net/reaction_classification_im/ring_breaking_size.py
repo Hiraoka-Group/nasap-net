@@ -4,6 +4,22 @@ from nasap_net.reaction_pairing_im.sample_rev_generation import \
 from .ring_formation_size import get_min_forming_ring_size
 
 
+def breaks_ring(reaction: Reaction) -> bool:
+    """Determine if a reaction breaks a ring.
+
+    Parameters
+    ----------
+    reaction : Reaction
+        The reaction to analyze.
+
+    Returns
+    -------
+    bool
+        True if the reaction breaks a ring, False otherwise.
+    """
+    return get_min_breaking_ring_size(reaction) is not None
+
+
 def get_min_breaking_ring_size(reaction: Reaction) -> int | None:
     """Determine the minimum ring size broken by a reaction.
 

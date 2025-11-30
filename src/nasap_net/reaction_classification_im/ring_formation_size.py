@@ -1,6 +1,23 @@
 from nasap_net.models import Reaction
 from nasap_net.rough_graph import convert_assembly_to_rough_graph
 
+
+def forms_ring(reaction: Reaction) -> bool:
+    """Determine if a reaction forms a ring.
+
+    Parameters
+    ----------
+    reaction : Reaction
+        The reaction to analyze.
+
+    Returns
+    -------
+    bool
+        True if the reaction forms a ring, False otherwise.
+    """
+    return get_min_forming_ring_size(reaction) is not None
+
+
 def get_min_forming_ring_size(reaction: Reaction) -> int | None:
     """Determine the minimum ring size formed by a reaction.
 
