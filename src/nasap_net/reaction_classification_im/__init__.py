@@ -1,2 +1,2 @@
+from .connection_count import get_connection_count_of_kind
 from .ring_formation_size import get_min_forming_ring_size
-
