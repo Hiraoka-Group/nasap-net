@@ -3,4 +3,4 @@ from .assembly_indexing import assign_composition_formula_ids
 from .binding_site_equivalence import extract_unique_binding_site_combs
 from .composition_formula import generate_composition_formula
 from .reaction_equivalence import reactions_equivalent
-from .unique_id_validation import validate_unique_ids, validate_unique_ids
+from .unique_id_validation import validate_unique_ids

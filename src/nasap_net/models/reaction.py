@@ -190,7 +190,7 @@ class Reaction:
     @property
     def metal_kind(self) -> str:
         """Return the kind of the metal binding site."""
-        return self.init_assem.get_component_kind_of_site(self.entering_bs)
+        return self.init_assem.get_component_kind_of_site(self.metal_bs)
 
     @property
     def leaving_kind(self) -> str:
