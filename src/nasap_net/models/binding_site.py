@@ -17,3 +17,6 @@ class BindingSite(SupportsDunderLt):
         self_values = (self.component_id, self.site_id)
         other_values = (other.component_id, other.site_id)
         return self_values < other_values
+
+    def __repr__(self):
+        return f'BindingSite({self.component_id!r}, {self.site_id!r})'

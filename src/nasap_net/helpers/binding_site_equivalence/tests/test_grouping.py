@@ -1,5 +1,6 @@
+from nasap_net.helpers.binding_site_equivalence import \
+    group_equivalent_binding_site_combs
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
-from nasap_net.reaction_exploration_im.lib import group_equivalent_node_combs
 
 
 def test_single_binding_site():
@@ -15,7 +16,7 @@ def test_single_binding_site():
         frozenset({(BindingSite('X0', 0),), (BindingSite('X1', 0),)}),
     }
 
-    result = group_equivalent_node_combs(
+    result = group_equivalent_binding_site_combs(
         node_combs=[(BindingSite('M0', 0),), (BindingSite('M0', 1),),
                     (BindingSite('X0', 0),), (BindingSite('X1', 0),)],
         assembly=MX2,
@@ -43,7 +44,7 @@ def test_binding_site_pairs():
         }),
     }
 
-    result = group_equivalent_node_combs(
+    result = group_equivalent_binding_site_combs(
         node_combs=[(BindingSite('M0', 0), BindingSite('X0', 0)),
                     (BindingSite('M0', 0), BindingSite('X1', 0)),
                     (BindingSite('M0', 1), BindingSite('X0', 0)),
@@ -82,7 +83,7 @@ def test_aux_edges():
         }),
     }
 
-    result = group_equivalent_node_combs(
+    result = group_equivalent_binding_site_combs(
         node_combs=[
             (BindingSite('X0', 0), BindingSite('L0', 0)),  # trans
             (BindingSite('X0', 0), BindingSite('L1', 0)),  # cis

@@ -37,6 +37,12 @@ class MLE:
 
     @property
     def duplication(self) -> int:
+        """Get the duplication count. Raises an error if not set."""
         if self._duplication is None:
             raise DuplicationNotSetError("Duplication count is not set.")
+        return self._duplication
+
+    @property
+    def duplication_or_none(self) -> int | None:
+        """Get the duplication count or None if not set."""
         return self._duplication

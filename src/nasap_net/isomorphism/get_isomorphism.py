@@ -1,11 +1,13 @@
 from nasap_net.models import Assembly
-from .exceptions import NoIsomorphismFoundError
+from .exceptions import IsomorphismNotFoundError
 from .lib import color_vertices_and_edges, convert_assembly_to_igraph, \
     decode_mapping
 from .models import Isomorphism
+from .utils import reverse_mapping_seq
 
 
 def get_isomorphism(assem1: Assembly, assem2: Assembly) -> Isomorphism:
+    """Get an isomorphism between two assemblies."""
     conv_res1 = convert_assembly_to_igraph(assem1)
     conv_res2 = convert_assembly_to_igraph(assem2)
 
@@ -14,8 +16,8 @@ def get_isomorphism(assem1: Assembly, assem2: Assembly) -> Isomorphism:
 
     try:
         colors = color_vertices_and_edges(g1, g2)
-    except NoIsomorphismFoundError:
-        raise NoIsomorphismFoundError() from None
+    except IsomorphismNotFoundError:
+        raise IsomorphismNotFoundError() from None
 
     mapping: list[int]
     _, mapping, _ = g1.isomorphic_vf2(
@@ -31,15 +33,18 @@ def get_isomorphism(assem1: Assembly, assem2: Assembly) -> Isomorphism:
 
 
 def get_all_isomorphisms(
-        assem1: Assembly, assem2: Assembly) -> set[Isomorphism]:
+        assem1: Assembly, assem2: Assembly
+) -> set[Isomorphism]:
+    """Get all isomorphisms between two assemblies."""
     conv_res1 = convert_assembly_to_igraph(assem1)
     conv_res2 = convert_assembly_to_igraph(assem2)
 
     try:
         colors = color_vertices_and_edges(conv_res1.graph, conv_res2.graph)
-    except NoIsomorphismFoundError:
-        raise NoIsomorphismFoundError() from None
+    except IsomorphismNotFoundError:
+        raise IsomorphismNotFoundError() from None
 
+    # NOTE: returned mappings are from graph2 to graph1
     res: list[list[int]] = conv_res1.graph.get_isomorphisms_vf2(
         conv_res2.graph,
         color1=colors.v_color1,
@@ -48,4 +53,12 @@ def get_all_isomorphisms(
         edge_color2=colors.e_color2,
     )
 
-    return {decode_mapping(mapping, conv_res1, conv_res2) for mapping in res}
+    isomorphisms = set()
+    for second_to_first_mapping in res:
+        first_to_second_mapping = reverse_mapping_seq(second_to_first_mapping)
+        isomorphism = decode_mapping(
+            first_to_second_mapping, conv_res1, conv_res2
+        )
+        isomorphisms.add(isomorphism)
+
+    return isomorphisms

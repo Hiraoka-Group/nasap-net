@@ -1,13 +1,14 @@
 import itertools
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
-from nasap_net.exceptions import NasapNetError
-from nasap_net.models import Assembly, BindingSite, Bond, MLE, MLEKind, \
+from nasap_net.helpers import extract_unique_binding_site_combs
+from nasap_net.models import Assembly, BindingSite, MLE, MLEKind, \
     Reaction
-from nasap_net.types import ID
-from .lib import extract_unique_site_combinations, separate_if_possible
+from .inter import perform_inter_reaction
+from .intra import perform_intra_reaction
+from .renaming import rename_for_inter_reaction
 
 
 class ReactionExplorer(ABC):
@@ -83,7 +84,7 @@ class IntraReactionExplorer(ReactionExplorer):
                 yield MLE(metal, leaving, entering)
 
     def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
-        unique_mle_trios = extract_unique_site_combinations(
+        unique_mle_trios = extract_unique_binding_site_combs(
             [(mle.metal, mle.leaving, mle.entering) for mle in mles],
              self.assembly)
         for unique_mle in unique_mle_trios:
@@ -93,15 +94,10 @@ class IntraReactionExplorer(ReactionExplorer):
                 duplication=unique_mle.duplication)
 
     def _perform_reaction(self, mle: MLE) -> Reaction:
-        raw_product = (
-            self.assembly
-                .remove_bond(mle.metal, mle.leaving)
-                .add_bond(mle.metal, mle.entering)
+        product, leaving = perform_intra_reaction(
+            assembly=self.assembly,
+            mle=mle
         )
-
-        product, leaving = separate_if_possible(
-            raw_product, metal_comp_id=mle.metal.component_id)
-
         return Reaction(
             init_assem=self.assembly,
             entering_assem=None,
@@ -168,9 +164,9 @@ class InterReactionExplorer(ReactionExplorer):
 
     def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
         mles1, mles2 = itertools.tee(mles)
-        unique_ml_pairs = extract_unique_site_combinations(
+        unique_ml_pairs = extract_unique_binding_site_combs(
             [(mle.metal, mle.leaving) for mle in mles1], self.init_assembly)
-        unique_entering_sites = extract_unique_site_combinations(
+        unique_entering_sites = extract_unique_binding_site_combs(
             [(mle.entering,) for mle in mles2], self.entering_assembly)
         for unique_ml, unique_e in itertools.product(
                 unique_ml_pairs, unique_entering_sites):
@@ -181,39 +177,16 @@ class InterReactionExplorer(ReactionExplorer):
                 duplication=unique_ml.duplication * unique_e.duplication)
 
     def _perform_reaction(self, mle: MLE) -> Reaction:
-        def init_renaming_func(comp_id: ID) -> ID:
-            return f'init_{comp_id}'
-
-        def entering_renaming_func(comp_id: ID) -> ID:
-            return f'entering_{comp_id}'
-
-        # Renaming
-        renamed_init_assem = _rename_assembly(
-            self.init_assembly, init_renaming_func)
-        renamed_entering_assem = _rename_assembly(
-            self.entering_assembly, entering_renaming_func)
-        renamed_mle = MLE(
-            metal=BindingSite(
-                component_id=init_renaming_func(mle.metal.component_id),
-                site_id=mle.metal.site_id),
-            leaving=BindingSite(
-                component_id=init_renaming_func(mle.leaving.component_id),
-                site_id=mle.leaving.site_id),
-            entering=BindingSite(
-                component_id=entering_renaming_func(mle.entering.component_id),
-                site_id=mle.entering.site_id),
-            duplication=mle.duplication
+        renamed = rename_for_inter_reaction(
+            self.init_assembly, self.entering_assembly, mle
         )
 
-        raw_product = (
-            _combine_assemblies(renamed_init_assem, renamed_entering_assem)
-                .remove_bond(renamed_mle.metal, renamed_mle.leaving)
-                .add_bond(renamed_mle.metal, renamed_mle.entering)
+        product, leaving = perform_inter_reaction(
+            init_assem=renamed.init_assembly,
+            entering_assem=renamed.entering_assembly,
+            mle=renamed.mle,
         )
 
-        product, leaving = separate_if_possible(
-            raw_product, metal_comp_id=renamed_mle.metal.component_id)
-        
         # Double the duplication count if both assemblies are the same.
         # This is because the frequency of "A + A" is twice that of "A + B".
         if self.init_assembly == self.entering_assembly:
@@ -246,32 +219,3 @@ def _enum_ml_pair(
         elif (kind1, kind2) == (leaving_kind, metal_kind):
             ml_pair.add((site2, site1))
     return ml_pair
-
-
-class ComponentIDCollisionError(NasapNetError):
-    pass
-
-
-def _rename_assembly(
-        assembly: Assembly, renaming_func: Callable[[ID], ID]) -> Assembly:
-    renamed_components = {
-        renaming_func(id_): comp
-        for id_, comp in assembly.components.items()}
-    renamed_bonds = {
-        Bond(comp_id1=renaming_func(site1.component_id), site1=site1.site_id,
-             comp_id2=renaming_func(site2.component_id), site2=site2.site_id)
-        for (site1, site2) in assembly.bonds}
-    return Assembly(components=renamed_components, bonds=renamed_bonds)
-
-
-def _combine_assemblies(
-        init_assem: Assembly, entering_assem: Assembly,
-        ) -> Assembly:
-    if set(init_assem.components) & set(entering_assem.components):
-        raise ComponentIDCollisionError(
-            "Component ID collision detected between the two assemblies.")
-
-    new_components = (
-            dict(init_assem.components) | dict(entering_assem.components))
-    new_bonds = init_assem.bonds | entering_assem.bonds
-    return Assembly(components=new_components, bonds=new_bonds)

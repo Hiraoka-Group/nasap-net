@@ -176,7 +176,5 @@ def test_override_with_none():
         reaction.copy_with(leaving_bs=None)  # type: ignore[arg-type]
     with pytest.raises(TypeError):
         reaction.copy_with(entering_bs=None)  # type: ignore[arg-type]
-    with pytest.raises(TypeError):
-        reaction.copy_with(duplicate_count=None)  # type: ignore[arg-type]
     with pytest.raises(ValueError):
         reaction.copy_with(duplicate_count=0)  # Should be positive integer

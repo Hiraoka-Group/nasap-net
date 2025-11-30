@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from itertools import chain, product
 from typing import Iterator, TypeVar
 
-from nasap_net.helpers import validate_unique_assembly_ids
+from nasap_net.helpers import validate_unique_ids
 from nasap_net.models import Assembly, MLEKind, Reaction
 from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
@@ -21,7 +21,7 @@ def explore_reactions(
     logger.debug('Starting reaction exploration.')
     assemblies = list(assemblies)
 
-    validate_unique_assembly_ids(assemblies)
+    validate_unique_ids(assemblies)
 
     reaction_iters: list[Iterator[Reaction]] = []
     for mle_kind in mle_kinds:
