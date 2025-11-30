@@ -4,6 +4,13 @@ from nasap_net.rough_graph import convert_assembly_to_rough_graph
 def get_min_forming_ring_size(reaction: Reaction) -> int | None:
     """Determine the minimum ring size formed by a reaction.
 
+    The "ring size" is defined as half the number of components involved
+    in the ring.
+
+    Examples:
+     - M4L4 ring = size of 4
+     - M3L3 ring = size of 3
+
     Returns None if the reaction does not form a ring.
 
     Parameters
@@ -57,4 +64,5 @@ def get_min_forming_ring_size(reaction: Reaction) -> int | None:
 
     if length == 0:
         return None
-    return length
+    assert length % 2 == 0
+    return length // 2

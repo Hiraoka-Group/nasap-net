@@ -49,7 +49,7 @@ def test_basic(M, L, X):
         leaving_bs=BindingSite('L1', 1),
         entering_bs=BindingSite('X0', 0),
     )
-    assert get_min_breaking_ring_size(reaction) == 4
+    assert get_min_breaking_ring_size(reaction) == 2
 
 
 def test_no_ring_breaking(M, L, X):

@@ -49,7 +49,7 @@ def test_basic(M, L, X):
         leaving_bs=BindingSite('X0', 0),
         entering_bs=BindingSite('L1', 1),
     )
-    assert get_min_forming_ring_size(reaction) == 4
+    assert get_min_forming_ring_size(reaction) == 2
 
 
 def test_no_ring(M, L, X):
@@ -108,3 +108,81 @@ def test_inter_reaction(M, L, X):
     )
 
     assert get_min_forming_ring_size(reaction) is None
+
+
+def test_multiple_ring():
+    """Test reaction that forms multiple rings of different sizes.
+
+    The minimum ring size should be returned.
+    """
+    M = Component(kind='M', sites=[0, 1, 2])  # tritopic metal
+    L = Component(kind='L', sites=[0, 1, 2])  # tritopic ligand
+    X = Component(kind='X', sites=[0])
+
+    # M5L5 ring
+    ring = Assembly(
+        components={
+            'M0': M, 'M1': M, 'M2': M, 'M3': M, 'M4': M,
+            'L0': L, 'L1': L, 'L2': L, 'L3': L, 'L4': L,
+            'X0': X, 'X1': X, 'X2': X, 'X3': X, 'X4': X,
+        },
+        bonds=[
+            Bond('M0', 0, 'L4', 1),
+            Bond('M0', 1, 'L0', 0),
+            Bond('M1', 0, 'L0', 1),
+            Bond('M1', 1, 'L1', 0),
+            Bond('M2', 0, 'L1', 1),
+            Bond('M2', 1, 'L2', 0),
+            Bond('M3', 0, 'L2', 1),
+            Bond('M3', 1, 'L3', 0),
+            Bond('M4', 0, 'L3', 1),
+            Bond('M4', 1, 'L4', 0),
+            Bond('M0', 2, 'X0', 0),
+            Bond('M1', 2, 'X1', 0),
+            Bond('M2', 2, 'X2', 0),
+            Bond('M3', 2, 'X3', 0),
+            Bond('M4', 2, 'X4', 0),
+        ],
+    )
+
+    # Bridging M0 and L1 forms M2L2 ring and M3L3 ring simultaneously
+
+    bridged = Assembly(
+        components={
+            'M0': M, 'M1': M, 'M2': M, 'M3': M, 'M4': M,
+            'L0': L, 'L1': L, 'L2': L, 'L3': L, 'L4': L,
+            'X1': X, 'X2': X, 'X3': X, 'X4': X,
+        },
+        bonds=[
+            Bond('M0', 0, 'L4', 1),
+            Bond('M0', 1, 'L0', 0),
+            Bond('M1', 0, 'L0', 1),
+            Bond('M1', 1, 'L1', 0),
+            Bond('M2', 0, 'L1', 1),
+            Bond('M2', 1, 'L2', 0),
+            Bond('M3', 0, 'L2', 1),
+            Bond('M3', 1, 'L3', 0),
+            Bond('M4', 0, 'L3', 1),
+            Bond('M4', 1, 'L4', 0),
+            Bond('M0', 2, 'L1', 2),  # New bond forming rings
+            Bond('M1', 2, 'X1', 0),
+            Bond('M2', 2, 'X2', 0),
+            Bond('M3', 2, 'X3', 0),
+            Bond('M4', 2, 'X4', 0),
+        ],
+    )
+
+    free_X = Assembly(components={'X0': X}, bonds=[])
+
+    reaction = Reaction(
+        init_assem=ring,
+        entering_assem=None,
+        product_assem=bridged,
+        leaving_assem=free_X,
+        metal_bs=BindingSite('M0', 2),
+        leaving_bs=BindingSite('X0', 0),
+        entering_bs=BindingSite('L1', 2),
+    )
+
+    # Should identify the smallest ring formed, which is size 2 (M2L2)
+    assert get_min_forming_ring_size(reaction) == 2
