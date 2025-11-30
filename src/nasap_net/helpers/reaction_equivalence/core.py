@@ -19,7 +19,6 @@ def reactions_equivalent(
 
     Two reactions are equivalent if they meet the following conditions:
         1-1. They have the same number of reactants.
-        1-2. They have the same number of products.
         2-1. They have the same initial assembly.
         2-2. They have the same entering assembly, or both are None.
         3-1. If the reaction is intra-molecular, the trio of binding sites
@@ -56,10 +55,8 @@ def reactions_equivalent(
     if reaction1 == reaction2:
         return True
 
-    # Condition 1: Same number of reactants and products
+    # Condition 1: Same number of reactants
     if reaction1.is_inter() != reaction2.is_inter():
-        return False
-    if reaction1.rev_is_inter() != reaction2.rev_is_inter():
         return False
 
     # Condition 2: Same assemblies (only left-hand side)
