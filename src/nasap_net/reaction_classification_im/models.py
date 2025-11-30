@@ -69,7 +69,7 @@ class ReactionToClassify(Reaction):
         )
 
     @cached_property
-    def rev(self) -> 'ReactionToClassify':
+    def sample_rev(self) -> 'ReactionToClassify':
         """Return the reverse reaction."""
         return generate_sample_rev_reaction(self).as_reaction_to_classify()
 
