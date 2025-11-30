@@ -26,6 +26,14 @@ class ReactionToClassify(Reaction):
         assem = self.init_assem if self.is_intra() else self.entering_assem_strict
         return assem.get_component_kind_of_site(self.entering_bs)
 
+    def forms_ring(self) -> bool:
+        """Whether this reaction forms any rings."""
+        return self.forming_ring_size is not None
+
+    def breaks_ring(self) -> bool:
+        """Whether this reaction breaks any rings."""
+        return self.breaking_ring_size is not None
+
     @cached_property
     def forming_ring_size(self) -> int | None:
         """The minimum size of rings formed in this reaction,
