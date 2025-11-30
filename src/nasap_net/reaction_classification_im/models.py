@@ -48,7 +48,7 @@ class ReactionToClassify(Reaction):
         """
         return get_min_breaking_ring_size(self)
 
-    @property
+    @cached_property
     def init_ligand_count_on_metal(self) -> int:
         """Return the number of ligands bound to the metal before reaction."""
         return get_connection_count_of_kind(
@@ -57,7 +57,7 @@ class ReactionToClassify(Reaction):
             target_kind=self.entering_kind,
         )
 
-    @property
+    @cached_property
     def init_metal_count_on_ligand(self) -> int:
         """Return the number of metals bound to the entering ligand before reaction."""
         return get_connection_count_of_kind(
