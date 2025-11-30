@@ -6,7 +6,7 @@ from typing import Literal
 
 import pandas as pd
 
-from nasap_net.helpers import validate_unique_assembly_ids
+from nasap_net.helpers import validate_unique_ids
 from nasap_net.models import Assembly, BindingSite, Reaction
 from nasap_net.types import ID
 from .models import ReactionRow
@@ -26,7 +26,7 @@ def load_reactions(
         has_index_column: bool = False,
 ) -> list[Reaction]:
     """Load reactions from a CSV file and convert to Reaction objects."""
-    validate_unique_assembly_ids(assemblies)
+    validate_unique_ids(assemblies)
     id_to_assembly = {assembly.id_: assembly for assembly in assemblies}
 
     file_path = Path(file_path)

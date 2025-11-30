@@ -1,5 +1,5 @@
 from nasap_net.models import Assembly
-from .exceptions import NoIsomorphismFoundError
+from .exceptions import IsomorphismNotFoundError
 from .lib import color_vertices_and_edges, convert_assembly_to_igraph
 
 
@@ -9,7 +9,7 @@ def is_isomorphic(assem1: Assembly, assem2: Assembly) -> bool:
 
     try:
         colors = color_vertices_and_edges(g1, g2)
-    except NoIsomorphismFoundError:
+    except IsomorphismNotFoundError:
         return False
 
     return g1.isomorphic_vf2(

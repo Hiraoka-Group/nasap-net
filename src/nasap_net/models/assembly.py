@@ -256,7 +256,7 @@ class Assembly:
             *,
             components: Mapping[ID, Component] | Missing = MISSING,
             bonds: Iterable[Bond] | Missing = MISSING,
-            id_: ID | Missing = MISSING,
+            id_: ID | None | Missing = MISSING,
             ) -> Self:
         """Return a copy of the assembly with optional modifications.
 

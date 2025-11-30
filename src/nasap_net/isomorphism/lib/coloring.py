@@ -4,7 +4,7 @@ from typing import Hashable
 import igraph as ig
 
 from nasap_net.exceptions import NasapNetError
-from ..exceptions import NoIsomorphismFoundError
+from ..exceptions import IsomorphismNotFoundError
 
 
 @dataclass(frozen=True)
@@ -19,12 +19,12 @@ def color_vertices_and_edges(g1: ig.Graph, g2: ig.Graph) -> Colors:
     try:
         v_color1, v_color2 = _vertex_color_lists(g1, g2)
     except _NotIsomorphicError:
-        raise NoIsomorphismFoundError() from None
+        raise IsomorphismNotFoundError() from None
 
     try:
         e_color1, e_color2 = _edge_color_lists(g1, g2)
     except _NotIsomorphicError:
-        raise NoIsomorphismFoundError() from None
+        raise IsomorphismNotFoundError() from None
 
     return Colors(
         v_color1=tuple(v_color1),

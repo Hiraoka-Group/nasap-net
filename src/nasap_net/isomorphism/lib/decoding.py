@@ -7,6 +7,22 @@ def decode_mapping(
         conv_res1: GraphConversionResult,
         conv_res2: GraphConversionResult,
 ) -> Isomorphism:
+    """Decode a vertex mapping into an Isomorphism object.
+
+    Parameters
+    ----------
+    mapping : list[int]
+        A mapping from vertices in graph1 to vertices in graph2.
+    conv_res1 : GraphConversionResult
+        The graph conversion result for assembly 1.
+    conv_res2 : GraphConversionResult
+        The graph conversion result for assembly 2.
+
+    Returns
+    -------
+    Isomorphism
+        The decoded isomorphism.
+    """
     comp_id_mapping = {}
     binding_site_mapping = {}
     for v1, v2 in enumerate(mapping):

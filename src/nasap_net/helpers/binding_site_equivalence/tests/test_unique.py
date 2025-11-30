@@ -1,8 +1,8 @@
 import pytest
 
+from nasap_net.helpers.binding_site_equivalence import UniqueComb, \
+    extract_unique_binding_site_combs
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
-from nasap_net.reaction_exploration_im.lib import UniqueComb, \
-    extract_unique_site_combinations
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def test_single_site(MX2):
         (BindingSite('X1', 0),),
     ]
 
-    result = extract_unique_site_combinations(binding_site_combs, MX2)
+    result = extract_unique_binding_site_combs(binding_site_combs, MX2)
 
     assert result == {
         UniqueComb(site_comb=(BindingSite('M0', 0),), duplication=2),
@@ -40,7 +40,7 @@ def test_site_pairs(MX2):
         (BindingSite('M0', 1), BindingSite('X1', 0)),
     ]
 
-    result = extract_unique_site_combinations(binding_site_combs, MX2)
+    result = extract_unique_binding_site_combs(binding_site_combs, MX2)
 
     assert result == {
         UniqueComb(
@@ -80,7 +80,7 @@ def test_site_triplets():
         (BindingSite('M0', 1), BindingSite('X1', 0), BindingSite('L1', 1)),  # cis
     ]
 
-    result = extract_unique_site_combinations(binding_site_combs, cis_ML2X2)
+    result = extract_unique_binding_site_combs(binding_site_combs, cis_ML2X2)
 
     assert result == {
         UniqueComb(
