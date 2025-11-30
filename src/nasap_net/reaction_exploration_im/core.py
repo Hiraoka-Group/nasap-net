@@ -43,7 +43,7 @@ def explore_reactions(
     for reaction in chain.from_iterable(reaction_iters):
         try:
             resolved = resolver.resolve(reaction)
-            logger.info('Reaction Found (%d): %s', counter, resolved)
+            logger.debug('Reaction Found (%d): %s', counter, resolved)
             counter += 1
             yield resolved
         except ReactionOutOfScopeError:
