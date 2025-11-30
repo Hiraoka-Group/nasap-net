@@ -1,7 +1,8 @@
 from collections.abc import Iterable, Mapping
 from typing import Any
 
-from nasap_net.isomorphism import extract_unique_assemblies_by_isomorphism
+from nasap_net.assembly_equivalence import \
+    extract_unique_assemblies
 from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
 from .lib import cap_assemblies_with_ligand, enumerate_fragments
@@ -61,7 +62,7 @@ def enumerate_assemblies(
         template,
         symmetry_operations=symmetry_operations,
     )
-    unique_fragments = extract_unique_assemblies_by_isomorphism(
+    unique_fragments = extract_unique_assemblies(
         fragments,
     )
     capped_assemblies = cap_assemblies_with_ligand(

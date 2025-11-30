@@ -3,7 +3,8 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
-from nasap_net.helpers import extract_unique_binding_site_combs
+from nasap_net.binding_site_equivalence import \
+    extract_unique_binding_site_combs
 from nasap_net.models import Assembly, BindingSite, MLE, MLEKind, \
     Reaction
 from .inter import perform_inter_reaction

@@ -1,6 +1,6 @@
 import pytest
 
-from nasap_net.helpers.binding_site_equivalence import UniqueComb, \
+from nasap_net.binding_site_equivalence import UniqueComb, \
     extract_unique_binding_site_combs
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
 

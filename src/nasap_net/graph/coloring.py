@@ -4,7 +4,7 @@ from typing import Hashable
 import igraph as ig
 
 from nasap_net.exceptions import NasapNetError
-from ..exceptions import IsomorphismNotFoundError
+from nasap_net.isomorphism.exceptions import IsomorphismNotFoundError
 
 
 @dataclass(frozen=True)

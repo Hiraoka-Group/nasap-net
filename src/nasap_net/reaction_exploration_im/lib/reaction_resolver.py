@@ -1,9 +1,9 @@
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
+from nasap_net.assembly_equivalence import AssemblyNotFoundError, \
+    EquivalentAssemblyFinder
 from nasap_net.exceptions import NasapNetError
-from nasap_net.isomorphism import AssemblyNotFoundError, \
-    IsomorphicAssemblyFinder
 from nasap_net.models import Assembly
 from nasap_net.models.reaction import Reaction
 
@@ -28,14 +28,14 @@ class ReactionResolver:
         Resolve a reaction to the assembly space.
     """
     assembly_space: frozenset[Assembly]
-    finder: IsomorphicAssemblyFinder = field(init=False)
+    finder: EquivalentAssemblyFinder = field(init=False)
 
     def __init__(self, assembly_space: Iterable[Assembly]) -> None:
         object.__setattr__(
             self, 'assembly_space', frozenset(assembly_space))
         object.__setattr__(
             self, 'finder',
-            IsomorphicAssemblyFinder(self.assembly_space))
+            EquivalentAssemblyFinder(self.assembly_space))
 
     def resolve(self, reaction: Reaction) -> Reaction:
         """Resolve a reaction to the assembly space.

@@ -1,5 +1,5 @@
-from .conversion import GraphConversionResult
-from ..models import Isomorphism
+from nasap_net.graph.conversion import GraphConversionResult
+from nasap_net.isomorphism.models import Isomorphism
 
 
 def decode_mapping(

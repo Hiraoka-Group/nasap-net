@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 
-from nasap_net.isomorphism.lib import convert_assembly_to_igraph
+from nasap_net.graph import convert_assembly_to_graph
 from nasap_net.models import Assembly
 from nasap_net.types import ID
 
@@ -42,7 +42,7 @@ def separate_if_possible(assembly: Assembly, *, metal_comp_id: ID) -> tuple[Asse
     SeparatedIntoMoreThanTwoPartsError
         If the assembly is separated into more than two parts.
     """
-    conv_res = convert_assembly_to_igraph(assembly)
+    conv_res = convert_assembly_to_graph(assembly)
     g = conv_res.graph
 
     group_of_each_vertex: list[int] = g.components().membership

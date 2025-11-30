@@ -1,5 +1,5 @@
+from nasap_net.binding_site_equivalence import binding_site_combs_equivalent
 from nasap_net.models import Reaction
-from ..binding_site_equivalence import binding_site_combs_equivalent
 
 
 def inter_reaction_mles_equivalent(

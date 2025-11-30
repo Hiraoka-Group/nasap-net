@@ -1,12 +1,12 @@
 from collections import defaultdict
 from collections.abc import Hashable, Iterable
 
+from nasap_net.isomorphism import is_isomorphic
 from nasap_net.models import Assembly
-from .is_isomorphic import is_isomorphic
-from .lib import get_light_signature
+from .signature import get_light_signature
 
 
-def extract_unique_assemblies_by_isomorphism(
+def extract_unique_assemblies(
         assemblies: Iterable[Assembly]
 ) -> set[Assembly]:
     """Extract unique assemblies by isomorphism from a collection of assemblies.

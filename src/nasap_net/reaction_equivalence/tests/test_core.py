@@ -1,8 +1,8 @@
 import pytest
 
-from nasap_net.helpers import reactions_equivalent
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component, \
     Reaction
+from nasap_net.reaction_equivalence import reactions_equivalent
 
 
 @pytest.fixture

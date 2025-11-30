@@ -1,11 +1,12 @@
 from collections.abc import Iterable, MutableMapping
 
 from nasap_net.models import Reaction
+from nasap_net.reaction_equivalence import reactions_equivalent
 from .exceptions import DuplicateReactionError, IncorrectReactionResultError
 from .sample_rev_generation import generate_sample_rev_reaction
 from .signature import ReactionSignature, group_reactions_by_signature
 from .utils import NoOverwriteDict, ValueConflictError
-from ..helpers import reactions_equivalent, validate_unique_ids
+from ..helpers import validate_unique_ids
 from ..types import ID
 
 

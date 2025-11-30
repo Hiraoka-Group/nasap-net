@@ -1,4 +1,4 @@
-from nasap_net.helpers.binding_site_equivalence import \
+from nasap_net.binding_site_equivalence import \
     group_equivalent_binding_site_combs
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component
 

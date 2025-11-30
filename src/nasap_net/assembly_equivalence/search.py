@@ -5,9 +5,9 @@ from dataclasses import dataclass, field
 from frozendict import frozendict
 
 from nasap_net.exceptions import NasapNetError
-from nasap_net.isomorphism.lib.signature import get_light_signature
+from nasap_net.isomorphism import is_isomorphic
 from nasap_net.models import Assembly
-from .is_isomorphic import is_isomorphic
+from .signature import get_light_signature
 
 
 class AssemblyNotFoundError(NasapNetError):
@@ -16,7 +16,7 @@ class AssemblyNotFoundError(NasapNetError):
 
 
 @dataclass(frozen=True, init=False)
-class IsomorphicAssemblyFinder:
+class EquivalentAssemblyFinder:
     """Class to find isomorphic assemblies in a search space.
 
     Parameters

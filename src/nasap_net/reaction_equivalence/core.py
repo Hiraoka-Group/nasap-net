@@ -1,8 +1,8 @@
+from nasap_net.assembly_equivalence import assemblies_equivalent
 from nasap_net.models import Reaction
 from .mle_equivalence import \
     inter_reaction_mles_equivalent, \
     intra_reaction_mles_equivalent
-from .. import assemblies_equivalent
 
 
 class DuplicateCountMismatchError(Exception):

@@ -1,11 +1,12 @@
+from nasap_net.graph import color_vertices_and_edges, \
+    convert_assembly_to_graph
 from nasap_net.models import Assembly
 from .exceptions import IsomorphismNotFoundError
-from .lib import color_vertices_and_edges, convert_assembly_to_igraph
 
 
 def is_isomorphic(assem1: Assembly, assem2: Assembly) -> bool:
-    g1 = convert_assembly_to_igraph(assem1).graph
-    g2 = convert_assembly_to_igraph(assem2).graph
+    g1 = convert_assembly_to_graph(assem1).graph
+    g2 = convert_assembly_to_graph(assem2).graph
 
     try:
         colors = color_vertices_and_edges(g1, g2)

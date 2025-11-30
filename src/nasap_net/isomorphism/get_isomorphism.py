@@ -1,15 +1,15 @@
+from nasap_net.graph import color_vertices_and_edges, \
+    convert_assembly_to_graph, decode_mapping
 from nasap_net.models import Assembly
 from .exceptions import IsomorphismNotFoundError
-from .lib import color_vertices_and_edges, convert_assembly_to_igraph, \
-    decode_mapping
 from .models import Isomorphism
 from .utils import reverse_mapping_seq
 
 
 def get_isomorphism(assem1: Assembly, assem2: Assembly) -> Isomorphism:
     """Get an isomorphism between two assemblies."""
-    conv_res1 = convert_assembly_to_igraph(assem1)
-    conv_res2 = convert_assembly_to_igraph(assem2)
+    conv_res1 = convert_assembly_to_graph(assem1)
+    conv_res2 = convert_assembly_to_graph(assem2)
 
     g1 = conv_res1.graph
     g2 = conv_res2.graph
@@ -36,8 +36,8 @@ def get_all_isomorphisms(
         assem1: Assembly, assem2: Assembly
 ) -> set[Isomorphism]:
     """Get all isomorphisms between two assemblies."""
-    conv_res1 = convert_assembly_to_igraph(assem1)
-    conv_res2 = convert_assembly_to_igraph(assem2)
+    conv_res1 = convert_assembly_to_graph(assem1)
+    conv_res2 = convert_assembly_to_graph(assem2)
 
     try:
         colors = color_vertices_and_edges(conv_res1.graph, conv_res2.graph)

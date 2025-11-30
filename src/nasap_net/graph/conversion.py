@@ -28,7 +28,7 @@ class GraphConversionResult:
             frozenbidict(binding_site_mapping))
 
 
-def convert_assembly_to_igraph(assembly: Assembly) -> GraphConversionResult:
+def convert_assembly_to_graph(assembly: Assembly) -> GraphConversionResult:
     g = ig.Graph()
     core_mapping = {}
     binding_site_mapping = {}

@@ -1,7 +1,7 @@
 import pytest
 
-from nasap_net.isomorphism import AssemblyNotFoundError, \
-    IsomorphicAssemblyFinder
+from nasap_net.assembly_equivalence import AssemblyNotFoundError, \
+    EquivalentAssemblyFinder
 from nasap_net.models import Assembly, Bond, Component
 
 
@@ -29,7 +29,7 @@ def test_find(M, L, X):
         bonds=[Bond('X1', 0, 'M1', 0), Bond('M1', 1, 'L1', 0)]
     )
 
-    finder = IsomorphicAssemblyFinder(search_space=[another_MLX])
+    finder = EquivalentAssemblyFinder(search_space=[another_MLX])
     result = finder.find(MLX)
     assert result == another_MLX
 
@@ -46,7 +46,7 @@ def test_not_found_error(M, L, X):
         bonds=[Bond('X0', 0, 'M0', 0)]
     )
 
-    finder = IsomorphicAssemblyFinder(search_space=[MX])
+    finder = EquivalentAssemblyFinder(search_space=[MX])
     with pytest.raises(AssemblyNotFoundError):
         finder.find(MLX)
 
@@ -66,7 +66,7 @@ def test_duplicate_assemblies_not_raise_error(M, L, X):
         bonds=[Bond('X2', 0, 'M2', 0), Bond('M2', 1, 'L2', 0)]
     )
 
-    finder = IsomorphicAssemblyFinder(
+    finder = EquivalentAssemblyFinder(
         search_space=[another_MLX, duplicate_MLX],
     )
     result = finder.find(MLX)
