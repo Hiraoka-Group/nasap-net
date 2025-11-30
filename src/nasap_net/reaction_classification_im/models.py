@@ -5,6 +5,8 @@ from nasap_net.models import Assembly, Reaction
 from . import get_connection_count_of_kind
 from .ring_breaking_size import get_min_breaking_ring_size
 from .ring_formation_size import get_min_forming_ring_size
+from ..reaction_pairing_im.sample_rev_generation import \
+    generate_sample_rev_reaction
 
 
 class ReactionToClassify(Reaction):
@@ -65,6 +67,11 @@ class ReactionToClassify(Reaction):
             source_component_id=self.entering_bs.component_id,
             target_kind=self.metal_kind,
         )
+
+    @cached_property
+    def rev(self) -> 'ReactionToClassify':
+        """Return the reverse reaction."""
+        return generate_sample_rev_reaction(self).as_reaction_to_classify()
 
     @property
     def assem_with_entering_bs(self) -> Assembly:
