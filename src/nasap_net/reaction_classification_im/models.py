@@ -27,12 +27,16 @@ class ReactionToClassify(Reaction):
 
     @property
     def forming_ring_size(self) -> int | None:
-        """The size of the ring being formed, if applicable."""
+        """The minimum size of rings formed in this reaction,
+        or None if no rings are formed.
+        """
         return get_min_forming_ring_size(self)
 
     @property
     def breaking_ring_size(self) -> int | None:
-        """The size of the ring being broken, if applicable."""
+        """The minimum size of rings broken in this reaction,
+        or None if no rings are broken.
+        """
         return get_min_breaking_ring_size(self)
 
     @classmethod
