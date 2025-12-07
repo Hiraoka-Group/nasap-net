@@ -11,9 +11,9 @@ from .temp_ring_formation import get_min_forming_ring_size_including_temporary
 
 class ReactionToClassify(Reaction):
     """Dataclass representing a reaction to classify."""
-    
+
     _is_sample_rev: bool
-    
+
     def __init__(
             self,
             init_assem,
@@ -114,7 +114,7 @@ class ReactionToClassify(Reaction):
     @cached_property
     def sample_rev(self) -> 'ReactionToClassify | None':
         """Return the reverse reaction.
-        
+
         Returns None if this reaction is already a sample reverse reaction,
         to prevent infinite recursion.
         """
