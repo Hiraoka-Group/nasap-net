@@ -2,4 +2,5 @@ from .assembly_indexing import assign_composition_formula_ids
 from .assembly_sort import sort_assemblies_by_component_kind_counts
 from .component_reindexing import reindex_components_in_assembly
 from .composition_formula import generate_composition_formula
+from .sample_rev_generation import generate_sample_rev_reaction
 from .unique_id_validation import validate_unique_ids

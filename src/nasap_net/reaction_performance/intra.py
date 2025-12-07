@@ -1,5 +1,5 @@
 from nasap_net.models import Assembly, MLE
-from nasap_net.reaction_exploration_im.lib import separate_if_possible
+from .separation import separate_if_possible
 
 
 def perform_intra_reaction(

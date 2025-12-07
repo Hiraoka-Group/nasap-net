@@ -12,7 +12,7 @@ class Renamed:
     mle: MLE
 
 
-def rename_for_inter_reaction(
+def reindex_components_for_inter_reaction(
         init_assembly: Assembly,
         entering_assembly: Assembly,
         mle: MLE,

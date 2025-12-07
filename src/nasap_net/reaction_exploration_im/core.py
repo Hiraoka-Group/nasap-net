@@ -5,10 +5,11 @@ from typing import Iterator, TypeVar
 
 from nasap_net.helpers import validate_unique_ids
 from nasap_net.models import Assembly, MLEKind, Reaction
+from nasap_net.reaction_classification_im import \
+    get_min_forming_ring_size_including_temporary
 from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
-from .lib import ReactionOutOfScopeError, ReactionResolver, \
-    get_min_forming_ring_size_including_temporary
+from .reaction_resolver import ReactionOutOfScopeError, ReactionResolver
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

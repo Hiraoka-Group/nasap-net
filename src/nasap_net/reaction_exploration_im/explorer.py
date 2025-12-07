@@ -7,9 +7,8 @@ from nasap_net.binding_site_equivalence import \
     extract_unique_binding_site_combs
 from nasap_net.models import Assembly, BindingSite, MLE, MLEKind, \
     Reaction
-from .inter import perform_inter_reaction
-from .intra import perform_intra_reaction
-from .renaming import rename_for_inter_reaction
+from nasap_net.reaction_performance import perform_inter_reaction, \
+    perform_intra_reaction, reindex_components_for_inter_reaction
 
 
 class ReactionExplorer(ABC):
@@ -178,7 +177,7 @@ class InterReactionExplorer(ReactionExplorer):
                 duplication=unique_ml.duplication * unique_e.duplication)
 
     def _perform_reaction(self, mle: MLE) -> Reaction:
-        renamed = rename_for_inter_reaction(
+        renamed = reindex_components_for_inter_reaction(
             self.init_assembly, self.entering_assembly, mle
         )
 

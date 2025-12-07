@@ -1,12 +1,12 @@
 from functools import cached_property
 from typing import Self
 
+from nasap_net.helpers import generate_sample_rev_reaction
 from nasap_net.models import Assembly, Reaction
-from . import get_connection_count_of_kind
+from .connection_count import get_connection_count_of_kind
 from .ring_breaking_size import get_min_breaking_ring_size
 from .ring_formation_size import get_min_forming_ring_size
-from ..reaction_pairing_im.sample_rev_generation import \
-    generate_sample_rev_reaction
+from .temp_ring_formation import get_min_forming_ring_size_including_temporary
 
 
 class ReactionToClassify(Reaction):
@@ -49,6 +49,22 @@ class ReactionToClassify(Reaction):
         or None if no rings are broken.
         """
         return get_min_breaking_ring_size(self)
+
+    @cached_property
+    def forming_ring_size_including_temporary(self) -> int | None:
+        """The minimum size of rings formed in this reaction,
+        including temporary rings, or None if no rings are formed.
+
+        Notes
+        -----
+        "Temporary ring" includes rings that may be broken later in the reaction.
+        Example:
+        X0(0)-(0)M0(1)-(0)L0(1)-(0)M1(1)-(0)L1(1)
+        metal_bs = M0(1), leaving_bs = L0(0), entering_bs = L1(1)
+        This reaction temporarily forms a ring of size 2, even though the ring is broken
+        when L0 leaves.
+        """
+        return get_min_forming_ring_size_including_temporary(self)
 
     @cached_property
     def init_ligand_count_on_metal(self) -> int:

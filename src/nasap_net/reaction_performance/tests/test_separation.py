@@ -1,7 +1,7 @@
 import pytest
 
 from nasap_net.models import Assembly, Bond, Component
-from nasap_net.reaction_exploration_im.lib import \
+from nasap_net.reaction_performance.separation import \
     SeparatedIntoMoreThanTwoPartsError, separate_if_possible
 
 
