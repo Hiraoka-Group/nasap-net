@@ -11,7 +11,7 @@ from nasap_net.types import ID
 
 _T = TypeVar('_T', bound=ID)
 
-def dump(assemblies: Iterable[Assembly]) -> str:
+def dump_assemblies_to_str(assemblies: Iterable[Assembly]) -> str:
     """Dump assemblies and components into a YAML string."""
     dumped = _dump_separately(assemblies)
     return '---\n'.join([dumped.components, dumped.assemblies])

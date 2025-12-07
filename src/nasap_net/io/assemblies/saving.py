@@ -1,9 +1,13 @@
+import logging
 import os
 from collections.abc import Iterable
 from pathlib import Path
 
-from nasap_net.io.assemblies.dump import dump
+from nasap_net.io.assemblies.yaml_dumping import dump_assemblies_to_str
 from nasap_net.models import Assembly
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 def save_assemblies(
@@ -11,7 +15,6 @@ def save_assemblies(
         file_path: os.PathLike | str,
         *,
         overwrite: bool = False,
-        verbose: bool = True,
         ) -> None:
     """Dump assemblies and components into a YAML file.
 
@@ -25,9 +28,6 @@ def save_assemblies(
         If True, overwrite the file if it already exists.
         If False, raise an error if the file already exists.
         Default is False.
-    verbose : bool, optional
-        If True, print a message indicating the file path written to.
-        Default is True.
     """
     file_path = Path(file_path)
     if file_path.exists() and not overwrite:
@@ -36,8 +36,9 @@ def save_assemblies(
             'Use `overwrite=True` to overwrite it.'
         )
 
+    assemblies = list(assemblies)
+
     file_path.parent.mkdir(parents=True, exist_ok=True)
-    yaml_str = dump(assemblies)
+    yaml_str = dump_assemblies_to_str(assemblies)
     file_path.write_text(yaml_str, encoding="utf-8")
-    if verbose:
-        print(f'Saved! --> "{str(file_path)}"')
+    logger.info('Saved %d assemblies to "%s"', len(assemblies), str(file_path))

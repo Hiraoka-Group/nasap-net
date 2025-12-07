@@ -5,7 +5,7 @@ from .semi_light_assembly import SemiLightAssembly, \
     convert_semi_light_assemblies_to_rich_ones
 
 
-def load(yaml_str: str) -> list[Assembly]:
+def load_assemblies_from_str(yaml_str: str) -> list[Assembly]:
     components, light_assemblies = _load_components_and_semi_light_assemblies(
         yaml_str=yaml_str,
     )

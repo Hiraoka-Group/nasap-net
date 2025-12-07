@@ -1,6 +1,6 @@
 import pytest
 
-from nasap_net.io.assemblies import dump, load_assemblies
+from nasap_net.io.assemblies import dump_assemblies_to_str, load_assemblies
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
@@ -31,37 +31,13 @@ def sample_assemblies():
     return assemblies
 
 
-def test_reads_file_and_contents(tmp_path, sample_assemblies):
+def test_basic(tmp_path, sample_assemblies):
     assemblies = sample_assemblies
-    f = tmp_path / "in.yaml"
+    f = tmp_path / "assemblies.yaml"
     # write YAML using dump()
-    f.write_text(dump(assemblies))
+    f.write_text(dump_assemblies_to_str(assemblies))
 
-    loaded = load_assemblies(f, strict=True, verbose=False)
+    loaded = load_assemblies(f)
 
     assert isinstance(loaded, list)
     assert loaded == assemblies
-
-
-def test_raises_if_missing_and_strict(tmp_path):
-    missing = tmp_path / "noexist.yaml"
-    with pytest.raises(FileNotFoundError):
-        load_assemblies(missing, strict=True, verbose=False)
-
-
-def test_returns_empty_if_missing_and_not_strict(tmp_path):
-    missing = tmp_path / "noexist.yaml"
-    res = load_assemblies(missing, strict=False, verbose=False)
-    assert res == []
-
-
-def test_verbose_prints_loaded_message(tmp_path, capsys, sample_assemblies):
-    assemblies = sample_assemblies
-    f = tmp_path / "v_in.yaml"
-    f.write_text(dump(assemblies))
-
-    load_assemblies(f, strict=True, verbose=True)
-
-    captured = capsys.readouterr()
-    assert 'Loaded' in captured.out
-    assert str(f) in captured.out
