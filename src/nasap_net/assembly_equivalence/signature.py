@@ -3,7 +3,7 @@ from typing import Hashable
 from nasap_net.models import Assembly
 
 
-def get_light_signature(assembly: Assembly) -> Hashable:
+def get_assembly_signature(assembly: Assembly) -> Hashable:
     """Compute a light signature of the assembly for quick filtering.
 
     Assemblies with different signatures are guaranteed to be non-isomorphic.

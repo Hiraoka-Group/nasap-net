@@ -3,7 +3,7 @@ from collections.abc import Hashable, Iterable
 
 from nasap_net.isomorphism import is_isomorphic
 from nasap_net.models import Assembly
-from .signature import get_light_signature
+from .signature import get_assembly_signature
 
 
 def extract_unique_assemblies(
@@ -23,7 +23,7 @@ def extract_unique_assemblies(
     """
     sig_to_unique_assembly: dict[Hashable, set[Assembly]] = defaultdict(set)
     for assembly in assemblies:
-        sig = get_light_signature(assembly)
+        sig = get_assembly_signature(assembly)
         is_unique = True
         for unique_assembly in sig_to_unique_assembly[sig]:
             if is_isomorphic(assembly, unique_assembly):

@@ -3,8 +3,8 @@ from nasap_net.models import Assembly
 
 
 def assemblies_equivalent(
-        assembly1: Assembly | None,
-        assembly2: Assembly | None,
+        assembly1: Assembly,
+        assembly2: Assembly,
 ) -> bool:
     """Check if two assemblies are equivalent.
 
@@ -16,22 +16,18 @@ def assemblies_equivalent(
         - Auxiliary edges (if present)
         - Auxiliary edge types (if present)
 
-    Returns False if either assembly is None.
-
     Parameters
     ----------
-    assembly1 : Assembly | None
+    assembly1 : Assembly
         The first assembly to compare.
-    assembly2 : Assembly | None
+    assembly2 : Assembly
         The second assembly to compare.
 
     Returns
     -------
     bool
-        True if both assemblies are not None and equivalent; False otherwise.
+        True if the assemblies are equivalent, False otherwise.
     """
-    if assembly1 is None or assembly2 is None:
-        return False
     if assembly1 == assembly2:
         return True
     return is_isomorphic(assembly1, assembly2)

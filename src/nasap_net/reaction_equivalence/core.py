@@ -62,8 +62,13 @@ def reactions_equivalent(
     # Condition 2: Same assemblies (only left-hand side)
     if not assemblies_equivalent(reaction1.init_assem, reaction2.init_assem):
         return False
-    if not assemblies_equivalent(reaction1.entering_assem, reaction2.entering_assem):
-        return False
+    if reaction1.is_inter():
+        assert reaction2.is_inter()
+        if not assemblies_equivalent(
+                reaction1.entering_assem_strict,
+                reaction2.entering_assem_strict
+        ):
+            return False
 
     # Condition 3: Equivalent pair/trio of binding sites
     if reaction1.is_intra():

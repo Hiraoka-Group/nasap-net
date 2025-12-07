@@ -7,7 +7,7 @@ from frozendict import frozendict
 from nasap_net.exceptions import NasapNetError
 from nasap_net.isomorphism import is_isomorphic
 from nasap_net.models import Assembly
-from .signature import get_light_signature
+from .signature import get_assembly_signature
 
 
 class AssemblyNotFoundError(NasapNetError):
@@ -31,7 +31,7 @@ class EquivalentAssemblyFinder:
         object.__setattr__(self, 'search_space', frozenset(search_space))
         sig_to_assems: defaultdict[Hashable, set[Assembly]] = defaultdict(set)
         for assembly in self.search_space:
-            sig = get_light_signature(assembly)
+            sig = get_assembly_signature(assembly)
             sig_to_assems[sig].add(assembly)
         object.__setattr__(self, '_sig_to_assemblies', frozendict(
             {k: frozenset(v) for k, v in sig_to_assems.items()}
@@ -55,7 +55,7 @@ class EquivalentAssemblyFinder:
         AssemblyNotFoundError
             If no isomorphic assembly is found in the search space.
         """
-        sig = get_light_signature(target)
+        sig = get_assembly_signature(target)
         candidates = self._sig_to_assemblies.get(sig)
         if not candidates:
             raise AssemblyNotFoundError(

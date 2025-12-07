@@ -65,7 +65,6 @@ def compute_reaction_list_diff(
                 if reactions_equivalent(reaction1, reaction2):
                     reactions_set1.discard(reaction1)
                     reactions_set2.discard(reaction2)
-                    break
 
         first_only.update(reactions_set1)
         second_only.update(reactions_set2)

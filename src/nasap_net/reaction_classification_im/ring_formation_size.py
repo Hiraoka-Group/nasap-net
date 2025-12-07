@@ -1,4 +1,4 @@
-from nasap_net.models import Reaction
+from nasap_net.models import Assembly, BindingSite, Reaction
 from nasap_net.rough_graph import convert_assembly_to_rough_graph
 
 
@@ -44,10 +44,25 @@ def get_min_forming_ring_size(reaction: Reaction) -> int | None:
     if reaction.is_inter():
         return None
 
-    # Create a modified assembly by removing the bond between
-    bond_removed_assem = reaction.init_assem.remove_bond(
-        reaction.metal_bs, reaction.leaving_bs
+    return get_min_forming_ring_size_internal(
+        assembly=reaction.init_assem,
+        metal_bs=reaction.metal_bs,
+        leaving_bs=reaction.leaving_bs,
+        entering_bs=reaction.entering_bs,
     )
+
+
+def get_min_forming_ring_size_internal(
+        assembly: Assembly,
+        metal_bs: BindingSite,
+        leaving_bs: BindingSite,
+        entering_bs: BindingSite,
+) -> int | None:
+    """Determine the minimum ring size formed between two binding sites
+    within an assembly.
+    """
+    # Create a modified assembly by removing the bond between
+    bond_removed_assem = assembly.remove_bond(metal_bs, leaving_bs)
 
     # The above bond removal ensures that
     # any path between the metal and entering binding sites
@@ -73,8 +88,8 @@ def get_min_forming_ring_size(reaction: Reaction) -> int | None:
     # Minimum ring size can be determined from the shortest path between
     # the metal binding site and the entering binding site in the initial assembly.
     shortest_path_vertices = conv_res.graph.get_shortest_paths(
-        conv_res.core_mapping[reaction.metal_bs.component_id],
-        conv_res.core_mapping[reaction.entering_bs.component_id],
+        conv_res.core_mapping[metal_bs.component_id],
+        conv_res.core_mapping[entering_bs.component_id],
     )
 
     length = len(shortest_path_vertices[0])
