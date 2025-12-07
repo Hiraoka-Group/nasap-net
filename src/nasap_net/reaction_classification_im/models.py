@@ -121,18 +121,10 @@ class ReactionToClassify(Reaction):
         if self._is_sample_rev:
             return None
         reverse_reaction = generate_sample_rev_reaction(self)
-        return ReactionToClassify(
-            init_assem=reverse_reaction.init_assem,
-            entering_assem=reverse_reaction.entering_assem,
-            product_assem=reverse_reaction.product_assem,
-            leaving_assem=reverse_reaction.leaving_assem,
-            metal_bs=reverse_reaction.metal_bs,
-            leaving_bs=reverse_reaction.leaving_bs,
-            entering_bs=reverse_reaction.entering_bs,
-            duplicate_count=reverse_reaction._duplicate_count,
-            id_=reverse_reaction._id,
-            _is_sample_rev=True,
-        )
+        # Create reverse reaction with _is_sample_rev=True
+        result = ReactionToClassify.from_reaction(reverse_reaction)
+        object.__setattr__(result, '_is_sample_rev', True)
+        return result
 
     @property
     def assem_with_entering_bs(self) -> Assembly:
@@ -152,4 +144,5 @@ class ReactionToClassify(Reaction):
             metal_bs=reaction.metal_bs,
             leaving_bs=reaction.leaving_bs,
             entering_bs=reaction.entering_bs,
+            _is_sample_rev=False,
         )
