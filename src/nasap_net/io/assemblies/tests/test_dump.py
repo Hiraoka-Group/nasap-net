@@ -1,4 +1,4 @@
-from nasap_net.io.assemblies import dump
+from nasap_net.io.assemblies import dump_assemblies_to_str
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
@@ -25,7 +25,7 @@ def test_dump():
         ),
     ]
 
-    dumped = dump(assemblies)
+    dumped = dump_assemblies_to_str(assemblies)
 
     assert dumped == """M: !Component
   kind: M

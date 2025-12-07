@@ -1,4 +1,4 @@
-from nasap_net.io.assemblies import dump, load
+from nasap_net.io.assemblies import dump_assemblies_to_str, load_assemblies_from_str
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
@@ -25,6 +25,6 @@ def test_round_trip():
         ),
     ]
 
-    dumped = dump(assemblies)
-    loaded = load(dumped)
+    dumped = dump_assemblies_to_str(assemblies)
+    loaded = load_assemblies_from_str(dumped)
     assert loaded == assemblies

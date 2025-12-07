@@ -1,7 +1,6 @@
 from nasap_net.models import Reaction
-from nasap_net.reaction_exploration_im.inter import perform_inter_reaction
-from nasap_net.reaction_exploration_im.renaming import \
-    rename_for_inter_reaction
+from nasap_net.reaction_performance import perform_inter_reaction, \
+    perform_intra_reaction, reindex_components_for_inter_reaction
 
 
 def generate_sample_rev_reaction(reaction: Reaction) -> Reaction:
@@ -24,7 +23,7 @@ def generate_sample_rev_reaction(reaction: Reaction) -> Reaction:
         result.
     """
     if reaction.is_inter():
-        renamed = rename_for_inter_reaction(
+        renamed = reindex_components_for_inter_reaction(
             init_assembly=reaction.init_assem,
             entering_assembly=reaction.entering_assem_strict,
             mle=reaction.mle,
@@ -47,9 +46,8 @@ def generate_sample_rev_reaction(reaction: Reaction) -> Reaction:
         )
     else:
         assert reaction.is_intra()
-        product, leaving = perform_inter_reaction(
-            init_assem=reaction.init_assem,
-            entering_assem=reaction.leaving_assem_strict,
+        product, leaving = perform_intra_reaction(
+            assembly=reaction.init_assem,
             mle=reaction.mle,
         )
         return Reaction(

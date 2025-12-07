@@ -55,11 +55,12 @@ def save_reactions(
             'Use `overwrite=True` to overwrite it.'
         )
 
+    reactions = list(reactions)
     df = reactions_to_df(reactions)
 
     file_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(file_path, index=index)
-    logger.info('Saved! --> "%s"', str(file_path))
+    logger.info('Saved %d reactions to "%s"', len(reactions), str(file_path))
 
 
 def reactions_to_df(reactions: Iterable[Reaction]) -> pd.DataFrame:

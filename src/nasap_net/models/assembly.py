@@ -1,3 +1,4 @@
+from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from functools import cached_property, total_ordering
@@ -174,6 +175,14 @@ class Assembly:
             comp_id: comp.kind for comp_id, comp
             in self._components.items()
         })
+
+    @property
+    def component_kind_counts(self) -> dict[str, int]:
+        """Return a mapping from component kinds to their counts."""
+        kind_counts: defaultdict[str, int] = defaultdict(int)
+        for comp in self._components.values():
+            kind_counts[comp.kind] += 1
+        return kind_counts
 
     def get_component_kind_of_site(self, site: BindingSite) -> str:
         """Return the component kind of the given binding site."""

@@ -1,4 +1,4 @@
-from nasap_net.io.assemblies import load
+from nasap_net.io.assemblies import load_assemblies_from_str
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
@@ -34,7 +34,7 @@ X: !Component
   - [M0, 2, X2, 0]
 """
 
-    loaded = load(yaml_str)
+    loaded = load_assemblies_from_str(yaml_str)
 
     M = Component(kind='M', sites=[0, 1])
     X = Component(kind='X', sites=[0])

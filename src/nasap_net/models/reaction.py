@@ -1,10 +1,14 @@
 from dataclasses import dataclass
-from typing import Self
+from functools import total_ordering
+from typing import Self, TYPE_CHECKING
 
 from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.models import Assembly, BindingSite, MLE
 from nasap_net.types import ID
 from nasap_net.utils.default import MISSING, Missing, default_if_missing
+
+if TYPE_CHECKING:
+    from nasap_net.reaction_classification_im import ReactionToClassify
 
 
 class DuplicateCountNotSetError(NasapNetError):
@@ -13,6 +17,7 @@ class DuplicateCountNotSetError(NasapNetError):
         super().__init__("Duplicate count is not set.")
 
 
+@total_ordering
 @dataclass(frozen=True, init=False)
 class Reaction:
     init_assem: Assembly
@@ -60,6 +65,23 @@ class Reaction:
         object.__setattr__(self, '_duplicate_count', duplicate_count)
         object.__setattr__(self, '_id', id_)
 
+    def __lt__(self, other):
+        if not isinstance(other, Reaction):
+            return NotImplemented
+        def key(reaction: Reaction) -> tuple:
+            return (
+                reaction.init_assem_id,
+                reaction.entering_assem_id,
+                reaction.product_assem_id,
+                reaction.leaving_assem_id,
+                reaction.metal_bs,
+                reaction.leaving_bs,
+                reaction.entering_bs,
+                reaction.duplicate_count_or_none,
+                reaction.id_or_none,
+            )
+        return key(self) < key(other)
+
     def __str__(self):
         equation = self.equation_str
         dup = self.duplicate_count
@@ -88,6 +110,11 @@ class Reaction:
         """Return the duplicate count of the reaction."""
         if self._duplicate_count is None:
             raise DuplicateCountNotSetError()
+        return self._duplicate_count
+
+    @property
+    def duplicate_count_or_none(self) -> int | None:
+        """Return the duplicate count of the reaction, or None if not set."""
         return self._duplicate_count
 
     @property
@@ -179,29 +206,10 @@ class Reaction:
         """Return True if the reaction is an intra-molecular reaction."""
         return self.entering_assem is None
 
-    def rev_is_inter(self) -> bool:
-        """Return True if the reverse reaction is an inter-molecular reaction."""
-        return self.leaving_assem is not None
-
-    def rev_is_intra(self) -> bool:
-        """Return True if the reverse reaction is an intra-molecular reaction."""
-        return self.leaving_assem is None
-
     @property
     def metal_kind(self) -> str:
         """Return the kind of the metal binding site."""
         return self.init_assem.get_component_kind_of_site(self.metal_bs)
-
-    @property
-    def leaving_kind(self) -> str:
-        """Return the kind of the leaving binding site."""
-        return self.init_assem.get_component_kind_of_site(self.leaving_bs)
-
-    @property
-    def entering_kind(self) -> str:
-        """Return the kind of the entering binding site."""
-        assem = self.init_assem if self.is_intra() else self.entering_assem_strict
-        return assem.get_component_kind_of_site(self.entering_bs)
 
     def copy_with(
             self,
@@ -237,6 +245,11 @@ class Reaction:
             duplicate_count=default_if_missing(duplicate_count, self.duplicate_count),
             id_=default_if_missing(id_, None),
         )
+
+    def as_reaction_to_classify(self) -> 'ReactionToClassify':
+        """Return a ReactionToClassify version of this reaction."""
+        from nasap_net.reaction_classification_im import ReactionToClassify
+        return ReactionToClassify.from_reaction(self)
 
 
 def _assembly_to_id(assembly: Assembly | None) -> ID | None:

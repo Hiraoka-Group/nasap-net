@@ -1,6 +1,6 @@
 import pytest
 
-from nasap_net.io.assemblies import dump, save_assemblies
+from nasap_net.io.assemblies import dump_assemblies_to_str, save_assemblies
 from nasap_net.models import Assembly, AuxEdge, Bond, Component
 
 
@@ -31,17 +31,17 @@ def sample_assemblies():
     return assemblies
 
 
-def test_writes_file_and_contents(tmp_path, sample_assemblies):
+def test_basic(tmp_path, sample_assemblies):
     assemblies = sample_assemblies
     out = tmp_path / "out.yaml"
 
     # write
-    save_assemblies(assemblies, out, overwrite=False, verbose=False)
+    save_assemblies(assemblies, out, overwrite=False)
 
     # file exists and contents match dump()
     assert out.exists()
     text = out.read_text()
-    assert text == dump(assemblies)
+    assert text == dump_assemblies_to_str(assemblies)
 
 
 def test_raises_if_exists_and_no_overwrite(tmp_path, sample_assemblies):
@@ -50,7 +50,7 @@ def test_raises_if_exists_and_no_overwrite(tmp_path, sample_assemblies):
     out.write_text("old")
 
     try:
-        save_assemblies(assemblies, out, overwrite=False, verbose=False)
+        save_assemblies(assemblies, out, overwrite=False)
         raised = False
     except FileExistsError:
         raised = True
@@ -65,28 +65,16 @@ def test_overwrite_ok(tmp_path, sample_assemblies):
     out = tmp_path / "to_overwrite.yaml"
     out.write_text("old content")
 
-    save_assemblies(assemblies, out, overwrite=True, verbose=False)
+    save_assemblies(assemblies, out, overwrite=True)
 
-    assert out.read_text() == dump(assemblies)
+    assert out.read_text() == dump_assemblies_to_str(assemblies)
 
 
 def test_creates_parent_dirs(tmp_path, sample_assemblies):
     assemblies = sample_assemblies
     out = tmp_path / "nested" / "a" / "dump.yaml"
 
-    save_assemblies(assemblies, out, overwrite=False, verbose=False)
+    save_assemblies(assemblies, out, overwrite=False)
 
     assert out.exists()
     assert (tmp_path / "nested" / "a").exists()
-
-
-def test_verbose_prints_saved_message(tmp_path, capsys, sample_assemblies):
-    assemblies = sample_assemblies
-    out = tmp_path / "v.yaml"
-
-    save_assemblies(assemblies, out, overwrite=False, verbose=True)
-
-    captured = capsys.readouterr()
-    # message should include path
-    assert 'Saved! -->' in captured.out
-    assert str(out) in captured.out

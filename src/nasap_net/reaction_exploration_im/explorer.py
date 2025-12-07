@@ -3,12 +3,12 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
-from nasap_net.helpers import extract_unique_binding_site_combs
+from nasap_net.binding_site_equivalence import \
+    extract_unique_binding_site_combs
 from nasap_net.models import Assembly, BindingSite, MLE, MLEKind, \
     Reaction
-from .inter import perform_inter_reaction
-from .intra import perform_intra_reaction
-from .renaming import rename_for_inter_reaction
+from nasap_net.reaction_performance import perform_inter_reaction, \
+    perform_intra_reaction, reindex_components_for_inter_reaction
 
 
 class ReactionExplorer(ABC):
@@ -66,11 +66,8 @@ class IntraReactionExplorer(ReactionExplorer):
           - The component kind of the metal binding site is `mle_kind.metal`.
           - The component kind of the leaving binding site is `mle_kind.leaving`.
           - The entering binding site is free and has the component kind `mle_kind.entering`.
-          - The component of the entering binding site and the component of the metal
-            binding site have no bonds between them.
-            (Currently, parallel bonds are not supported.)
         """
-        ml_pair = _enum_ml_pair(
+        ml_pairs = _enum_ml_pair(
             self.assembly,
             metal_kind=self.mle_kind.metal, leaving_kind=self.mle_kind.leaving)
 
@@ -78,10 +75,13 @@ class IntraReactionExplorer(ReactionExplorer):
             has_bond=False, component_kind=self.mle_kind.entering)
 
         for (metal, leaving), entering in itertools.product(
-                ml_pair, entering_sites):
-            if not self.assembly.has_bond_between_components(
-                    metal.component_id, entering.component_id):
-                yield MLE(metal, leaving, entering)
+                ml_pairs, entering_sites):
+
+            if forms_parallel_bond(self.assembly, entering, leaving, metal):
+                # Parallel bond formation is not allowed
+                continue
+
+            yield MLE(metal, leaving, entering)
 
     def _get_unique_mles(self, mles: Iterable[MLE]) -> Iterator[MLE]:
         unique_mle_trios = extract_unique_binding_site_combs(
@@ -177,7 +177,7 @@ class InterReactionExplorer(ReactionExplorer):
                 duplication=unique_ml.duplication * unique_e.duplication)
 
     def _perform_reaction(self, mle: MLE) -> Reaction:
-        renamed = rename_for_inter_reaction(
+        renamed = reindex_components_for_inter_reaction(
             self.init_assembly, self.entering_assembly, mle
         )
 
@@ -219,3 +219,19 @@ def _enum_ml_pair(
         elif (kind1, kind2) == (leaving_kind, metal_kind):
             ml_pair.add((site2, site1))
     return ml_pair
+
+
+def forms_parallel_bond(
+        assembly: Assembly,
+        entering: BindingSite,
+        leaving: BindingSite,
+        metal: BindingSite
+) -> bool:
+    """Return True if the reaction would form a parallel bond."""
+    if not assembly.has_bond_between_components(
+            metal.component_id, entering.component_id
+    ):
+        return False
+    if leaving.component_id == entering.component_id:
+        return False
+    return True
