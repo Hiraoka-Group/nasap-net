@@ -1,5 +1,5 @@
 from nasap_net.models import Assembly, BindingSite, Bond, Component, Reaction
-from nasap_net.reaction_classification_im import ReactionToClassify
+from nasap_net.reaction_classification import ReactionToClassify
 
 
 def test_basic():

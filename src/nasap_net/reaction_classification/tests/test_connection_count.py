@@ -1,7 +1,7 @@
 import pytest
 
 from nasap_net.models import Assembly, Bond, Component
-from nasap_net.reaction_classification_im import get_connection_count_of_kind
+from nasap_net.reaction_classification import get_connection_count_of_kind
 
 
 @pytest.fixture

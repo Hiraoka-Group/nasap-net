@@ -1,7 +1,7 @@
 import pytest
 
 from nasap_net.models import Assembly, BindingSite, Bond, Component, Reaction
-from nasap_net.reaction_classification_im import get_min_forming_ring_size
+from nasap_net.reaction_classification import get_min_forming_ring_size
 
 
 @pytest.fixture

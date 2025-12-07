@@ -1,7 +1,7 @@
 from nasap_net.assembly_enumeration import enumerate_assemblies
 from nasap_net.helpers import assign_composition_formula_ids
 from nasap_net.models import Assembly, AuxEdge, Bond, Component, MLEKind
-from nasap_net.reaction_exploration_im import explore_reactions
+from nasap_net.reaction_enumeration import enumerate_reactions
 
 
 def test_M4L4():
@@ -38,7 +38,7 @@ def test_M4L4():
         order=['M', 'L', 'X'],
     )
 
-    reactions = explore_reactions(
+    reactions = enumerate_reactions(
         assemblies=indexed_assemblies,
         mle_kinds=[MLEKind(metal='M', leaving='X', entering='L')],
     )
@@ -90,7 +90,7 @@ def test_M2L4():
         order=['M', 'L', 'X'],
     )
 
-    reactions = explore_reactions(
+    reactions = enumerate_reactions(
         assemblies=indexed_assemblies,
         mle_kinds=[MLEKind(metal='M', leaving='X', entering='L')],
     )

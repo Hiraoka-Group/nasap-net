@@ -2,7 +2,7 @@ import pytest
 
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component, \
     Reaction
-from nasap_net.reaction_exploration_im.reaction_resolver import \
+from nasap_net.reaction_enumeration.reaction_resolver import \
     ReactionOutOfScopeError, ReactionResolver
 
 

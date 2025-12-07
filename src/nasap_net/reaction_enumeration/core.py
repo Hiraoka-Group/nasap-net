@@ -5,7 +5,7 @@ from typing import Iterator, TypeVar
 
 from nasap_net.helpers import validate_unique_ids
 from nasap_net.models import Assembly, MLEKind, Reaction
-from nasap_net.reaction_classification_im import \
+from nasap_net.reaction_classification import \
     get_min_forming_ring_size_including_temporary
 from nasap_net.types import ID
 from .explorer import InterReactionExplorer, IntraReactionExplorer
@@ -16,20 +16,20 @@ logger.addHandler(logging.NullHandler())
 
 _T = TypeVar('_T', bound=ID)
 
-def explore_reactions(
+def enumerate_reactions(
         assemblies: Iterable[Assembly],
         mle_kinds: Iterable[MLEKind],
         *,
         min_temp_ring_size: int | None = None,
         ) -> Iterator[Reaction]:
-    """Explore possible reactions among given assemblies.
+    """Enumerate possible reactions among given assemblies.
 
     Parameters
     ----------
     assemblies : Iterable[Assembly]
-        The assemblies to explore reactions for.
+        The assemblies to consider during reaction enumeration.
     mle_kinds : Iterable[MLEKind]
-        The kinds of MLEs to consider during reaction exploration.
+        The kinds of MLEs to consider during reaction enumeration.
     min_temp_ring_size : int | None, optional
         Minimum size of temporary rings to consider during intra-molecular
         reactions. Reactions forming temporary rings smaller than this size
@@ -38,9 +38,9 @@ def explore_reactions(
     Yields
     ------
     Reaction
-        The explored and resolved reactions.
+        The enumerated and resolved reactions.
     """
-    logger.debug('Starting reaction exploration.')
+    logger.debug('Starting reaction enumeration.')
     assemblies = list(assemblies)
 
     validate_unique_ids(assemblies)
@@ -80,4 +80,4 @@ def explore_reactions(
             yield resolved
         except ReactionOutOfScopeError:
             continue
-    logger.debug('Reaction exploration completed.')
+    logger.debug('Reaction enumeration completed.')

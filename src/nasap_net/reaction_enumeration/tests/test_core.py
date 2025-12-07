@@ -1,7 +1,7 @@
 from nasap_net.models import Assembly, BindingSite, Bond, Component, MLEKind, \
     Reaction
 from nasap_net.reaction_equivalence import compute_reaction_list_diff
-from nasap_net.reaction_exploration_im import explore_reactions
+from nasap_net.reaction_enumeration import enumerate_reactions
 
 
 def test():
@@ -45,7 +45,7 @@ def test():
             bonds=[Bond('M0', 1, 'L0', 0), Bond('L0', 1, 'M1', 0),
                    Bond('M1', 1, 'L1', 0), Bond('L1', 1, 'M0', 0)]),
     ]
-    result = set(explore_reactions(assemblies, [MLEKind('M', 'X', 'L')]))
+    result = set(enumerate_reactions(assemblies, [MLEKind('M', 'X', 'L')]))
     # TODO: add more detailed checks
     assert len(result) == 7
 
@@ -76,7 +76,7 @@ def test_temp_ring_size_limitation():
 
     # No limitation on ring size
     no_limit_actual = set(
-        explore_reactions(
+        enumerate_reactions(
             assemblies=[M2L3, free_L, M2L2_ring],
             mle_kinds=[MLEKind('M', 'L', 'L')],
             min_temp_ring_size=None,
@@ -142,7 +142,7 @@ def test_temp_ring_size_limitation():
 
     # Limit to ring size 2 or larger
     limit_2_actual = set(
-        explore_reactions(
+        enumerate_reactions(
             assemblies=[M2L3, free_L, M2L2_ring],
             mle_kinds=[MLEKind('M', 'L', 'L')],
             min_temp_ring_size=2,

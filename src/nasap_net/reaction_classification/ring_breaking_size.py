@@ -1,5 +1,5 @@
 from nasap_net.models import Reaction
-from nasap_net.reaction_pairing_im.sample_rev_generation import \
+from nasap_net.reaction_pairing.sample_rev_generation import \
     generate_sample_rev_reaction
 from .ring_formation_size import get_min_forming_ring_size
 

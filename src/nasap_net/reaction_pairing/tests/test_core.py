@@ -2,7 +2,7 @@ import pytest
 
 from nasap_net.models import Assembly, AuxEdge, BindingSite, Bond, Component, \
     Reaction
-from nasap_net.reaction_pairing_im import pair_reverse_reactions
+from nasap_net.reaction_pairing import pair_reverse_reactions
 
 
 @pytest.fixture
