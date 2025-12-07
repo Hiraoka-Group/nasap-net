@@ -1,39 +1,34 @@
 """
-NASAPNet
+nasap-net
 ========
 
-NASAPNet: Automates the construction of reaction networks as part of the NASAP (Numerical Analysis for Self-Assembly Process) methodology, originally developed by the Hiraoka Group.
+nasap-net is a tool for automatically constructing reaction networks within
+the NASAP (Numerical Analysis for Self-Assembly Process) framework,
+originally developed by the Hiraoka Group.
 
-See the documentation for details.
+Refer to the documentation for full details.
 """
-# isort: skip_file
+from nasap_net.models import BindingSite
+from nasap_net.models import AuxEdge
+from nasap_net.models import Component
+from nasap_net.models import Bond
+from nasap_net.models import Assembly
+from nasap_net.models import Reaction
 
-# 'isort: split' is used to separate the imports into groups.
-# (although the comment 'isort: split' itself is not necessary
-# as long as 'isort: skip_file' is used.)
+from nasap_net.helpers import assign_composition_formula_ids
 
-__version__ = "0.1.0"
+from nasap_net.assembly_enumeration import enumerate_assemblies
+from nasap_net.assembly_enumeration import SymmetryOperations
 
-from .classes import *
+from nasap_net.reaction_enumeration import enumerate_reactions
 
-# isort: split
-from .algorithms import *
+from nasap_net.assembly_equivalence import extract_unique_assemblies
+from nasap_net.assembly_equivalence import assemblies_equivalent
 
-# isort: split
-from .assembly_drawing import draw_2d
-from .assembly_drawing import draw_3d
+from nasap_net.reaction_equivalence import reactions_equivalent
+from nasap_net.reaction_equivalence import compute_reaction_list_diff
 
-from .bondset_enumeration import enum_bond_subsets
-
-from .bondset_to_assembly import convert_bondset_to_assembly
-from .bondset_to_assembly import convert_bondsets_to_assemblies
-
-from .bindsite_capping import cap_bindsites
-from .bindsite_capping import cap_single_bindsite
-
-from .duplicate_exclusion import find_unique_assemblies
-from .duplicate_exclusion import group_assemblies_by_isomorphism
-
-from .reaction_exploration import explore_reactions
-
-from .reaction_classification import ReactionClassifier
+from nasap_net.io import load_assemblies
+from nasap_net.io import load_reactions
+from nasap_net.io import save_assemblies
+from nasap_net.io import save_reactions

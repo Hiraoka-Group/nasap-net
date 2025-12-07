@@ -1,10 +1,5 @@
-from .chain_map import *
-from .circular_perm_comparison import *
-from .cyclic_perm import *
-from .frozen_unordered_pair import *
+from .chain_map import resolve_chain_map
+from .cyclic_perm import cyclic_perm_to_map, cyclic_perms_to_map
 from .id_deduplication import deduplicate_ids
-from .mapping_iterable_comparison import *
-from .nested_dict_update import *
-from .node_equivalence import *
 from .repr_constructor import construct_repr
 from .union_find import UnionFind

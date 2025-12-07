@@ -1,5 +1,3 @@
-import pytest
-
 from nasap_net.utils import resolve_chain_map
 
 
@@ -21,7 +19,3 @@ def test_single_input():
     input1 = {1: 10}
     output = resolve_chain_map(input1)
     assert output == {1: 10}
-
-
-if __name__ == '__main__':
-    pytest.main(['-v', __file__])

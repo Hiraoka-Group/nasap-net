@@ -8,7 +8,7 @@ from nasap_net.types import ID
 from nasap_net.utils.default import MISSING, Missing, default_if_missing
 
 if TYPE_CHECKING:
-    from nasap_net.reaction_classification_im import ReactionToClassify
+    from nasap_net.reaction_classification import ReactionToClassify
 
 
 class DuplicateCountNotSetError(NasapNetError):
@@ -248,7 +248,7 @@ class Reaction:
 
     def as_reaction_to_classify(self) -> 'ReactionToClassify':
         """Return a ReactionToClassify version of this reaction."""
-        from nasap_net.reaction_classification_im import ReactionToClassify
+        from nasap_net.reaction_classification import ReactionToClassify
         return ReactionToClassify.from_reaction(self)
 
 

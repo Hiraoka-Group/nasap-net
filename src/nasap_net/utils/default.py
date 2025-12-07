@@ -1,6 +1,5 @@
 from typing import Any, NewType, TypeVar, overload
 
-
 Missing = NewType("Missing", object)
 MISSING = Missing(object())
 
