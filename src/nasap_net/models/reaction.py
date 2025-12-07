@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import total_ordering
 from typing import Self, TYPE_CHECKING
 
 from nasap_net.exceptions import IDNotSetError, NasapNetError
@@ -16,6 +17,7 @@ class DuplicateCountNotSetError(NasapNetError):
         super().__init__("Duplicate count is not set.")
 
 
+@total_ordering
 @dataclass(frozen=True, init=False)
 class Reaction:
     init_assem: Assembly
@@ -63,6 +65,23 @@ class Reaction:
         object.__setattr__(self, '_duplicate_count', duplicate_count)
         object.__setattr__(self, '_id', id_)
 
+    def __lt__(self, other):
+        if not isinstance(other, Reaction):
+            return NotImplemented
+        def key(reaction: Reaction) -> tuple:
+            return (
+                reaction.init_assem_id,
+                reaction.entering_assem_id,
+                reaction.product_assem_id,
+                reaction.leaving_assem_id,
+                reaction.metal_bs,
+                reaction.leaving_bs,
+                reaction.entering_bs,
+                reaction.duplicate_count_or_none,
+                reaction.id_or_none,
+            )
+        return key(self) < key(other)
+
     def __str__(self):
         equation = self.equation_str
         dup = self.duplicate_count
@@ -91,6 +110,11 @@ class Reaction:
         """Return the duplicate count of the reaction."""
         if self._duplicate_count is None:
             raise DuplicateCountNotSetError()
+        return self._duplicate_count
+
+    @property
+    def duplicate_count_or_none(self) -> int | None:
+        """Return the duplicate count of the reaction, or None if not set."""
         return self._duplicate_count
 
     @property

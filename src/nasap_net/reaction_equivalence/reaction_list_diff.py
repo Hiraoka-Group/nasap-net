@@ -57,17 +57,18 @@ def compute_reaction_list_diff(
         second_only.update(sig_to_reactions2[second_only_sig])
 
     for common_sig in common_sigs:
-        reactions_set1 = sig_to_reactions1[common_sig].copy()
-        reactions_set2 = sig_to_reactions2[common_sig].copy()
+        unpaired_reactions1 = sig_to_reactions1[common_sig].copy()
+        unpaired_reactions2 = sig_to_reactions2[common_sig].copy()
 
-        for reaction1 in sig_to_reactions1[common_sig]:
-            for reaction2 in sig_to_reactions2[common_sig]:
+        for reaction1 in sorted(unpaired_reactions1):
+            for reaction2 in sorted(unpaired_reactions2):
                 if reactions_equivalent(reaction1, reaction2):
-                    reactions_set1.discard(reaction1)
-                    reactions_set2.discard(reaction2)
+                    unpaired_reactions1.remove(reaction1)
+                    unpaired_reactions2.remove(reaction2)
+                    break
 
-        first_only.update(reactions_set1)
-        second_only.update(reactions_set2)
+        first_only.update(unpaired_reactions1)
+        second_only.update(unpaired_reactions2)
 
     return ReactionListDiff(
         first_only=first_only,
