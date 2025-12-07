@@ -1,4 +1,4 @@
-from typing import Sequence
+from collections.abc import Iterable, Sequence
 
 from nasap_net.models import Assembly
 from nasap_net.utils import deduplicate_ids
@@ -6,7 +6,7 @@ from .composition_formula import generate_composition_formula
 
 
 def assign_composition_formula_ids(
-        assemblies: Sequence[Assembly],
+        assemblies: Iterable[Assembly],
         *,
         order: Sequence[str] | None = None,
 ) -> list[Assembly]:
