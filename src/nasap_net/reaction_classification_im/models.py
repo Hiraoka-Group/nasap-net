@@ -11,6 +11,35 @@ from .temp_ring_formation import get_min_forming_ring_size_including_temporary
 
 class ReactionToClassify(Reaction):
     """Dataclass representing a reaction to classify."""
+
+    _is_sample_rev: bool
+
+    def __init__(
+            self,
+            init_assem,
+            entering_assem,
+            product_assem,
+            leaving_assem,
+            metal_bs,
+            leaving_bs,
+            entering_bs,
+            duplicate_count=None,
+            id_=None,
+            _is_sample_rev=False,
+    ):
+        super().__init__(
+            init_assem=init_assem,
+            entering_assem=entering_assem,
+            product_assem=product_assem,
+            leaving_assem=leaving_assem,
+            metal_bs=metal_bs,
+            leaving_bs=leaving_bs,
+            entering_bs=entering_bs,
+            duplicate_count=duplicate_count,
+            id_=id_,
+        )
+        object.__setattr__(self, '_is_sample_rev', _is_sample_rev)
+
     @property
     def metal_kind(self) -> str:
         """Return the kind of the metal binding site."""
@@ -83,9 +112,19 @@ class ReactionToClassify(Reaction):
         )
 
     @cached_property
-    def sample_rev(self) -> 'ReactionToClassify':
-        """Return the reverse reaction."""
-        return generate_sample_rev_reaction(self).as_reaction_to_classify()
+    def sample_rev(self) -> 'ReactionToClassify | None':
+        """Return the reverse reaction.
+
+        Returns None if this reaction is already a sample reverse reaction,
+        to prevent infinite recursion.
+        """
+        if self._is_sample_rev:
+            return None
+        reverse_reaction = generate_sample_rev_reaction(self)
+        # Create reverse reaction with _is_sample_rev=True
+        result = ReactionToClassify.from_reaction(reverse_reaction)
+        object.__setattr__(result, '_is_sample_rev', True)
+        return result
 
     @property
     def assem_with_entering_bs(self) -> Assembly:
@@ -105,4 +144,5 @@ class ReactionToClassify(Reaction):
             metal_bs=reaction.metal_bs,
             leaving_bs=reaction.leaving_bs,
             entering_bs=reaction.entering_bs,
+            _is_sample_rev=False,
         )
