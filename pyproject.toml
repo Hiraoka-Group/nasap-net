@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nasap-net"
-version = "1.0.0"
+version = "1.0.1"
 description = "Automated reaction network generator for NASAP (Numerical Analysis of Self-Assembly Process)"
 authors = ["takeuchi-sci <142223934+takeuchi-sci@users.noreply.github.com>"]
 license = "MIT"
