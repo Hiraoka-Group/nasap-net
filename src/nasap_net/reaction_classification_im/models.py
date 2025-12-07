@@ -11,8 +11,6 @@ from .temp_ring_formation import get_min_forming_ring_size_including_temporary
 
 class ReactionToClassify(Reaction):
     """Dataclass representing a reaction to classify."""
-    pass
-
     @property
     def metal_kind(self) -> str:
         """Return the kind of the metal binding site."""

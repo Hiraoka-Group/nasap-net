@@ -69,8 +69,8 @@ def explore_reactions(
             actual_ring_size = get_min_forming_ring_size_including_temporary(
                 reaction,
             )
-            if actual_ring_size is not None\
-                    and actual_ring_size < min_temp_ring_size:
+            if (actual_ring_size is not None
+                    and actual_ring_size < min_temp_ring_size):
                 continue
 
         try:
