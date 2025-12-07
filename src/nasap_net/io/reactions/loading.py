@@ -37,7 +37,7 @@ def load_reactions(
         file_path,
         index_col=0 if has_index_column else None,
     )
-    df = df.astype(object).where(pd.notnull(df), None)
+    df = df.astype(object).where(pd.notnull(df), None)  # type: ignore[call-overload]
 
     types = {'int': int, 'str': str}
 

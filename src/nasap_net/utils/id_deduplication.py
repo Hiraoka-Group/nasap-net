@@ -1,19 +1,12 @@
-from collections.abc import Hashable, Iterable
-from typing import Protocol, Self, TypeVar
-
-from typing_extensions import ParamSpec
-
-P = ParamSpec('P')
+from collections.abc import Callable, Hashable, Iterable
+from typing import Protocol, TypeVar
 
 
-class HasCopyWith(Protocol[P]):
+class HasCopyWith(Protocol):
+    copy_with: Callable
+
     @property
     def id_(self) -> Hashable:
-        ...
-
-    # TODO: Use more specific signature when PyCharm fixes the issue PY-70838
-    # copy_with(self, *, id_: Any) -> Self:
-    def copy_with(self, **kwargs: P.kwargs) -> Self:
         ...
 
 
