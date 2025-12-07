@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nasap-net"
 version = "0.24.0"
-description = "Automated Reaction Network Generator for NASAP (Numerical Analysis of Self-Assembly Process)"
+description = "Automated reaction network generator for NASAP (Numerical Analysis of Self-Assembly Process)"
 authors = ["takeuchi-sci <142223934+takeuchi-sci@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
@@ -47,9 +47,6 @@ mkdocstrings = {extras = ["python"], version = "^0.29.0"}
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-nasapnet = "nasap_net.cli.main:main"
 
 [tool.setuptools.package-data]
 "nasap_net" = ["py.typed"]
