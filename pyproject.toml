@@ -8,18 +8,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 bidict = "^0.23.1"
-cachetools = "^5.5.0"
-click = "^8.1.8"
 frozendict = "^2.4.6"
-matplotlib = "^3.8.4"
-networkx = "^3.3"
-opencv-python = "^4.10.0.84"
 pandas = "^2.2.2"
-pydantic = "^2.9.2"
 python = ">=3.12,<4.0"
-python-igraph = "^0.11.9"
 pyyaml = "^6.0.2"
-scipy = "^1.14.0"
+typing-extensions = "^4.15.0"
+igraph = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 build = "^1.2.2.post1"
@@ -31,6 +25,7 @@ pytest-mock = "^3.15.1"
 twine = "^6.1.0"
 types-cachetools = "^5.5.0.20240820"
 types-pyyaml = "^6.0.12.20240917"
+deptry = "^0.24.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -48,5 +43,15 @@ mkdocstrings = {extras = ["python"], version = "^0.29.0"}
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.setuptools.package-data]
-"nasap_net" = ["py.typed"]
+[tool.deptry.per_rule_ignores]
+DEP003 = ["nasap_net"]
+DEP004 = ["pytest", "pytest_mock"]
+
+[tool.deptry.package_module_name_map]
+mkdocs = "mkdocs"
+mkdocs-awesome-nav = "mkdocs_awesome_nav"
+mkdocs-click = "mkdocs_click"
+mkdocs-material = "mkdocs_material"
+mkdocs-static-i18n = "mkdocs_static_i18n"
+mkdocs-table-reader-plugin = "mkdocs_table_reader_plugin"
+mkdocstrings = "mkdocstrings"
