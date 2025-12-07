@@ -1,8 +1,8 @@
 from functools import cached_property
 from typing import Self
 
-from nasap_net.helpers import generate_sample_rev_reaction
 from nasap_net.models import Assembly, Reaction
+from nasap_net.reaction_pairing_im import generate_sample_rev_reaction
 from .connection_count import get_connection_count_of_kind
 from .ring_breaking_size import get_min_breaking_ring_size
 from .ring_formation_size import get_min_forming_ring_size
