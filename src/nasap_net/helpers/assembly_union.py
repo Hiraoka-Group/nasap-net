@@ -6,7 +6,8 @@ class ComponentIDCollisionError(NasapNetError):
 
 
 def union_assemblies(
-        init_assem: Assembly, entering_assem: Assembly,
+        assembly1: Assembly,
+        assembly2: Assembly,
         ) -> Assembly:
     """Create the union of two assemblies.
 
@@ -15,10 +16,10 @@ def union_assemblies(
 
     Parameters
     ----------
-    init_assem : Assembly
-        The initial assembly.
-    entering_assem : Assembly
-        The entering assembly.
+    assembly1 : Assembly
+        The first assembly.
+    assembly2 : Assembly
+        The second assembly.
 
     Returns
     -------
@@ -30,11 +31,11 @@ def union_assemblies(
     ComponentIDCollisionError
         If there are component ID collisions between the two assemblies.
     """
-    if set(init_assem.components) & set(entering_assem.components):
+    if set(assembly1.components) & set(assembly2.components):
         raise ComponentIDCollisionError(
             "Component ID collision detected between the two assemblies.")
 
     new_components = (
-            dict(init_assem.components) | dict(entering_assem.components))
-    new_bonds = init_assem.bonds | entering_assem.bonds
+            dict(assembly1.components) | dict(assembly2.components))
+    new_bonds = assembly1.bonds | assembly2.bonds
     return Assembly(components=new_components, bonds=new_bonds)
