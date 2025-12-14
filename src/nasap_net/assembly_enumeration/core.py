@@ -1,4 +1,4 @@
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
 from nasap_net.assembly_equivalence import \
@@ -6,6 +6,7 @@ from nasap_net.assembly_equivalence import \
 from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
 from .lib import cap_assemblies_with_ligand, enumerate_fragments
+from .. import assign_composition_formula_ids
 
 
 def enumerate_assemblies(
@@ -15,7 +16,8 @@ def enumerate_assemblies(
         leaving_ligand_site: ID | None = None,
         metal_kinds: Iterable[str],
         symmetry_operations: Iterable[Mapping[Any, ID]] | None = None,
-) -> set[Assembly]:
+        comp_kind_order_in_formula: Sequence[str] | None = None,
+) -> list[Assembly]:
     """Enumerate assemblies which can be formed by adding the leaving ligand
     to the fragments of the template assembly.
 
@@ -50,11 +52,15 @@ def enumerate_assemblies(
         A list of symmetry operations to consider when excluding duplicate
         assemblies. Each symmetry operation is represented as a mapping from
         original site IDs to transformed site IDs.
+    comp_kind_order_in_formula : Sequence[str] | None, optional
+        The order of component kinds to use when assigning composition formula
+        IDs to the assemblies. If None, the kinds will be sorted alphabetically.
+        Default is None.
 
     Returns
     -------
-    set[Assembly]
-        A set of unique assemblies formed by adding the leaving ligand
+    list[Assembly]
+        A list of unique assemblies formed by adding the leaving ligand
         to the fragments of the template assembly.
         Also includes the free leaving ligand as an assembly.
     """
@@ -78,4 +84,8 @@ def enumerate_assemblies(
             bonds=[],
         )
     )
-    return capped_assemblies
+    assemblies_with_ids = assign_composition_formula_ids(
+        assemblies=capped_assemblies,
+        order=comp_kind_order_in_formula,
+    )
+    return assemblies_with_ids
