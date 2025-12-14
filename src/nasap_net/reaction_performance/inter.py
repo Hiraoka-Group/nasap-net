@@ -1,10 +1,7 @@
-from nasap_net.exceptions import NasapNetError
 from nasap_net.models import Assembly, MLE
 from .separation import separate_if_possible
-
-
-class ComponentIDCollisionError(NasapNetError):
-    pass
+from nasap_net.helpers.assembly_union import ComponentIDCollisionError, \
+    union_assemblies
 
 
 def perform_inter_reaction(
@@ -44,7 +41,7 @@ def perform_inter_reaction(
             "Component ID collision detected between the two assemblies.")
 
     raw_product = (
-        _combine_assemblies(init_assem, entering_assem)
+        union_assemblies(init_assem, entering_assem)
             .remove_bond(mle.metal, mle.leaving)
             .add_bond(mle.metal, mle.entering)
     )
@@ -53,21 +50,3 @@ def perform_inter_reaction(
         metal_comp_id=mle.metal.component_id
     )
     return product, leaving
-
-
-def _combine_assemblies(
-        init_assem: Assembly, entering_assem: Assembly,
-        ) -> Assembly:
-    """Combine two assemblies into one.
-
-    Raise ComponentIDCollisionError if there are any component ID collisions
-    between the two assemblies.
-    """
-    if set(init_assem.components) & set(entering_assem.components):
-        raise ComponentIDCollisionError(
-            "Component ID collision detected between the two assemblies.")
-
-    new_components = (
-            dict(init_assem.components) | dict(entering_assem.components))
-    new_bonds = init_assem.bonds | entering_assem.bonds
-    return Assembly(components=new_components, bonds=new_bonds)
