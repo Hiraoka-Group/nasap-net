@@ -181,9 +181,25 @@ def test_override_with_none():
         reaction.copy_with(duplicate_count=0)  # Should be positive integer
 
 
-def test_to_stoichiometric_reaction(MX2_plus_free_L):
-    sr = MX2_plus_free_L.to_stoichiometric_reaction()
-    assert isinstance(sr, StoichiometricReaction)
-    assert sr.reactants == {'MX2': 1, 'free_L': 1}
-    assert sr.products == {'MLX': 1, 'free_X': 1}
-    assert sr.duplicate_count == 4
+def test_to_stoichiometric_reaction():
+    reaction = Reaction(
+        init_assem=Assembly(id_='A', components={}, bonds=[]),
+        entering_assem=Assembly(id_='B', components={}, bonds=[]),
+        product_assem=Assembly(id_='C', components={}, bonds=[]),
+        leaving_assem=None,
+        metal_bs=BindingSite('metal', 0),
+        leaving_bs=BindingSite('leaving', 0),
+        entering_bs=BindingSite('entering', 0),
+        duplicate_count=2,
+        id_='R1',
+    )
+
+    stoich_reaction = reaction.to_stoichiometric_reaction()
+
+    assert isinstance(stoich_reaction, StoichiometricReaction)
+    assert stoich_reaction.reactant1 == 'A'
+    assert stoich_reaction.reactant2 == 'B'
+    assert stoich_reaction.product1 == 'C'
+    assert stoich_reaction.product2 is None
+    assert stoich_reaction.duplicate_count == 2
+    assert stoich_reaction.id_ == 'R1'

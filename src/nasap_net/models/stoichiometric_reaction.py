@@ -1,8 +1,5 @@
-from collections.abc import Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Self
-
-from frozendict import frozendict
 
 from nasap_net.types import ID
 from .reaction import Reaction
@@ -11,24 +8,20 @@ from .reaction import Reaction
 @dataclass(frozen=True)
 class StoichiometricReaction:
     """A stoichiometric representation of a reaction between assemblies."""
-    reactants: frozendict[ID, int] = field(init=False)
-    products: frozendict[ID, int] = field(init=False)
+    reactant1: ID
+    reactant2: ID | None
+    product1: ID
+    product2: ID | None
     duplicate_count: int
     id_: ID | None = None
 
-    def __init__(
-        self,
-        reactants: Mapping[ID, int],
-        products: Mapping[ID, int],
-        duplicate_count: int,
-        id_: ID | None = None,
-    ):
-        object.__setattr__(self, 'reactants', frozendict(reactants))
-        object.__setattr__(self, 'products', frozendict(products))
-        object.__setattr__(self, 'duplicate_count', duplicate_count)
-        object.__setattr__(self, 'id_', id_)
-        if duplicate_count <= 0:
+    def __post_init__(self):
+        if self.duplicate_count <= 0:
             raise ValueError("duplicate_count must be positive")
+        if self.reactant1 is None:
+            raise ValueError("reactant1 must not be None")
+        if self.product1 is None:
+            raise ValueError("product1 must not be None")
 
     def __str__(self):
         equation = self.equation_str
@@ -44,29 +37,22 @@ class StoichiometricReaction:
     @property
     def equation_str(self) -> str:
         """Return a string representation of the reaction equation."""
-        def side_to_str(side: Mapping[ID, int]) -> str:
-            return ' + '.join(
-                f'{v if v != 1 else ""}{k}' if v != 1 else f'{k}'
-                for k, v in sorted(side.items())
-            )
-        left = side_to_str(self.reactants)
-        right = side_to_str(self.products)
+        def side_to_str(a: ID, b: ID | None) -> str:
+            if b is not None:
+                return f'{a} + {b}'
+            return f'{a}'
+        left = side_to_str(self.reactant1, self.reactant2)
+        right = side_to_str(self.product1, self.product2)
         return f'{left} -> {right}'
 
     @classmethod
     def from_reaction(cls, reaction: Reaction) -> Self:
         """Create a StoichiometricReaction from a Reaction instance."""
-        reactants: dict[ID, int] = {}
-        for rid in [reaction.init_assem_id, reaction.entering_assem_id]:
-            if rid is not None:
-                reactants[rid] = reactants.get(rid, 0) + 1
-        products: dict[ID, int] = {}
-        for pid in [reaction.product_assem_id, reaction.leaving_assem_id]:
-            if pid is not None:
-                products[pid] = products.get(pid, 0) + 1
         return cls(
-            reactants=reactants,
-            products=products,
+            reactant1=reaction.init_assem_id,
+            reactant2=reaction.entering_assem_id,
+            product1=reaction.product_assem_id,
+            product2=reaction.leaving_assem_id,
             duplicate_count=reaction.duplicate_count,
             id_=reaction.id_or_none,
         )
