@@ -65,3 +65,35 @@ def test_from_reaction():
     assert stoich_reaction.product2 is None
     assert stoich_reaction.duplicate_count == 2
     assert stoich_reaction.id_ == 'R1'
+
+
+def test_reactants_products_changes():
+    # A + B -> C
+    r1 = StoichiometricReaction('A', 'B', 'C', None, 1)
+    assert r1.reactants == {'A': 1, 'B': 1}
+    assert r1.products == {'C': 1}
+    assert r1.changes == {'A': -1, 'B': -1, 'C': 1}
+
+    # A -> B + C
+    r2 = StoichiometricReaction('A', None, 'B', 'C', 1)
+    assert r2.reactants == {'A': 1}
+    assert r2.products == {'B': 1, 'C': 1}
+    assert r2.changes == {'A': -1, 'B': 1, 'C': 1}
+
+    # A -> B
+    r3 = StoichiometricReaction('A', None, 'B', None, 1)
+    assert r3.reactants == {'A': 1}
+    assert r3.products == {'B': 1}
+    assert r3.changes == {'A': -1, 'B': 1}
+
+    # A + A -> B
+    r4 = StoichiometricReaction('A', 'A', 'B', None, 1)
+    assert r4.reactants == {'A': 2}
+    assert r4.products == {'B': 1}
+    assert r4.changes == {'A': -2, 'B': 1}
+
+    # A -> A
+    r5 = StoichiometricReaction('A', None, 'A', None, 1)
+    assert r5.reactants == {'A': 1}
+    assert r5.products == {'A': 1}
+    assert r5.changes == {'A': 0}

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dataclasses import dataclass
 from typing import Self
 
@@ -44,6 +45,44 @@ class StoichiometricReaction:
         left = side_to_str(self.reactant1, self.reactant2)
         right = side_to_str(self.product1, self.product2)
         return f'{left} -> {right}'
+
+    @property
+    def reactants(self) -> dict[ID, int]:
+        """
+        Return a dictionary of reactant IDs and their counts.
+        For example, for A + B -> C, returns {A: 1, B: 1}.
+        """
+        counts: defaultdict[ID, int] = defaultdict(int)
+        counts[self.reactant1] += 1
+        if self.reactant2 is not None:
+            counts[self.reactant2] += 1
+        return dict(counts)
+
+    @property
+    def products(self) -> dict[ID, int]:
+        """
+        Return a dictionary of product IDs and their counts.
+        For example, for A + B -> C, returns {C: 1}.
+        """
+        counts: defaultdict[ID, int] = defaultdict(int)
+        counts[self.product1] += 1
+        if self.product2 is not None:
+            counts[self.product2] += 1
+        return dict(counts)
+
+    @property
+    def changes(self) -> dict[ID, int]:
+        """
+        Return a dictionary of ID to net change (products - reactants).
+        Reactants are negative, products are positive.
+        For example, for A + B -> C, returns {A: -1, B: -1, C: 1}.
+        """
+        changes: defaultdict[ID, int] = defaultdict(int)
+        for k, v in self.reactants.items():
+            changes[k] -= v
+        for k, v in self.products.items():
+            changes[k] += v
+        return dict(changes)
 
     @classmethod
     def from_reaction(cls, reaction: Reaction) -> Self:
