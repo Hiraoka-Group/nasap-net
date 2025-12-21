@@ -1,9 +1,11 @@
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from typing import Self
 
 from frozendict import frozendict
 
 from nasap_net.types import ID
+from .reaction import Reaction
 
 
 @dataclass(frozen=True)
@@ -50,3 +52,21 @@ class StoichiometricReaction:
         left = side_to_str(self.reactants)
         right = side_to_str(self.products)
         return f'{left} -> {right}'
+
+    @classmethod
+    def from_reaction(cls, reaction: Reaction) -> Self:
+        """Create a StoichiometricReaction from a Reaction instance."""
+        reactants: dict[ID, int] = {}
+        for rid in [reaction.init_assem_id, reaction.entering_assem_id]:
+            if rid is not None:
+                reactants[rid] = reactants.get(rid, 0) + 1
+        products: dict[ID, int] = {}
+        for pid in [reaction.product_assem_id, reaction.leaving_assem_id]:
+            if pid is not None:
+                products[pid] = products.get(pid, 0) + 1
+        return cls(
+            reactants=reactants,
+            products=products,
+            duplicate_count=reaction.duplicate_count,
+            id_=reaction.id_or_none,
+        )
