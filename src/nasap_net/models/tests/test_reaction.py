@@ -2,8 +2,9 @@ from copy import deepcopy
 
 import pytest
 
+from nasap_net import Assembly, BindingSite, Component, Reaction, \
+    StoichiometricReaction
 from nasap_net.exceptions import IDNotSetError
-from nasap_net.models import Assembly, BindingSite, Component, Reaction
 
 
 @pytest.fixture
@@ -178,3 +179,11 @@ def test_override_with_none():
         reaction.copy_with(entering_bs=None)  # type: ignore[arg-type]
     with pytest.raises(ValueError):
         reaction.copy_with(duplicate_count=0)  # Should be positive integer
+
+
+def test_to_stoichiometric_reaction(MX2_plus_free_L):
+    sr = MX2_plus_free_L.to_stoichiometric_reaction()
+    assert isinstance(sr, StoichiometricReaction)
+    assert sr.reactants == {'MX2': 1, 'free_L': 1}
+    assert sr.products == {'MLX': 1, 'free_X': 1}
+    assert sr.duplicate_count == 4

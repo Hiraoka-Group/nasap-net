@@ -10,6 +10,7 @@ from .lib import assembly_to_id_or_none_or_unknown
 
 if TYPE_CHECKING:
     from nasap_net.reaction_classification import ReactionToClassify
+    from .stoichiometric_reaction import StoichiometricReaction
 
 
 class DuplicateCountNotSetError(NasapNetError):
@@ -251,3 +252,8 @@ class Reaction:
         """Return a ReactionToClassify version of this reaction."""
         from nasap_net.reaction_classification import ReactionToClassify
         return ReactionToClassify.from_reaction(self)
+
+    def to_stoichiometric_reaction(self) -> 'StoichiometricReaction':
+        """Convert this Reaction to a StoichiometricReaction."""
+        from .stoichiometric_reaction import StoichiometricReaction
+        return StoichiometricReaction.from_reaction(self)
