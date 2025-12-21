@@ -17,6 +17,7 @@ from nasap_net.models import Bond
 from nasap_net.models import Assembly
 from nasap_net.models import Reaction
 from nasap_net.models import MLEKind
+from nasap_net.models import StoichiometricReaction
 
 from nasap_net.helpers import assign_composition_formula_ids
 

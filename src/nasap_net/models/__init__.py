@@ -5,3 +5,4 @@ from .bond import Bond
 from .component import Component
 from .mle import DuplicationNotSetError, MLE, MLEKind
 from .reaction import Reaction
+from .stoichiometric_reaction import StoichiometricReaction

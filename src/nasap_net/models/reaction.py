@@ -6,6 +6,7 @@ from nasap_net.exceptions import IDNotSetError, NasapNetError
 from nasap_net.models import Assembly, BindingSite, MLE
 from nasap_net.types import ID
 from nasap_net.utils.default import MISSING, Missing, default_if_missing
+from .lib import assembly_to_id_or_none_or_unknown
 
 if TYPE_CHECKING:
     from nasap_net.reaction_classification import ReactionToClassify
@@ -123,10 +124,10 @@ class Reaction:
 
         If an assembly ID is not set, '??' is used in its place.
         """
-        init = _assembly_to_id(self.init_assem)
-        entering = _assembly_to_id(self.entering_assem)
-        product = _assembly_to_id(self.product_assem)
-        leaving = _assembly_to_id(self.leaving_assem)
+        init = assembly_to_id_or_none_or_unknown(self.init_assem)
+        entering = assembly_to_id_or_none_or_unknown(self.entering_assem)
+        product = assembly_to_id_or_none_or_unknown(self.product_assem)
+        leaving = assembly_to_id_or_none_or_unknown(self.leaving_assem)
 
         left = f'{init}' if entering is None else f'{init} + {entering}'
         right = f'{product}' if leaving is None else f'{product} + {leaving}'
@@ -250,15 +251,3 @@ class Reaction:
         """Return a ReactionToClassify version of this reaction."""
         from nasap_net.reaction_classification import ReactionToClassify
         return ReactionToClassify.from_reaction(self)
-
-
-def _assembly_to_id(assembly: Assembly | None) -> ID | None:
-    """Return the ID of the assembly, or '??' if not set, or None if assembly
-    is None.
-    """
-    if assembly is None:
-        return None
-    if assembly.id_or_none is None:
-        # ID not set
-        return '??'
-    return assembly.id_or_none
