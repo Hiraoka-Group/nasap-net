@@ -91,8 +91,8 @@ class Reaction:
     def __repr__(self):
         equation = self.equation_str
         if self._id is None:
-            return f'<{self.__class__.__name__} {equation}>'
-        return f'<{self.__class__.__name__} ID={self._id} {equation}>'
+            return f'<{self.__class__.__name__} ({equation})>'
+        return f'<{self.__class__.__name__} ID={self._id} ({equation})>'
 
     @property
     def id_(self) -> ID:

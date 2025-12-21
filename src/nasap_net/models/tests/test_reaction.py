@@ -38,13 +38,13 @@ def MX2_plus_free_L():
 
 def test___repr__(MX2_plus_free_L):
     repr_str = repr(MX2_plus_free_L)
-    assert repr_str == '<Reaction MX2 + free_L -> MLX + free_X>'
+    assert repr_str == '<Reaction (MX2 + free_L -> MLX + free_X)>'
 
 
 def test___repr___with_id(MX2_plus_free_L):
     reaction = MX2_plus_free_L.copy_with(id_='R1')
     repr_str = repr(reaction)
-    assert repr_str == '<Reaction ID=R1 MX2 + free_L -> MLX + free_X>'
+    assert repr_str == '<Reaction ID=R1 (MX2 + free_L -> MLX + free_X)>'
 
 
 def test_equation_str(MX2_plus_free_L):
