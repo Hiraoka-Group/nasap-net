@@ -36,8 +36,8 @@ class StoichiometricReaction:
     def __repr__(self):
         equation = self.equation_str
         if self.id_ is None:
-            return f'<{self.__class__.__name__} {equation}>'
-        return f'<{self.__class__.__name__} ID={self.id_}: {equation}>'
+            return f'<{self.__class__.__name__} ({equation})>'
+        return f'<{self.__class__.__name__} ID={self.id_} ({equation})>'
 
     @property
     def equation_str(self) -> str:

@@ -10,12 +10,12 @@ def test_creation_and_str_repr():
     assert isinstance(r.products, frozendict)
     assert r.equation_str == '2A + B -> 3C'
     assert str(r) == '2A + B -> 3C (x1)'
-    assert repr(r) == '<StoichiometricReaction 2A + B -> 3C>'
+    assert repr(r) == '<StoichiometricReaction (2A + B -> 3C)>'
 
 
 def test_repr_with_id():
     r = StoichiometricReaction({'A': 1}, {'B': 1}, 1, id_='R1')
-    assert repr(r) == '<StoichiometricReaction ID=R1: A -> B>'
+    assert repr(r) == '<StoichiometricReaction ID=R1 (A -> B)>'
 
 
 def test_equation_str_coefficients():
