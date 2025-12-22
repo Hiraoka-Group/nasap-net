@@ -37,4 +37,4 @@ def test_with_missing_id(tmp_path):
     file = tmp_path / 'stoich_reactions_no_id.csv'
     save_stoichiometric_reactions(reactions, file)
     loaded = load_stoichiometric_reactions(file)
-    assert loaded[0].id_ is None
+    assert loaded[0].id_or_none is None

@@ -2,11 +2,12 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Self
 
+from nasap_net.exceptions import IDNotSetError
 from nasap_net.types import ID
 from .reaction import Reaction
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class StoichiometricReaction:
     """A stoichiometric representation of a reaction between assemblies."""
     reactant1: ID
@@ -14,15 +15,29 @@ class StoichiometricReaction:
     product1: ID
     product2: ID | None
     duplicate_count: int
-    id_: ID | None = None
+    _id: ID | None
 
-    def __post_init__(self):
-        if self.duplicate_count <= 0:
+    def __init__(
+        self,
+        reactant1: ID,
+        reactant2: ID | None,
+        product1: ID,
+        product2: ID | None,
+        duplicate_count: int,
+        id_: ID | None = None,
+    ):
+        if duplicate_count <= 0:
             raise ValueError("duplicate_count must be positive")
-        if self.reactant1 is None:
+        if reactant1 is None:
             raise ValueError("reactant1 must not be None")
-        if self.product1 is None:
+        if product1 is None:
             raise ValueError("product1 must not be None")
+        object.__setattr__(self, 'reactant1', reactant1)
+        object.__setattr__(self, 'reactant2', reactant2)
+        object.__setattr__(self, 'product1', product1)
+        object.__setattr__(self, 'product2', product2)
+        object.__setattr__(self, 'duplicate_count', duplicate_count)
+        object.__setattr__(self, '_id', id_)
 
     def __str__(self):
         equation = self.equation_str
@@ -31,9 +46,9 @@ class StoichiometricReaction:
 
     def __repr__(self):
         equation = self.equation_str
-        if self.id_ is None:
+        if self._id is None:
             return f'<{self.__class__.__name__} ({equation})>'
-        return f'<{self.__class__.__name__} ID={self.id_} ({equation})>'
+        return f'<{self.__class__.__name__} ID={self._id} ({equation})>'
 
     @property
     def equation_str(self) -> str:
@@ -45,6 +60,18 @@ class StoichiometricReaction:
         left = side_to_str(self.reactant1, self.reactant2)
         right = side_to_str(self.product1, self.product2)
         return f'{left} -> {right}'
+
+    @property
+    def id_(self) -> ID:
+        """Return the ID. Raise IDNotSetError if not set."""
+        if self._id is None:
+            raise IDNotSetError("StoichiometricReaction ID is not set.")
+        return self._id
+
+    @property
+    def id_or_none(self) -> ID | None:
+        """Return the ID of the reaction, or None if not set."""
+        return self._id
 
     @property
     def reactants(self) -> dict[ID, int]:
