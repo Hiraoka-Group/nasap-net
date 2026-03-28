@@ -1,7 +1,7 @@
 from nasap_net import Reaction
 
 
-class IncompleteClassificationRuleError(Exception):
+class IncompleteReactionClassifierError(Exception):
     """
     Raised by user-defined classification functions when a reaction
     cannot be classified due to incomplete rules.
@@ -25,11 +25,11 @@ class IncompleteClassificationRuleError(Exception):
     ...         if reaction.entering_kind == 'L':
     ...             return '1f'
     ...         else:
-    ...             raise IncompleteClassificationRuleError(
+    ...             raise IncompleteReactionClassifierError(
     ...                 reaction, error_id="case_X_other"
     ...             )
     ...     else:
-    ...         raise IncompleteClassificationRuleError(
+    ...         raise IncompleteReactionClassifierError(
     ...             reaction, error_id="case_not_X"
     ...         )
     """

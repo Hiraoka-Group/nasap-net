@@ -1,5 +1,5 @@
 from nasap_net import Reaction
-from nasap_net.reaction_classification import IncompleteClassificationRuleError
+from nasap_net.reaction_classification import IncompleteReactionClassifierError
 
 
 class StubReaction:
@@ -9,7 +9,7 @@ class StubReaction:
 
 def test_attributes_are_stored():
     r: Reaction = StubReaction()  # type: ignore
-    e = IncompleteClassificationRuleError(r, error_id="case_1")
+    e = IncompleteReactionClassifierError(r, error_id="case_1")
 
     assert e.reaction is r
     assert e.error_id == "case_1"
@@ -17,7 +17,7 @@ def test_attributes_are_stored():
 
 def test_str_includes_error_id_and_reaction():
     r: Reaction = StubReaction()  # type: ignore
-    e = IncompleteClassificationRuleError(r, error_id="case_1")
+    e = IncompleteReactionClassifierError(r, error_id="case_1")
 
     s = str(e)
 
@@ -29,7 +29,7 @@ def test_str_includes_error_id_and_reaction():
 
 def test_str_without_error_id():
     r: Reaction = StubReaction()  # type: ignore
-    e = IncompleteClassificationRuleError(r)
+    e = IncompleteReactionClassifierError(r)
 
     s = str(e)
 
