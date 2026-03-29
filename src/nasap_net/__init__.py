@@ -38,3 +38,4 @@ from nasap_net.io import load_assemblies
 from nasap_net.io import load_reactions
 from nasap_net.io import save_assemblies
 from nasap_net.io import save_reactions
+from nasap_net.io import save_classification_result
