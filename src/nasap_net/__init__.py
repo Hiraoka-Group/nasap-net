@@ -31,6 +31,9 @@ from nasap_net.assembly_equivalence import assemblies_equivalent
 from nasap_net.reaction_equivalence import reactions_equivalent
 from nasap_net.reaction_equivalence import compute_reaction_list_diff
 
+from nasap_net.reaction_classification import classify_reactions
+from nasap_net.reaction_classification import IncompleteReactionClassifierError
+
 from nasap_net.io import load_assemblies
 from nasap_net.io import load_reactions
 from nasap_net.io import save_assemblies
