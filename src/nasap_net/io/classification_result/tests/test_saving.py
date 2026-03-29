@@ -37,10 +37,10 @@ def MX2_and_free_L():
 
 
 def test_basic(MX2_and_free_L, tmp_path):
-    reactions = {MX2_and_free_L: 'ClassA'}
+    classification_results = {MX2_and_free_L: 'ClassA'}
 
-    output_file = tmp_path / 'reactions.csv'
-    save_classification_result(reactions, output_file)
+    output_file = tmp_path / 'classification_results.csv'
+    save_classification_result(classification_results, output_file)
 
     assert output_file.exists()
     df = pd.read_csv(output_file)
