@@ -1,0 +1,508 @@
+L: !Component
+  kind: L
+  sites: [0, 1]
+M: !Component
+  kind: M
+  sites: [0, 1]
+X: !Component
+  kind: X
+  sites: [0]
+---
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, M1: M, M2: M, M3: M,
+    M4: M, M5: M, M6: M}
+  bonds:
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  id_: M6L7
+- !Assembly
+  components: {L5: L, L6: L, M4: M, M5: M, M6: M, X0: X, X1: X}
+  bonds:
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [M4, 0, X1, 0]
+  - [M6, 1, X0, 0]
+  id_: M3L2X2
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, L9: L, M0: M,
+    M1: M, M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, M8: M, M9: M, X0: X, X1: X}
+  bonds:
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  - [L9, 1, M9, 0]
+  - [M0, 0, X0, 0]
+  - [M9, 1, X1, 0]
+  id_: M10L9X2
+- !Assembly
+  components: {L3: L, L4: L, L5: L, M2: M, M3: M, M4: M, M5: M, X0: X, X1: X}
+  bonds:
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [M2, 0, X1, 0]
+  - [M5, 1, X0, 0]
+  id_: M4L3X2
+- !Assembly
+  components: {L1: L, L10: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, L9: L,
+    M1: M, M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, M8: M, M9: M}
+  bonds:
+  - [L1, 1, M1, 0]
+  - [L10, 0, M9, 1]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  - [L9, 1, M9, 0]
+  id_: M9L10
+- !Assembly
+  components: {L0: L, L1: L, L10: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L,
+    L9: L, M0: M, M1: M, M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, M8: M, M9: M}
+  bonds:
+  - [L0, 1, M0, 0]
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L10, 0, M9, 1]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  - [L9, 1, M9, 0]
+  id_: M10L11
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, M0: M, M1: M,
+    M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, M8: M, X0: X, X1: X}
+  bonds:
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [M0, 0, X0, 0]
+  - [M8, 1, X1, 0]
+  id_: M9L8X2
+- !Assembly
+  components: {L6: L, L7: L, L8: L, M6: M, M7: M}
+  bonds:
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  id_: M2L3
+- !Assembly
+  components: {L2: L, L3: L, L4: L, L5: L, L6: L, M1: M, M2: M, M3: M, M4: M, M5: M,
+    M6: M, X0: X, X1: X}
+  bonds:
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [M1, 0, X1, 0]
+  - [M6, 1, X0, 0]
+  id_: M6L5X2
+- !Assembly
+  components: {L8: L, L9: L, M8: M}
+  bonds:
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  id_: ML2
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, M0: M, M1: M,
+    M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, X0: X}
+  bonds:
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [M0, 0, X0, 0]
+  id_: M8L8X
+- !Assembly
+  components: {L1: L}
+  bonds: []
+  id_: L
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, M1: M, M2: M, M3: M, M4: M}
+  bonds:
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  id_: M4L5
+- !Assembly
+  components: {L1: L, L10: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, L9: L,
+    M0: M, M1: M, M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, M8: M, M9: M, X0: X}
+  bonds:
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L10, 0, M9, 1]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  - [L9, 1, M9, 0]
+  - [M0, 0, X0, 0]
+  id_: M10L10X
+- !Assembly
+  components: {L0: L, L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, M0: M,
+    M1: M, M2: M, M3: M, M4: M, M5: M, M6: M, M7: M}
+  bonds:
+  - [L0, 1, M0, 0]
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  id_: M8L9
+- !Assembly
+  components: {L10: L, L5: L, L6: L, L7: L, L8: L, L9: L, M5: M, M6: M, M7: M, M8: M,
+    M9: M}
+  bonds:
+  - [L10, 0, M9, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  - [L9, 1, M9, 0]
+  id_: M5L6
+- !Assembly
+  components: {L3: L, L4: L, M2: M, M3: M, X0: X}
+  bonds:
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [M2, 0, X0, 0]
+  id_: M2L2X
+- !Assembly
+  components: {X0: X}
+  bonds: []
+  id_: X
+- !Assembly
+  components: {L4: L, L5: L, L6: L, M3: M, M4: M, M5: M, X0: X}
+  bonds:
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [M3, 0, X0, 0]
+  id_: M3L3X
+- !Assembly
+  components: {L5: L, L6: L, L7: L, L8: L, M5: M, M6: M, M7: M}
+  bonds:
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  id_: M3L4
+- !Assembly
+  components: {L4: L, L5: L, L6: L, L7: L, M3: M, M4: M, M5: M, M6: M, M7: M, X0: X,
+    X1: X}
+  bonds:
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [M3, 0, X0, 0]
+  - [M7, 1, X1, 0]
+  id_: M5L4X2
+- !Assembly
+  components: {L5: L, M4: M, M5: M, X0: X, X1: X}
+  bonds:
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [M4, 0, X1, 0]
+  - [M5, 1, X0, 0]
+  id_: M2LX2
+- !Assembly
+  components: {L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, M1: M, M2: M, M3: M,
+    M4: M, M5: M, M6: M, M7: M, M8: M, X0: X, X1: X}
+  bonds:
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [M1, 0, X1, 0]
+  - [M8, 1, X0, 0]
+  id_: M8L7X2
+- !Assembly
+  components: {L6: L, M5: M, X0: X}
+  bonds:
+  - [L6, 0, M5, 1]
+  - [M5, 0, X0, 0]
+  id_: MLX
+- !Assembly
+  components: {L0: L, L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, M0: M,
+    M1: M, M2: M, M3: M, M4: M, M5: M, M6: M, M7: M, M8: M, X0: X}
+  bonds:
+  - [L0, 1, M0, 0]
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [M8, 1, X0, 0]
+  id_: M9L9X
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, M1: M, M2: M, M3: M,
+    M4: M, M5: M, M6: M, M7: M, X0: X}
+  bonds:
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [M7, 1, X0, 0]
+  id_: M7L7X
+- !Assembly
+  components: {M1: M, X0: X, X1: X}
+  bonds:
+  - [M1, 0, X1, 0]
+  - [M1, 1, X0, 0]
+  id_: MX2
+- !Assembly
+  components: {L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, M2: M, M3: M, M4: M, M5: M,
+    M6: M, M7: M, M8: M, X0: X, X1: X}
+  bonds:
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [M2, 0, X1, 0]
+  - [M8, 1, X0, 0]
+  id_: M7L6X2
+- !Assembly
+  components: {L1: L, L2: L, L3: L, L4: L, L5: L, L6: L, M1: M, M2: M, M3: M, M4: M,
+    M5: M, M6: M, X0: X}
+  bonds:
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [M6, 1, X0, 0]
+  id_: M6L6X
+- !Assembly
+  components: {L5: L, L6: L, L7: L, L8: L, L9: L, M4: M, M5: M, M6: M, M7: M, M8: M,
+    X0: X}
+  bonds:
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  - [M4, 0, X0, 0]
+  id_: M5L5X
+- !Assembly
+  components: {L2: L, L3: L, L4: L, L5: L, L6: L, L7: L, L8: L, L9: L, M2: M, M3: M,
+    M4: M, M5: M, M6: M, M7: M, M8: M}
+  bonds:
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [L4, 0, M3, 1]
+  - [L4, 1, M4, 0]
+  - [L5, 0, M4, 1]
+  - [L5, 1, M5, 0]
+  - [L6, 0, M5, 1]
+  - [L6, 1, M6, 0]
+  - [L7, 0, M6, 1]
+  - [L7, 1, M7, 0]
+  - [L8, 0, M7, 1]
+  - [L8, 1, M8, 0]
+  - [L9, 0, M8, 1]
+  id_: M7L8
+- !Assembly
+  components: {L0: L, L1: L, L2: L, L3: L, M0: M, M1: M, M2: M, M3: M, X0: X}
+  bonds:
+  - [L0, 1, M0, 0]
+  - [L1, 0, M0, 1]
+  - [L1, 1, M1, 0]
+  - [L2, 0, M1, 1]
+  - [L2, 1, M2, 0]
+  - [L3, 0, M2, 1]
+  - [L3, 1, M3, 0]
+  - [M3, 1, X0, 0]
+  id_: M4L4X
+- !Assembly
+  components: {L0: L, L1: L, L2: L, M0: M, M1: M, M2: M}
+  bonds:
+  - [L0, 0, M0, 1]
+  - [L0, 1, M1, 0]
+  - [L1, 0, M1, 1]
+  - [L1, 1, M2, 0]
+  - [L2, 0, M2, 1]
+  - [L2, 1, M0, 0]
+  id_: M3L3
+- !Assembly
+  components: {L0: L, L1: L, L2: L, L3: L, M0: M, M1: M, M2: M, M3: M}
+  bonds:
+  - [L0, 0, M0, 1]
+  - [L0, 1, M1, 0]
+  - [L1, 0, M1, 1]
+  - [L1, 1, M2, 0]
+  - [L2, 0, M2, 1]
+  - [L2, 1, M3, 0]
+  - [L3, 0, M3, 1]
+  - [L3, 1, M0, 0]
+  id_: M4L4
