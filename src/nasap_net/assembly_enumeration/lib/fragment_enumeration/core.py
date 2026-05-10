@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict, deque
 from collections.abc import Hashable, Iterable, Mapping
 from typing import Any
@@ -8,6 +9,9 @@ from .lib import enumerate_one_step_grown_fragments, get_key, \
     get_unique_starting_fragments, is_new, validate_symmetry_operation
 from .models import Fragment
 from .models.fragment import create_complete_fragment
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 def enumerate_fragments(
@@ -27,6 +31,10 @@ def enumerate_fragments(
     for frag in starting_fragments:
         found[get_key(frag)].add(frag)
     queue = deque(sorted(starting_fragments))
+    logger.debug(
+        'Starting fragment enumeration from %d single-component fragment(s).',
+        len(starting_fragments),
+    )
 
     while queue:
         cur_frag = queue.popleft()
@@ -35,8 +43,14 @@ def enumerate_fragments(
             if is_new(frag, found, symmetry_operations):
                 found[get_key(frag)].add(frag)
                 queue.append(frag)
+        logger.debug(
+            'Growing %d-component fragment(s). %d fragment(s) found so far.',
+            len(cur_frag.components),
+            sum(len(s) for s in found.values()),
+        )
 
     result: set[Assembly] = set()
     for frags in found.values():
         result.update(frag.to_assembly() for frag in frags)
+    logger.debug('Fragment enumeration complete. %d fragment(s) found.', len(result))
     return result
