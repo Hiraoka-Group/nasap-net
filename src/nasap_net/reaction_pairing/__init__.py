@@ -1,2 +1,3 @@
 from .core import pair_reverse_reactions
+from .forward_reverse_equivalence import is_forward_reverse_equivalent
 from .sample_rev_generation import generate_sample_rev_reaction
