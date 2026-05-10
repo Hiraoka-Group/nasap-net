@@ -1,4 +1,4 @@
 from .capping import cap_assemblies_with_ligand
-from .capping_by_assembly import cap_assemblies_with_assembly
 from .fragment_enumeration.core import enumerate_fragments
+from .substitution_with_assembly import enumerate_substitutions_with_assembly
 from .symmetry_operation import SymmetryOperations
