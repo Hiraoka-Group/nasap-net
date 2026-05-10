@@ -1,2 +1,2 @@
 from .core import enumerate_assemblies
-from .lib import enumerate_substitutions_with_assembly, SymmetryOperations
+from .lib import enumerate_assemblies_capped_with_assembly, enumerate_substitutions_with_assembly, SymmetryOperations

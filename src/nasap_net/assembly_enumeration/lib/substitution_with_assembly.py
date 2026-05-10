@@ -34,6 +34,7 @@ def _enumerate_substitutions(
         comp_id
         for comp_id, comp in assembly.components.items()
         if comp.kind == leaving_ligand_kind
+        and any(comp_id in bond.component_ids for bond in assembly.bonds)
     ]
 
     result: set[Assembly] = set()
