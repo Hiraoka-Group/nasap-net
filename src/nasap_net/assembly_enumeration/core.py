@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
@@ -7,6 +8,9 @@ from nasap_net.models import Assembly, Component
 from nasap_net.types import ID
 from .lib import cap_assemblies_with_ligand, enumerate_fragments
 from .. import assign_composition_formula_ids
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 def enumerate_assemblies(
@@ -64,13 +68,17 @@ def enumerate_assemblies(
         to the fragments of the template assembly.
         Also includes the free leaving ligand as an assembly.
     """
+    logger.info('Enumerating substructure fragments...')
     fragments = enumerate_fragments(
         template,
         symmetry_operations=symmetry_operations,
     )
+    logger.info('Removing symmetry-equivalent and isomorphic duplicates...')
     unique_fragments = extract_unique_assemblies(
         fragments,
     )
+    logger.info('%d unique fragment(s) remain.', len(unique_fragments))
+    logger.info('Attaching leaving ligands to free metal sites...')
     capped_assemblies = cap_assemblies_with_ligand(
         unique_fragments,
         component=leaving_ligand,
@@ -88,4 +96,5 @@ def enumerate_assemblies(
         assemblies=capped_assemblies,
         order=comp_kind_order_in_formula,
     )
+    logger.info('Enumeration complete. Total assemblies: %d.', len(assemblies_with_ids))
     return assemblies_with_ids

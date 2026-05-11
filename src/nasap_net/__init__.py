@@ -8,6 +8,9 @@ originally developed by the Hiraoka Group.
 
 Refer to the documentation for full details.
 """
+
+# isort: skip_file
+
 from nasap_net.exceptions import NasapNetError
 
 from nasap_net.models import BindingSite
@@ -22,6 +25,7 @@ from nasap_net.helpers import assign_composition_formula_ids
 
 from nasap_net.assembly_enumeration import enumerate_assemblies
 from nasap_net.assembly_enumeration import SymmetryOperations
+from nasap_net.assembly_enumeration import enumerate_assemblies_capped_with_assembly
 
 from nasap_net.reaction_enumeration import enumerate_reactions
 
